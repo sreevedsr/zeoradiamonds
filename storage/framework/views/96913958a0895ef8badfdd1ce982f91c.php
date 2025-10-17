@@ -38,34 +38,35 @@
 
     <!-- Modal -->
     <?php $__env->startPush('modals'); ?>
-    <?php if (isset($component)) { $__componentOriginal9f64f32e90b9102968f2bc548315018c = $component; } ?>
+        <?php if (isset($component)) { $__componentOriginal9f64f32e90b9102968f2bc548315018c = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal9f64f32e90b9102968f2bc548315018c = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.modal','data' => ['name' => 'confirm-user-deletion','show' => $errors->userDeletion->isNotEmpty(),'focusable' => true,'xTeleport' => 'body','class' => 'z-50']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.modal','data' => ['name' => 'confirm-user-deletion','show' => $errors->userDeletion->isNotEmpty(),'focusable' => true]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('modal'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['name' => 'confirm-user-deletion','show' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($errors->userDeletion->isNotEmpty()),'focusable' => true,'x-teleport' => 'body','class' => 'z-50']); ?>
-        <form method="post" action="<?php echo e(route('profile.destroy')); ?>" class="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg max-w-md mx-auto">
-            <?php echo csrf_field(); ?>
-            <?php echo method_field('delete'); ?>
+<?php $component->withAttributes(['name' => 'confirm-user-deletion','show' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($errors->userDeletion->isNotEmpty()),'focusable' => true]); ?>
+            <form method="post" action="<?php echo e(route('profile.destroy')); ?>"
+                class="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg max-w-md mx-auto">
+                <?php echo csrf_field(); ?>
+                <?php echo method_field('delete'); ?>
 
-            <!-- Modal Header -->
-            <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-                <?php echo e(__('Are you sure you want to delete your account?')); ?>
+                <!-- Modal Header -->
+                <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
+                    <?php echo e(__('Are you sure you want to delete your account?')); ?>
 
-            </h2>
+                </h2>
 
-            <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
-                <?php echo e(__('Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.')); ?>
+                <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                    <?php echo e(__('Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.')); ?>
 
-            </p>
+                </p>
 
-            <!-- Password Input -->
-            <div class="mt-4">
-                <?php if (isset($component)) { $__componentOriginale3da9d84bb64e4bc2eeebaafabfb2581 = $component; } ?>
+                <!-- Password Input -->
+                <div class="mt-4">
+                    <?php if (isset($component)) { $__componentOriginale3da9d84bb64e4bc2eeebaafabfb2581 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginale3da9d84bb64e4bc2eeebaafabfb2581 = $attributes; } ?>
 <?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.input-label','data' => ['for' => 'password','value' => ''.e(__('Password')).'','class' => 'sr-only']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('input-label'); ?>
@@ -86,7 +87,7 @@
 <?php unset($__componentOriginale3da9d84bb64e4bc2eeebaafabfb2581); ?>
 <?php endif; ?>
 
-                <?php if (isset($component)) { $__componentOriginal18c21970322f9e5c938bc954620c12bb = $component; } ?>
+                    <?php if (isset($component)) { $__componentOriginal18c21970322f9e5c938bc954620c12bb = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal18c21970322f9e5c938bc954620c12bb = $attributes; } ?>
 <?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.text-input','data' => ['id' => 'password','name' => 'password','type' => 'password','placeholder' => ''.e(__('Password')).'','class' => 'mt-1 block w-full px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-red-500 dark:focus:ring-red-400','required' => true]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('text-input'); ?>
@@ -107,7 +108,7 @@
 <?php unset($__componentOriginal18c21970322f9e5c938bc954620c12bb); ?>
 <?php endif; ?>
 
-                <?php if (isset($component)) { $__componentOriginalf94ed9c5393ef72725d159fe01139746 = $component; } ?>
+                    <?php if (isset($component)) { $__componentOriginalf94ed9c5393ef72725d159fe01139746 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginalf94ed9c5393ef72725d159fe01139746 = $attributes; } ?>
 <?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.input-error','data' => ['messages' => $errors->userDeletion->get('password'),'class' => 'mt-2 text-sm text-red-600 dark:text-red-400']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('input-error'); ?>
@@ -127,11 +128,11 @@
 <?php $component = $__componentOriginalf94ed9c5393ef72725d159fe01139746; ?>
 <?php unset($__componentOriginalf94ed9c5393ef72725d159fe01139746); ?>
 <?php endif; ?>
-            </div>
+                </div>
 
-            <!-- Modal Actions -->
-            <div class="mt-6 flex justify-end gap-3">
-                <?php if (isset($component)) { $__componentOriginal3b0e04e43cf890250cc4d85cff4d94af = $component; } ?>
+                <!-- Modal Actions -->
+                <div class="mt-6 flex justify-end gap-3">
+                    <?php if (isset($component)) { $__componentOriginal3b0e04e43cf890250cc4d85cff4d94af = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal3b0e04e43cf890250cc4d85cff4d94af = $attributes; } ?>
 <?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.secondary-button','data' => ['xOn:click' => '$dispatch(\'close\')','class' => 'dark:bg-gray-700 dark:text-gray-100 dark:hover:bg-gray-600 px-4 py-2 rounded-md']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('secondary-button'); ?>
@@ -141,9 +142,9 @@
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
 <?php $component->withAttributes(['x-on:click' => '$dispatch(\'close\')','class' => 'dark:bg-gray-700 dark:text-gray-100 dark:hover:bg-gray-600 px-4 py-2 rounded-md']); ?>
-                    <?php echo e(__('Cancel')); ?>
+                        <?php echo e(__('Cancel')); ?>
 
-                 <?php echo $__env->renderComponent(); ?>
+                     <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal3b0e04e43cf890250cc4d85cff4d94af)): ?>
 <?php $attributes = $__attributesOriginal3b0e04e43cf890250cc4d85cff4d94af; ?>
@@ -154,7 +155,7 @@
 <?php unset($__componentOriginal3b0e04e43cf890250cc4d85cff4d94af); ?>
 <?php endif; ?>
 
-                <?php if (isset($component)) { $__componentOriginal656e8c5ea4d9a4fa173298297bfe3f11 = $component; } ?>
+                    <?php if (isset($component)) { $__componentOriginal656e8c5ea4d9a4fa173298297bfe3f11 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal656e8c5ea4d9a4fa173298297bfe3f11 = $attributes; } ?>
 <?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.danger-button','data' => ['class' => 'dark:bg-red-600 dark:hover:bg-red-500 dark:text-white px-4 py-2 rounded-md']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('danger-button'); ?>
@@ -164,9 +165,9 @@
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
 <?php $component->withAttributes(['class' => 'dark:bg-red-600 dark:hover:bg-red-500 dark:text-white px-4 py-2 rounded-md']); ?>
-                    <?php echo e(__('Delete Account')); ?>
+                        <?php echo e(__('Delete Account')); ?>
 
-                 <?php echo $__env->renderComponent(); ?>
+                     <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal656e8c5ea4d9a4fa173298297bfe3f11)): ?>
 <?php $attributes = $__attributesOriginal656e8c5ea4d9a4fa173298297bfe3f11; ?>
@@ -176,9 +177,9 @@
 <?php $component = $__componentOriginal656e8c5ea4d9a4fa173298297bfe3f11; ?>
 <?php unset($__componentOriginal656e8c5ea4d9a4fa173298297bfe3f11); ?>
 <?php endif; ?>
-            </div>
-        </form>
-     <?php echo $__env->renderComponent(); ?>
+                </div>
+            </form>
+         <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal9f64f32e90b9102968f2bc548315018c)): ?>
 <?php $attributes = $__attributesOriginal9f64f32e90b9102968f2bc548315018c; ?>

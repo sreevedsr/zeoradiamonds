@@ -12,8 +12,8 @@ return new class extends Migration
         $table->id();
         $table->json('diamond_specs');
         $table->json('jewelry_specs');
-        $table->foreignId('created_by')->constrained('users'); // superadmin
-        $table->foreignId('assigned_to')->nullable()->constrained('users'); // buyer
+        $table->foreignId('created_by')->constrained('users');
+        $table->foreignId('assigned_to')->nullable()->constrained('users');
         $table->timestamps();
     });
 }

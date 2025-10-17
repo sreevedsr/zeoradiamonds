@@ -9,7 +9,7 @@ return new class extends Migration
    public function up(): void
 {
     Schema::table('users', function (Blueprint $table) {
-        $table->string('role')->default('buyer')->after('email'); // superadmin | merchant | buyer
+        $table->string('role')->default('buyer')->after('email');
     });
 }
 
