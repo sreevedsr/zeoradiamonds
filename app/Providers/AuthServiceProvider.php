@@ -26,7 +26,7 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         // Define Gates
-        Gate::define('view-forms', function ($user) {
+        Gate::define('view-merchants', function ($user) {
             return in_array($user->role, ['admin', 'manager']);
         });
 

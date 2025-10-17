@@ -19,14 +19,14 @@
                     @csrf
 
                     <div class="mb-4">
-                        <label for="card_title" class="block text-sm font-medium">Card Title</label>
+                        <label for="card_title" class="block text-sm font-medium text-gray-700 dark:text-gray-400">Card Title</label>
                         <input type="text" name="card_title" id="card_title"
                                class="mt-1 block w-full p-2 border rounded-md dark:bg-gray-700"
                                required>
                     </div>
 
                     <div class="mb-4">
-                        <label for="card_description" class="block text-sm font-medium">Card Description</label>
+                        <label for="card_description" class="block text-sm font-medium text-gray-700 dark:text-gray-400">Card Description</label>
                         <textarea name="card_description" id="card_description" rows="3"
                                   class="mt-1 block w-full p-2 border rounded-md dark:bg-gray-700"
                                   required></textarea>

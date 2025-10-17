@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CardsController;
 use App\Http\Controllers\FormsController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\MerchantController;
 use App\Http\Controllers\DashboardController;
 
 // Redirect root URL to login
@@ -36,6 +37,13 @@ Route::middleware('auth')->group(function () {
     Route::post('/forms', [FormsController::class, 'store'])->name('forms.store');
     Route::get('/cards', [CardsController::class, 'index'])->name('cards.index');
     Route::post('/cards', [CardsController::class, 'store'])->name('cards.store');
+
+    Route::middleware(['auth', 'can:view-merchants'])->prefix('admin')->name('merchants.')->group(function () {
+    Route::get('/', [MerchantController::class, 'index'])->name('index'); // View Merchants
+    Route::get('/create', [App\Http\Controllers\MerchantController::class, 'create'])->name('create'); // Add Merchant
+    Route::post('/store', [App\Http\Controllers\MerchantController::class, 'store'])->name('store'); // Save Merchant
+});
+
 
 
     // Merchant-only routes
