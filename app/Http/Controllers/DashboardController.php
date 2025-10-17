@@ -45,7 +45,7 @@ class DashboardController extends Controller
      */
     public function createCard()
     {
-        return view('dashboard.cards-create'); // Blade
+        return view('cards.index'); // Blade
     }
 
     /**

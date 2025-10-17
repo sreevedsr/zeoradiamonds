@@ -39,12 +39,13 @@ Route::middleware('auth')->group(function () {
     Route::post('/cards', [CardsController::class, 'store'])->name('cards.store');
 
     Route::middleware(['auth', 'can:view-merchants'])->prefix('admin')->name('merchants.')->group(function () {
-    Route::get('/', [MerchantController::class, 'index'])->name('index'); // View Merchants
-    Route::get('/create', [App\Http\Controllers\MerchantController::class, 'create'])->name('create'); // Add Merchant
-    Route::post('/store', [App\Http\Controllers\MerchantController::class, 'store'])->name('store'); // Save Merchant
-});
+        Route::get('/', [MerchantController::class, 'index'])->name('index'); // View Merchants
+        Route::get('/create', [App\Http\Controllers\MerchantController::class, 'create'])->name('create'); // Add Merchant
+        Route::post('/store', [App\Http\Controllers\MerchantController::class, 'store'])->name('store'); // Save Merchant
+    });
 
-
+    Route::get('/merchants/requests', [App\Http\Controllers\MerchantRequestController::class, 'index'])
+        ->name('merchants.request');
 
     // Merchant-only routes
     Route::get('/buyers', [DashboardController::class, 'buyers'])->name('buyers');
