@@ -34,24 +34,15 @@
             <!-- Navigation / Top bar -->
             @include('layouts.navigation')
 
-            <!-- Main content wrapper with shadow -->
-            <main class="flex-1 overflow-y-auto p-6 transition-colors duration-300">
-                <div class="max-w-7xl mx-auto bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6 transition-colors duration-300">
-                    {{ $slot }}
-                </div>
+            <!-- Slot content with padding -->
+            <main class="flex-1 overflow-y-auto px-6 transition-colors duration-300">
+                {{ $slot }}
             </main>
         </div>
     </div>
 
     <!-- Optional: Modals -->
     @stack('modals')
-
-    <!-- Optional Footer -->
-    {{--
-    <footer class="bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 p-4 text-center border-t border-gray-200 dark:border-gray-700">
-        &copy; {{ date('Y') }} Zeeyame. All rights reserved.
-    </footer>
-    --}}
 </body>
 
 </html>

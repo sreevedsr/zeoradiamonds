@@ -1,27 +1,39 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Add Card Details') }}
-        </h2>
-    </x-slot>
+    @slot('title', 'Zeeyame - Add Card Details')
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-6">
-                <!-- Your form goes here -->
+    <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
+        Add Card Details
+    </h2>
+
+    <div class="space-y-6 max-w-4xl mx-auto sm:px-6 lg:px-8">
+        <!-- Card Form Section -->
+        <div class="p-6 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
+            <div class="text-gray-900 dark:text-gray-100">
+                @if (session('success'))
+                    <div class="mb-4 text-green-500 font-semibold">
+                        {{ session('success') }}
+                    </div>
+                @endif
+
                 <form action="{{ route('forms.store') }}" method="POST">
                     @csrf
+
                     <div class="mb-4">
-                        <label for="card_title" class="block text-sm font-medium text-gray-700">Card Title</label>
-                        <input type="text" name="card_title" id="card_title" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" required>
+                        <label for="card_title" class="block text-sm font-medium">Card Title</label>
+                        <input type="text" name="card_title" id="card_title"
+                               class="mt-1 block w-full p-2 border rounded-md dark:bg-gray-700"
+                               required>
                     </div>
 
                     <div class="mb-4">
-                        <label for="card_description" class="block text-sm font-medium text-gray-700">Card Description</label>
-                        <textarea name="card_description" id="card_description" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" required></textarea>
+                        <label for="card_description" class="block text-sm font-medium">Card Description</label>
+                        <textarea name="card_description" id="card_description" rows="3"
+                                  class="mt-1 block w-full p-2 border rounded-md dark:bg-gray-700"
+                                  required></textarea>
                     </div>
 
-                    <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded">
+                    <button type="submit"
+                            class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">
                         Save
                     </button>
                 </form>

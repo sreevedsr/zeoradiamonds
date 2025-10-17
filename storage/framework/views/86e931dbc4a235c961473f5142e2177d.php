@@ -34,21 +34,16 @@
             <!-- Navigation / Top bar -->
             <?php echo $__env->make('layouts.navigation', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
-            <!-- Main content wrapper with shadow -->
-            <main class="flex-1 overflow-y-auto p-6 transition-colors duration-300">
-                <div class="max-w-7xl mx-auto bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6 transition-colors duration-300">
-                    <?php echo e($slot); ?>
+            <!-- Slot content with padding -->
+            <main class="flex-1 overflow-y-auto px-6 transition-colors duration-300">
+                <?php echo e($slot); ?>
 
-                </div>
             </main>
         </div>
     </div>
 
     <!-- Optional: Modals -->
     <?php echo $__env->yieldPushContent('modals'); ?>
-
-    <!-- Optional Footer -->
-    
 </body>
 
 </html>

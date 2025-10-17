@@ -14,7 +14,7 @@
         Profile
     </h2>
 
-    <div class="py-12 max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-8">
+    
         <!-- Update Profile Information -->
         <div class="p-6 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
             <div class="max-w-xl">
@@ -35,7 +35,6 @@
                 <?php echo $__env->make('profile.partials.delete-user-form', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
             </div>
         </div>
-    </div>
  <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54)): ?>
