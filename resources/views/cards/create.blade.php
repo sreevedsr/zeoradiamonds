@@ -14,7 +14,7 @@
                         {{ session('success') }}
                     </div>
                 @endif
-                
+
                 @if ($errors->any())
                     <div class="mb-4 text-red-500 font-semibold">
                         <ul class="list-disc list-inside">
@@ -25,7 +25,7 @@
                     </div>
                 @endif
 
-                <form method="POST" action="{{ route('cards.store') }}">
+                <form method="POST" action="{{ route('cards.store') }}" class="space-y-4">
                     @csrf
 
                     <!-- Certificate Holder Name -->

@@ -8,13 +8,13 @@
 <?php $attributes = $attributes->except(\App\View\Components\AppLayout::ignoredParameterNames()); ?>
 <?php endif; ?>
 <?php $component->withAttributes([]); ?>
-    <?php $__env->slot('title', 'Zeeyame - Merchants'); ?>
+    <?php $__env->slot('title', 'Zeeyame - Customers'); ?>
 
     <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
-        View Merchants
+        View Customers
     </h2>
 
-    <!-- Merchants Table Section -->
+    <!-- Customers Table Section -->
     <div class="p-6 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
         <div class="max-w-7xl mx-auto text-gray-900 dark:text-gray-100">
 
@@ -26,42 +26,41 @@
                 </div>
             <?php endif; ?>
 
-            <!-- Merchants Table -->
-            <div class="w-full overflow-x-auto">
-                <table class="w-full whitespace-no-wrap">
-                    <thead>
-                        <tr
-                            class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
-                            <th class="px-4 py-3">#</th>
-                            <th class="px-4 py-3">Name</th>
-                            <th class="px-4 py-3">Email</th>
-                            <th class="px-4 py-3">Created At</th>
-                            <th class="px-4 py-3">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-                        <?php $__currentLoopData = $merchants; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $merchant): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                            <tr class="text-gray-700 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                                <td class="px-4 py-3 text-sm"><?php echo e($index + 1); ?></td>
-                                <td class="px-4 py-3 text-sm"><?php echo e($merchant->name); ?></td>
-                                <td class="px-4 py-3 text-sm"><?php echo e($merchant->email); ?></td>
-                                <td class="px-4 py-3 text-sm"><?php echo e($merchant->created_at->format('d M Y')); ?></td>
-                                <td class="px-4 py-3 text-sm">
-                                    <div class="flex items-center space-x-2">
-                                        
-                                    </div>
-                                </td>
+            <!-- No Data Message -->
+            
+                <!-- Customers Table -->
+                <div class="w-full overflow-x-auto">
+                    <table class="w-full whitespace-no-wrap">
+                        <thead>
+                            <tr
+                                class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+                                <th class="px-4 py-3">#</th>
+                                <th class="px-4 py-3">Name</th>
+                                <th class="px-4 py-3">Email</th>
+                                <th class="px-4 py-3">Phone</th>
+                                <th class="px-4 py-3">Address</th>
+                                <th class="px-4 py-3">City</th>
+                                <th class="px-4 py-3">State</th>
+                                <th class="px-4 py-3">Actions</th>
                             </tr>
-                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                    </tbody>
-                </table>
-            </div>
+                        </thead>
+                        <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+                            
+                                <tr class="text-gray-700 dark:text-gray-400">
+                                    
+                                    <td class="px-4 py-3 text-sm">
+                                        <div class="flex items-center space-x-2">
+                                            
+                                        </div>
+                                    </td>
+                                </tr>
+                            
+                        </tbody>
+                    </table>
+                </div>
 
-            <!-- Pagination Example -->
-            
-                
-            
-<div
+                <!-- Pagination Example -->
+                <div
                     class="px-4 py-3 text-xs font-semibold tracking-wide text-gray-500 uppercase border-t dark:border-gray-700 bg-gray-50 sm:grid-cols-9 dark:text-gray-400 dark:bg-gray-800">
                     <span class="flex items-center col-span-3">
                         Showing 1–10 of 45
@@ -109,6 +108,7 @@
                         </nav>
                     </span>
                 </div>
+            
         </div>
     </div>
  <?php echo $__env->renderComponent(); ?>
@@ -121,4 +121,4 @@
 <?php $component = $__componentOriginal9ac128a9029c0e4701924bd2d73d7f54; ?>
 <?php unset($__componentOriginal9ac128a9029c0e4701924bd2d73d7f54); ?>
 <?php endif; ?>
-<?php /**PATH C:\xampp\htdocs\Zeeyame\resources\views/merchants/index.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\xampp\htdocs\Zeeyame\resources\views/customers/index.blade.php ENDPATH**/ ?>

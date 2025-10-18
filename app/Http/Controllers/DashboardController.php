@@ -131,4 +131,31 @@ class DashboardController extends Controller
         // Logic to store merchant request
         return redirect()->route('merchant.requests');
     }
+    public function customers()
+    {
+        // Example: fetch customers from DB
+        $customers = []; // Replace with Customer::all();
+        return view('customers.index', compact('customers'));
+    }
+
+    // Show form to add a new customer
+    public function createCustomer()
+    {
+        return view('customers.create');
+    }
+
+    // Store new customer
+    public function storeCustomer(Request $request)
+    {
+        // Validate and save customer
+        // Customer::create($request->all());
+        return redirect()->route('customers.index')->with('success', 'Customer added successfully!');
+    }
+
+    // View customer requests
+    public function customerRequests()
+    {
+        $requests = []; // Replace with actual requests from DB
+        return view('customers.requests', compact('requests'));
+    }
 }

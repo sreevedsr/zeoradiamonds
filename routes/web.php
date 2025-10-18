@@ -65,15 +65,16 @@ Route::middleware('auth')->group(function () {
     });
 
     // ================================
-    // Merchant-only routes
-    // ================================
+// Merchant-only routes (Customer Management)
+// ================================
     Route::middleware('role:merchant')->group(function () {
 
-        // Buyers management
-        Route::prefix('buyers')->name('buyers.')->group(function () {
-            Route::get('/', [DashboardController::class, 'buyers'])->name('index');
-            Route::get('/create', [DashboardController::class, 'createBuyer'])->name('create');
-            Route::post('/', [DashboardController::class, 'storeBuyer'])->name('store');
+        // Customers management
+        Route::prefix('customers')->name('customers.')->group(function () {
+            Route::get('/', [DashboardController::class, 'customers'])->name('index');         // View customers
+            Route::get('/create', [DashboardController::class, 'createCustomer'])->name('create'); // Add customer
+            Route::post('/', [DashboardController::class, 'storeCustomer'])->name('store');     // Save customer
+                Route::get('/requests', [DashboardController::class, 'customerRequests'])->name('requests');
         });
 
         // Card assignment

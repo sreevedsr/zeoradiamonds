@@ -8,13 +8,13 @@
 <?php $attributes = $attributes->except(\App\View\Components\AppLayout::ignoredParameterNames()); ?>
 <?php endif; ?>
 <?php $component->withAttributes([]); ?>
-    <?php $__env->slot('title', 'Zeeyame - Add Diamond Certificate'); ?>
+    <?php $__env->slot('title', 'Zeeyame - Add Customer'); ?>
 
     <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
-        Add Diamond Certificate
+        Add Customer
     </h2>
 
-    <!-- Diamond Certificate Form Section -->
+    <!-- Customer Form Section -->
     <div class="space-y-6">
         <div class="p-6 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
             <div class="max-w-xl text-gray-900 dark:text-gray-100">
@@ -35,68 +35,59 @@
                     </div>
                 <?php endif; ?>
 
-                <form method="POST" action="<?php echo e(route('cards.store')); ?>" class="space-y-4">
+                <form method="POST" action="<?php echo e(route('customers.store')); ?>" class="space-y-4">
                     <?php echo csrf_field(); ?>
 
-                    <!-- Certificate Holder Name -->
+                    <!-- Customer Name -->
                     <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-400">Certificate Holder Name</label>
-                        <input type="text" name="holder_name"
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-400">Customer Name</label>
+                        <input type="text" name="name"
                                class="mt-1 block w-full p-2 border rounded-md dark:bg-gray-700"
                                placeholder="Enter full name" required>
                     </div>
 
-                    <!-- Certificate ID / Number -->
+                    <!-- Email -->
                     <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-400">Certificate ID</label>
-                        <input type="text" name="certificate_id"
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-400">Email</label>
+                        <input type="email" name="email"
                                class="mt-1 block w-full p-2 border rounded-md dark:bg-gray-700"
-                               placeholder="Enter unique certificate ID" required>
+                               placeholder="Enter email address" required>
                     </div>
 
-                    <!-- Diamond Type -->
+                    <!-- Phone Number -->
                     <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-400">Diamond Type</label>
-                        <input type="text" name="diamond_type"
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-400">Phone Number</label>
+                        <input type="text" name="phone"
                                class="mt-1 block w-full p-2 border rounded-md dark:bg-gray-700"
-                               placeholder="e.g., Round, Princess, Emerald" required>
+                               placeholder="Enter phone number" required>
                     </div>
 
-                    <!-- Carat Weight -->
+                    <!-- Address -->
                     <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-400">Carat Weight</label>
-                        <input type="number" step="0.01" name="carat_weight"
-                               class="mt-1 block w-full p-2 border rounded-md dark:bg-gray-700"
-                               placeholder="e.g., 1.25" required>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-400">Address</label>
+                        <textarea name="address"
+                                  class="mt-1 block w-full p-2 border rounded-md dark:bg-gray-700"
+                                  placeholder="Enter full address" rows="3" required></textarea>
                     </div>
 
-                    <!-- Clarity -->
+                    <!-- Optional: Other fields like city, state, etc. -->
                     <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-400">Clarity</label>
-                        <input type="text" name="clarity"
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-400">City</label>
+                        <input type="text" name="city"
                                class="mt-1 block w-full p-2 border rounded-md dark:bg-gray-700"
-                               placeholder="e.g., VVS1, VS2" required>
+                               placeholder="Enter city" required>
                     </div>
 
-                    <!-- Color -->
                     <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-400">Color</label>
-                        <input type="text" name="color"
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-400">State</label>
+                        <input type="text" name="state"
                                class="mt-1 block w-full p-2 border rounded-md dark:bg-gray-700"
-                               placeholder="e.g., D, E, F" required>
-                    </div>
-
-                    <!-- Cut -->
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-400">Cut</label>
-                        <input type="text" name="cut"
-                               class="mt-1 block w-full p-2 border rounded-md dark:bg-gray-700"
-                               placeholder="e.g., Excellent, Very Good" required>
+                               placeholder="Enter state" required>
                     </div>
 
                     <button type="submit"
                             class="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors duration-150">
-                        Save Card
+                        Save Customer
                     </button>
                 </form>
             </div>
@@ -112,4 +103,4 @@
 <?php $component = $__componentOriginal9ac128a9029c0e4701924bd2d73d7f54; ?>
 <?php unset($__componentOriginal9ac128a9029c0e4701924bd2d73d7f54); ?>
 <?php endif; ?>
-<?php /**PATH C:\xampp\htdocs\Zeeyame\resources\views/cards/create.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\xampp\htdocs\Zeeyame\resources\views/customers/create.blade.php ENDPATH**/ ?>

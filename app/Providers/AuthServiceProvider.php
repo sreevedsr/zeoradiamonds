@@ -27,7 +27,7 @@ class AuthServiceProvider extends ServiceProvider
 
         // Define Gates
         Gate::define('view-merchants', function ($user) {
-            return in_array($user->role, ['admin', 'manager']);
+            return in_array($user->role, ['admin']);
         });
 
         Gate::define('view-cards', function ($user) {
@@ -36,6 +36,9 @@ class AuthServiceProvider extends ServiceProvider
 
         Gate::define('create-account', function ($user) {
             return $user->role === 'admin';
+        });
+        Gate::define('view-customers', function ($user) {
+            return in_array($user->role, ['merchant']);
         });
     }
 }

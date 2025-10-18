@@ -1,11 +1,21 @@
 <!-- Desktop Sidebar -->
-<aside  class="z-20 hidden w-64 overflow-y-auto bg-white dark:bg-gray-800 md:block flex-shrink-0">
+<aside class="z-20 hidden w-64 overflow-y-auto bg-white dark:bg-gray-800 md:block flex-shrink-0">
     <div class="flex flex-col justify-between h-full py-4 text-gray-500 dark:text-gray-400">
         <div>
             <!-- Logo -->
-            <a class="ml-6 text-lg font-bold text-gray-800 dark:text-gray-200" href="#">
-                Zeeyame
-            </a>
+            
+            <?php if(auth()->guard()->check()): ?>
+                <div class="flex items-center mt-6 px-6">
+                    <img class="w-8 h-8 rounded-full object-cover"
+                        src="<?php echo e(Auth::user()->profile_photo_url ?? '/default-profile.png'); ?>" alt="<?php echo e(Auth::user()->name); ?>">
+
+                    <div class="ml-4">
+                        <p class="text-gray-800 dark:text-gray-200 font-semibold"><?php echo e(Auth::user()->name); ?></p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400"><?php echo e(Auth::user()->email); ?></p>
+                    </div>
+
+                </div>
+            <?php endif; ?>
 
             <!-- Navigation -->
             <ul class="mt-6">
@@ -14,7 +24,7 @@
                         class="<?php echo e(request()->routeIs('dashboard') ? 'absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg' : ''); ?>"
                         aria-hidden="true"></span>
                     <a href="<?php echo e(route('dashboard')); ?>"
-                        class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150
+                        class="inline-flex items-start w-full text-sm font-semibold transition-colors duration-150
                        <?php echo e(request()->routeIs('dashboard') ? 'text-gray-800 dark:text-gray-200' : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
                             stroke-linecap="round" stroke-linejoin="round">
@@ -22,7 +32,7 @@
                                 d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
                             </path>
                         </svg>
-                        <span class="ml-4">Dashboard</span>
+                        <span class="ml-2">Dashboard</span>
                     </a>
                 </li>
                 <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('view-merchants')): ?>
@@ -38,7 +48,7 @@
             }
         "
                             type="button"
-                            class="flex items-center w-full text-sm font-semibold text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors duration-150 rounded-md focus:outline-none">
+                            class="flex items-start w-full text-sm font-semibold text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors duration-150 rounded-md focus:outline-none">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
                                 stroke-linecap="round" stroke-linejoin="round">
                                 <path
@@ -46,7 +56,7 @@
                                 </path>
                             </svg>
 
-                            <span class="ml-4 flex-1 text-left">Merchants</span>
+                            <span class="ml-2 flex-1 text-left">Merchants</span>
                             <svg class="w-4 h-4 ml-auto transition-transform duration-300"
                                 :class="{ 'rotate-180': openMerchants }" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd"
@@ -84,6 +94,61 @@
                 <?php endif; ?>
 
 
+                <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('view-customers')): ?>
+                    <li class="relative px-6 py-3" x-data="{ openCustomers: false, height: 0 }">
+                        <!-- Main Menu Button -->
+                        <button
+                            @click="
+            openCustomers = !openCustomers;
+            if (openCustomers) {
+                height = $refs.panel.scrollHeight
+            } else {
+                height = 0
+            }
+        "
+                            type="button"
+                            class="flex items-start w-full text-sm font-semibold text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors duration-150 rounded-md focus:outline-none">
+
+                            <!-- Icon -->
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path
+                                    d="M12 15.5H7.5C6.10444 15.5 5.40665 15.5 4.83886 15.6722C3.56045 16.06 2.56004 17.0605 2.17224 18.3389C2 18.9067 2 19.6044 2 21M19 21V15M16 18H22M14.5 7.5C14.5 9.98528 12.4853 12 10 12C7.51472 12 5.5 9.98528 5.5 7.5C5.5 5.01472 7.51472 3 10 3C12.4853 3 14.5 5.01472 14.5 7.5Z">
+                                </path>
+                            </svg>
+
+                            <span class="ml-2 flex-1 text-left">Customers</span>
+                            <svg class="w-4 h-4 ml-auto transition-transform duration-300"
+                                :class="{ 'rotate-180': openCustomers }" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M5.293 7.293a1 1 0 0 1 1.414 0L10 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414l-4 4a1 1 0 0 1-1.414 0l-4-4a1 1 0 0 1 0-1.414z"
+                                    clip-rule="evenodd"></path>
+                            </svg>
+                        </button>
+
+                        <!-- Submenu -->
+                        <ul x-ref="panel" :style="`height: ${height}px`"
+                            class="mt-2 space-y-2 px-4 overflow-hidden transition-all duration-300 ease-in-out">
+                            <li>
+                                <a href="<?php echo e(route('customers.create')); ?>"
+                                    class="block px-2 py-1 text-sm font-medium rounded-md
+                <?php echo e(request()->routeIs('customers.create') ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700' : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>">
+                                    Add Customer
+                                </a>
+                            </li>
+                            <li>
+                                <a href="<?php echo e(route('customers.index')); ?>"
+                                    class="block px-2 py-1 text-sm font-medium rounded-md
+                <?php echo e(request()->routeIs('customers.index') ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700' : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>">
+                                    View Customers
+                                </a>
+                            </li>
+                            
+                        </ul>
+                    </li>
+                <?php endif; ?>
+
+
 
                 <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('view-cards')): ?>
                     <li class="relative px-6 py-3" x-data="{ openCards: false, height: 0 }">
@@ -98,7 +163,7 @@
             }
         "
                             type="button"
-                            class="flex items-center w-full text-sm font-semibold text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors duration-150 rounded-md focus:outline-none">
+                            class="flex items-start w-full text-sm font-semibold text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors duration-150 rounded-md focus:outline-none">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
                                 stroke-linecap="round" stroke-linejoin="round">
                                 <path
@@ -106,7 +171,7 @@
                                 </path>
                             </svg>
 
-                            <span class="ml-4 flex-1 text-left">Cards</span>
+                            <span class="ml-2 flex-1 text-left">Cards</span>
                             <svg class="w-4 h-4 ml-auto transition-transform duration-300"
                                 :class="{ 'rotate-180': openCards }" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd"
@@ -231,7 +296,7 @@
             <ul class="mt-6">
                 <li class="relative px-6 py-3">
                     <a href="<?php echo e(route('dashboard')); ?>"
-                        class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150
+                        class="inline-flex items-start w-full text-sm font-semibold transition-colors duration-150
                        <?php echo e(request()->routeIs('dashboard') ? 'text-gray-800 dark:text-gray-200' : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>">
                         Dashboard
                     </a>
@@ -242,7 +307,7 @@
                 <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('view-forms')): ?>
                     <li class="relative px-6 py-3">
                         <a href="<?php echo e(route('forms.index')); ?>"
-                            class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150
+                            class="inline-flex items-start w-full text-sm font-semibold transition-colors duration-150
                        <?php echo e(request()->routeIs('forms.*') ? 'text-gray-800 dark:text-gray-200' : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>">
                             Forms
                         </a>
@@ -252,7 +317,7 @@
                 <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('view-cards')): ?>
                     <li class="relative px-6 py-3">
                         <a href="<?php echo e(route('cards.index')); ?>"
-                            class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150
+                            class="inline-flex items-start w-full text-sm font-semibold transition-colors duration-150
                        <?php echo e(request()->routeIs('cards.*') ? 'text-gray-800 dark:text-gray-200' : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>">
                             Cards
                         </a>
