@@ -1,4 +1,5 @@
 <?php
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CardsController;
@@ -6,11 +7,11 @@ use App\Http\Controllers\FormsController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\MerchantController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\MerchantRequestController;
 
-// Redirect root URL to login
+// Redirect root URL to login or dashboard
 Route::get('/', function () {
     if (Auth::check()) {
-        // User is logged in → redirect to their role dashboard
         return match (Auth::user()->role) {
             'admin', 'merchant' => redirect()->route('dashboard'),
             default => redirect()->route('login'),
@@ -19,43 +20,71 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
+// Authenticated routes
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Profile routes (accessible to all authenticated users)
+    Route::prefix('profile')->name('profile.')->group(function () {
+        Route::get('/', [ProfileController::class, 'edit'])->name('edit');
+        Route::patch('/', [ProfileController::class, 'update'])->name('update');
+        Route::delete('/', [ProfileController::class, 'destroy'])->name('destroy');
+    });
 
     // Shared dashboard for admin & merchant
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
+    // ================================
     // Admin-only routes
-    Route::get('/cards', [DashboardController::class, 'cards'])->name('cards');
-    Route::get('/cards/create', [DashboardController::class, 'createCard'])->name('cards.create');
-    Route::post('/cards', [DashboardController::class, 'storeCard'])->name('cards.store');
-    Route::get('/logs', [DashboardController::class, 'logs'])->name('logs');
-    Route::get('/requests', [DashboardController::class, 'requests'])->name('requests');
-    Route::get('/forms', [FormsController::class, 'index'])->name('forms.index');
-    Route::post('/forms', [FormsController::class, 'store'])->name('forms.store');
-    Route::get('/cards', [CardsController::class, 'index'])->name('cards.index');
-    Route::post('/cards', [CardsController::class, 'store'])->name('cards.store');
+    // ================================
+    Route::middleware('role:admin')->group(function () {
 
-    Route::middleware(['auth', 'can:view-merchants'])->prefix('admin')->name('merchants.')->group(function () {
-        Route::get('/', [MerchantController::class, 'index'])->name('index'); // View Merchants
-        Route::get('/create', [App\Http\Controllers\MerchantController::class, 'create'])->name('create'); // Add Merchant
-        Route::post('/store', [App\Http\Controllers\MerchantController::class, 'store'])->name('store'); // Save Merchant
+        // Cards management
+        Route::prefix('cards')->name('cards.')->group(function () {
+            Route::get('/', [CardsController::class, 'index'])->name('index');
+            Route::get('/create', [DashboardController::class, 'createCard'])->name('create');
+            Route::post('/', [CardsController::class, 'store'])->name('store');
+        });
+
+        // Forms management
+        Route::get('/forms', [FormsController::class, 'index'])->name('forms.index');
+        Route::post('/forms', [FormsController::class, 'store'])->name('forms.store');
+
+        // Logs and requests
+        Route::get('/logs', [DashboardController::class, 'logs'])->name('logs');
+        Route::get('/requests', [DashboardController::class, 'requests'])->name('requests');
+
+        // Merchant management
+        Route::middleware('can:view-merchants')->prefix('admin/merchants')->name('merchants.')->group(function () {
+            Route::get('/', [MerchantController::class, 'index'])->name('index');       // View merchants
+            Route::get('/create', [MerchantController::class, 'create'])->name('create'); // Add merchant
+            Route::post('/store', [MerchantController::class, 'store'])->name('store');  // Save merchant
+        });
+
+        // Merchant requests viewing
+        Route::get('/merchants/requests', [MerchantRequestController::class, 'index'])->name('merchants.request');
     });
 
-    Route::get('/merchants/requests', [App\Http\Controllers\MerchantRequestController::class, 'index'])
-        ->name('merchants.request');
-
+    // ================================
     // Merchant-only routes
-    Route::get('/buyers', [DashboardController::class, 'buyers'])->name('buyers');
-    Route::get('/buyers/create', [DashboardController::class, 'createBuyer'])->name('buyers.create');
-    Route::post('/buyers', [DashboardController::class, 'storeBuyer'])->name('buyers.store');
-    Route::get('/cards/assign', [DashboardController::class, 'assignCard'])->name('cards.assign');
-    Route::post('/cards/assign', [DashboardController::class, 'storeAssignment'])->name('cards.assign.store');
-    Route::get('/requests', [DashboardController::class, 'merchantRequests'])->name('merchant.requests');
-    Route::post('/requests', [DashboardController::class, 'storeRequest'])->name('merchant.requests.store');
-});
+    // ================================
+    Route::middleware('role:merchant')->group(function () {
 
+        // Buyers management
+        Route::prefix('buyers')->name('buyers.')->group(function () {
+            Route::get('/', [DashboardController::class, 'buyers'])->name('index');
+            Route::get('/create', [DashboardController::class, 'createBuyer'])->name('create');
+            Route::post('/', [DashboardController::class, 'storeBuyer'])->name('store');
+        });
+
+        // Card assignment
+        Route::get('/cards/assign', [DashboardController::class, 'assignCard'])->name('cards.assign');
+        Route::post('/cards/assign', [DashboardController::class, 'storeAssignment'])->name('cards.assign.store');
+
+        // Requests management
+        Route::get('/requests', [DashboardController::class, 'merchantRequests'])->name('merchant.requests');
+        Route::post('/requests', [DashboardController::class, 'storeRequest'])->name('merchant.requests.store');
+    });
+
+});
 
 require __DIR__ . '/auth.php';

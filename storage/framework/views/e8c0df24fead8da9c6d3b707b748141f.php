@@ -14,13 +14,19 @@
         Add Merchant
     </h2>
 
-    <div class="space-y-6 max-w-4xl mx-auto sm:px-6 lg:px-8">
-        <!-- Merchant Form Section -->
+    <div class="space-y-6">
         <div class="p-6 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
-            <div class="text-gray-900 dark:text-gray-100">
+            <div class="max-w-xl text-gray-900 dark:text-gray-100">
+
+                <?php if(session('success')): ?>
+                    <div class="mb-4 text-green-500 font-semibold">
+                        <?php echo e(session('success')); ?>
+
+                    </div>
+                <?php endif; ?>
 
                 <?php if($errors->any()): ?>
-                    <div class="mb-4 p-3 bg-red-200 text-red-800 rounded">
+                    <div class="mb-4 text-red-500 font-semibold">
                         <ul class="list-disc list-inside">
                             <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                 <li><?php echo e($error); ?></li>
@@ -32,32 +38,32 @@
                 <form action="<?php echo e(route('merchants.store')); ?>" method="POST" class="space-y-4">
                     <?php echo csrf_field(); ?>
 
-                    <div class="mb-4">
+                    <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-400">Name</label>
                         <input type="text" name="name" value="<?php echo e(old('name')); ?>"
                                class="mt-1 block w-full p-2 border rounded-md dark:bg-gray-700"
-                               required>
+                               placeholder="Enter full name" required>
                     </div>
 
                     <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-400">Email</label>
                         <input type="email" name="email" value="<?php echo e(old('email')); ?>"
                                class="mt-1 block w-full p-2 border rounded-md dark:bg-gray-700"
-                               required>
+                               placeholder="Enter email address" required>
                     </div>
 
                     <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-400">Password</label>
                         <input type="password" name="password"
                                class="mt-1 block w-full p-2 border rounded-md dark:bg-gray-700"
-                               required>
+                               placeholder="Enter password" required>
                     </div>
 
                     <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-400">Confirm Password</label>
                         <input type="password" name="password_confirmation"
                                class="mt-1 block w-full p-2 border rounded-md dark:bg-gray-700"
-                               required>
+                               placeholder="Confirm password" required>
                     </div>
 
                     <button type="submit"
