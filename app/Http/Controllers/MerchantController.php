@@ -40,4 +40,32 @@ class MerchantController extends Controller
 
         return redirect()->route('merchants.index')->with('success', 'Merchant added successfully.');
     }
+    public function assignCardsPage()
+{
+    // Fetch merchants, customers, and available cards if needed
+    // $customers = \App\Models\Customer::all();
+    // $cards = \App\Models\Card::all();
+
+    // Return your assign-cards view (create this if not existing)
+    return view('cards.merchants.assign');
+}
+public function viewCards()
+{
+    // Fetch cards from database if needed
+    // Example:
+    // $cards = Card::all();
+
+    // Return the view
+    return view('cards.merchants.index');
+}
+public function requestCards()
+    {
+        return view('merchants.request-cards'); // Make sure this blade exists
+    }
+
+    // Show View Requests page
+    public function viewRequests()
+    {
+        return view('merchants.view-requests'); // Make sure this blade exists
+    }
 }

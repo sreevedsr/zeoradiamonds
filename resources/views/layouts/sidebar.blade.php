@@ -84,13 +84,13 @@
                                     View Merchants
                                 </a>
                             </li>
-                            <li>
+                            {{-- <li>
                                 <a href="{{ route('merchants.request') }}"
                                     class="block px-2 py-1 text-sm font-medium rounded-md
                 {{ request()->routeIs('merchants.request') ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700' : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }}">
                                     View Requests
                                 </a>
-                            </li>
+                            </li> --}}
                         </ul>
                     </li>
                 @endcan
@@ -158,18 +158,11 @@
 
 
 
-                @can('view-cards')
+                @can('edit-cards')
                     <li class="relative px-6 py-3" x-data="{ openCards: false, height: 0 }">
                         <!-- Main Menu Button -->
                         <button
-                            @click="
-            openCards = !openCards;
-            if (openCards) {
-                height = $refs.cardsPanel.scrollHeight
-            } else {
-                height = 0
-            }
-        "
+                            @click=" openCards = !openCards; if (openCards) {height = $refs.cardsPanel.scrollHeight } else{height = 0 }"
                             type="button"
                             class="flex items-start w-full text-sm font-semibold text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors duration-150 rounded-md focus:outline-none">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
@@ -205,10 +198,121 @@
                                     View Cards
                                 </a>
                             </li>
+                            <li>
+                                <a href="{{ route('cards.requests') }}"
+                                    class="block px-2 py-1 text-sm font-medium rounded-md
+                {{ request()->routeIs('customers.requests') ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700' : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }}">
+                                    View Card Requests
+                                </a>
+                            </li>
                         </ul>
                     </li>
                 @endcan
+                @can('view-cards')
+                    <li class="relative px-6 py-3" x-data="{ openCards: false, height: 0 }">
+                        <!-- Main Menu Button -->
+                        <button
+                            @click=" openCards = !openCards; if (openCards) {height = $refs.cardsPanel.scrollHeight } else{height = 0 }"
+                            type="button"
+                            class="flex items-start w-full text-sm font-semibold text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors duration-150 rounded-md focus:outline-none">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"
+                                viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                                <path
+                                    d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
+                                </path>
+                            </svg>
 
+                            <span class="ml-2 flex-1 text-left">Cards</span>
+                            <svg class="w-4 h-4 ml-auto transition-transform duration-300"
+                                :class="{ 'rotate-180': openCards }" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M5.293 7.293a1 1 0 0 1 1.414 0L10 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414l-4 4a1 1 0 0 1-1.414 0l-4-4a1 1 0 0 1 0-1.414z"
+                                    clip-rule="evenodd"></path>
+                            </svg>
+                        </button>
+
+                        <!-- Submenu -->
+                        <ul x-ref="cardsPanel" :style="`height: ${height}px`"
+                            class="mt-2 space-y-2 px-4 overflow-hidden transition-all duration-300 ease-in-out">
+                            {{-- <li>
+                                <a href="{{ route('cards.create') }}"
+                                    class="block px-2 py-1 text-sm font-medium rounded-md
+               {{ request()->routeIs('cards.create') ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700' : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }}">
+                                    Assign Card
+                                </a>
+                            </li> --}}
+                            <li>
+                                <a href="{{ route('merchant.cards.assign') }}"
+                                    class="block px-2 py-1 text-sm font-medium rounded-md
+        {{ request()->routeIs('merchant.cards.assign') ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700' : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }}">
+                                    Assign Cards
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="{{ route('merchant.cards.index') }}"
+                                    class="block px-2 py-1 text-sm font-medium rounded-md
+        {{ request()->routeIs('merchant.cards.index') ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700' : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }}">
+                                    View Cards
+                                </a>
+                            </li>
+
+                        </ul>
+                    </li>
+                @endcan
+                @can('view-market')
+                    <li class="relative px-6 py-3" x-data="{ openCards: false, height: 0 }">
+                        <!-- Main Menu Button -->
+                        <button
+                            @click=" openCards = !openCards; if (openCards) {height = $refs.cardsPanel.scrollHeight } else{height = 0 }"
+                            type="button"
+                            class="flex items-start w-full text-sm font-semibold text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors duration-150 rounded-md focus:outline-none">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"
+                                viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                                <path
+                                    d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
+                                </path>
+                            </svg>
+
+                            <span class="ml-2 flex-1 text-left">MarketPlace</span>
+                            <svg class="w-4 h-4 ml-auto transition-transform duration-300"
+                                :class="{ 'rotate-180': openCards }" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M5.293 7.293a1 1 0 0 1 1.414 0L10 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414l-4 4a1 1 0 0 1-1.414 0l-4-4a1 1 0 0 1 0-1.414z"
+                                    clip-rule="evenodd"></path>
+                            </svg>
+                        </button>
+
+                        <!-- Submenu -->
+                        <ul x-ref="cardsPanel" :style="`height: ${height}px`"
+                            class="mt-2 space-y-2 px-4 overflow-hidden transition-all duration-300 ease-in-out">
+                            {{-- <li>
+                                <a href="{{ route('cards.create') }}"
+                                    class="block px-2 py-1 text-sm font-medium rounded-md
+               {{ request()->routeIs('cards.create') ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700' : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }}">
+                                    Assign Card
+                                </a>
+                            </li> --}}
+                            <li>
+    <a href="/request-cards"
+        class="block px-2 py-1 text-sm font-medium rounded-md
+        {{ request()->is('request-cards') ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700' : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }}">
+        Request Cards
+    </a>
+</li>
+
+<li>
+    <a href="/view-requests"
+        class="block px-2 py-1 text-sm font-medium rounded-md
+        {{ request()->is('view-requests') ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700' : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }}">
+        View Requests
+    </a>
+</li>
+
+
+                        </ul>
+                    </li>
+                @endcan
             </ul>
 
             {{-- @can('create-account')

@@ -28,13 +28,13 @@
                 <form method="POST" action="{{ route('cards.store') }}" class="space-y-4">
                     @csrf
 
-                    <!-- Certificate Holder Name -->
+                    {{-- <!-- Certificate Holder Name -->
                     <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-400">Certificate Holder Name</label>
                         <input type="text" name="holder_name"
                                class="mt-1 block w-full p-2 border rounded-md dark:bg-gray-700"
                                placeholder="Enter full name" required>
-                    </div>
+                    </div> --}}
 
                     <!-- Certificate ID / Number -->
                     <div class="mb-4">

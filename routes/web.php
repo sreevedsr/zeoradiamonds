@@ -62,6 +62,7 @@ Route::middleware('auth')->group(function () {
 
         // Merchant requests viewing
         Route::get('/merchants/requests', [MerchantRequestController::class, 'index'])->name('merchants.request');
+        Route::get('/cards/requests', [DashboardController::class, 'customerRequests'])->name('cards.requests');
     });
 
     // ================================
@@ -74,7 +75,6 @@ Route::middleware('auth')->group(function () {
             Route::get('/', [DashboardController::class, 'customers'])->name('index');         // View customers
             Route::get('/create', [DashboardController::class, 'createCustomer'])->name('create'); // Add customer
             Route::post('/', [DashboardController::class, 'storeCustomer'])->name('store');     // Save customer
-                Route::get('/requests', [DashboardController::class, 'customerRequests'])->name('requests');
         });
 
         // Card assignment
@@ -85,6 +85,27 @@ Route::middleware('auth')->group(function () {
         Route::get('/requests', [DashboardController::class, 'merchantRequests'])->name('merchant.requests');
         Route::post('/requests', [DashboardController::class, 'storeRequest'])->name('merchant.requests.store');
     });
+    Route::middleware(['auth', 'can:view-cards'])->prefix('merchant')->name('merchant.')->group(function () {
+
+        // 🟣 View all assigned diamond certificates
+        Route::get('/cards', [MerchantController::class, 'viewCards'])->name('cards.index');
+
+        // 🟢 Show assign-cards page (form + table)
+        Route::get('/assign-cards', [MerchantController::class, 'assignCardsPage'])->name('cards.assign');
+
+        // 🟠 Handle card assignment form submission
+        Route::post('/assign-cards', [MerchantController::class, 'assignCard'])->name('assignCard');
+
+        // 🔴 Handle card unassignment (delete assignment)
+        Route::delete('/unassign-card/{id}', [MerchantController::class, 'unassignCard'])->name('unassignCard');
+
+        // Optional: If you plan to show card requests
+        Route::get('/card-requests', [MerchantController::class, 'viewRequests'])->name('cards.requests');
+    });
+    Route::get('/request-cards', [MerchantController::class, 'requestCards'])->name('merchant.cards.request');
+
+// View Requests page
+Route::get('/view-requests', [MerchantController::class, 'viewRequests'])->name('merchant.cards.view');
 
 });
 
