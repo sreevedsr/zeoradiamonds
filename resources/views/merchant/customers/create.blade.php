@@ -25,7 +25,7 @@
                     </div>
                 @endif
 
-                <form method="POST" action="{{ route('customers.store') }}" class="space-y-4">
+                <form method="POST" action="{{ route('merchant.customers.store') }}" class="space-y-4">
                     @csrf
 
                     <!-- Customer Name -->

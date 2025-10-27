@@ -22,7 +22,7 @@
             <!-- Assignment Form -->
             <div>
                 <h3 class="text-lg font-semibold mb-4">Assign Certificate to Customer</h3>
-                <form action="{{ route('merchant.assignCard') }}" method="POST" class="space-y-4">
+                <form action="{{ route('merchant.cards.assign') }}" method="POST" class="space-y-4">
                     @csrf
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <!-- Select Customer -->

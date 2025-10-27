@@ -35,7 +35,7 @@
                     </div>
                 <?php endif; ?>
 
-                <form method="POST" action="<?php echo e(route('customers.store')); ?>" class="space-y-4">
+                <form method="POST" action="<?php echo e(route('merchant.customers.store')); ?>" class="space-y-4">
                     <?php echo csrf_field(); ?>
 
                     <!-- Customer Name -->

@@ -26,7 +26,6 @@ class MerchantController extends Controller
     // Validate input
     $request->validate([
         'name' => 'required|string|max:255',
-        'owner_name' => 'required|string|max:255',
         'business_name' => 'required|string|max:255',
         'email' => 'required|email|unique:users,email',
         'phone' => 'required|string|max:20',

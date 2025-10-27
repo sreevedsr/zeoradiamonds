@@ -127,6 +127,9 @@
                             type="button"
                             class="flex items-start w-full text-sm font-semibold text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors duration-150 rounded-md focus:outline-none"
                             :aria-expanded="openMerchants.toString()">
+                            <span
+                        class="{{ request()->routeIs('admin.merchants.*') ? 'absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg' : '' }}"
+                        aria-hidden="true"></span>
                             <!-- icon / label -->
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
                                 stroke-linecap="round" stroke-linejoin="round">
@@ -135,7 +138,9 @@
                                 </path>
                             </svg>
 
-                            <span class="ml-2 flex-1 text-left">Merchants</span>
+                            <span class="ml-2 flex-1 text-left {{ request()->routeIs('admin.merchants.*')
+                    ? 'text-gray-800 dark:text-gray-200'
+                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }}">Merchants</span>
                             <svg class="w-4 h-4 ml-auto transform-gpu transition-transform duration-300 ease-in-out rotate-0"
                                 :class="openMerchants ? 'rotate-180' : 'rotate-0'" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd"
@@ -172,10 +177,9 @@
                     </li>
                 @endcan
 
-
                 @can('view-customers')
                     <li class="relative px-6 py-3" x-data="{
-                        openCustomers: {{ request()->routeIs('customers.*') ? 'true' : 'false' }},
+                        openCustomers: {{ request()->routeIs('merchant.customers.*') ? 'true' : 'false' }},
                         height: 0,
                         setup() {
                             this.setMeasured = () => { this.height = this.$refs.panel ? this.$refs.panel.scrollHeight : 0 }
@@ -186,6 +190,9 @@
                         window.addEventListener('resize', () => { if (openCustomers) setMeasured() });
                     })"
                         x-on:destroy.window="window.removeEventListener('resize', () => {})">
+                        <span
+                        class="{{ request()->routeIs('merchant.customers.*') ? 'absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg' : '' }}"
+                        aria-hidden="true"></span>
 
                         <!-- Main Menu Button -->
                         <button
@@ -206,6 +213,7 @@
                             class="flex items-start w-full text-sm font-semibold text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors duration-150 rounded-md focus:outline-none"
                             :aria-expanded="openCustomers.toString()">
 
+
                             <!-- Icon -->
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
                                 stroke-linecap="round" stroke-linejoin="round">
@@ -214,7 +222,9 @@
                                 </path>
                             </svg>
 
-                            <span class="ml-2 flex-1 text-left">Customers</span>
+                            <span class="ml-2 flex-1 text-left {{ request()->routeIs('merchant.customers.*')
+                    ? 'text-gray-800 dark:text-gray-200'
+                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }}">Customers</span>
 
                             <!-- Rotating Arrow -->
                             <svg class="w-4 h-4 ml-auto transform transition-transform duration-300 ease-in-out rotate-0"
@@ -231,9 +241,9 @@
                             class="mt-2 space-y-2 px-4 overflow-hidden transition-all duration-300 ease-in-out">
 
                             <li>
-                                <a href="{{ route('customers.create') }}"
+                                <a href="{{ route('merchant.customers.create') }}"
                                     class="block px-2 py-1 text-sm font-medium rounded-md
-                    {{ request()->routeIs('customers.create')
+                    {{ request()->routeIs('merchant.customers.create')
                         ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
                         : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }}">
                                     Add Customer
@@ -241,9 +251,9 @@
                             </li>
 
                             <li>
-                                <a href="{{ route('customers.index') }}"
+                                <a href="{{ route('merchant.customers.index') }}"
                                     class="block px-2 py-1 text-sm font-medium rounded-md
-                    {{ request()->routeIs('customers.index')
+                    {{ request()->routeIs('merchant.customers.index')
                         ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
                         : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }}">
                                     View Customers
@@ -265,8 +275,6 @@
                     </li>
                 @endcan
 
-
-
                 @can('edit-cards')
                     <li class="relative px-6 py-3" x-data="{
                         openCards: {{ request()->routeIs('admin.cards.*') ? 'true' : 'false' }},
@@ -280,6 +288,12 @@
                         window.addEventListener('resize', () => { if (openCards) setMeasured(); });
                     })"
                         x-on:destroy.window="window.removeEventListener('resize', () => {})">
+                        <span
+                        class="{{ request()->routeIs('cards.*') ? 'absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg' : '' }}"
+                        aria-hidden="true"></span>
+                        <span
+                        class="{{ request()->routeIs('admin.cards.*') ? 'absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg' : '' }}"
+                        aria-hidden="true"></span>
 
                         <!-- Main Menu Button -->
                         <button
@@ -307,7 +321,9 @@
                                 </path>
                             </svg>
 
-                            <span class="ml-2 flex-1 text-left">Cards</span>
+                            <span class="ml-2 flex-1 text-left {{ request()->routeIs('admin.cards.*')
+                    ? 'text-gray-800 dark:text-gray-200'
+                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }}">Cards</span>
                             <svg class="w-4 h-4 ml-auto transition-transform duration-300"
                                 :class="{ 'rotate-180': openCards }" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd"
@@ -336,6 +352,15 @@
                                     View Cards
                                 </a>
                             </li>
+                            <li>
+                                <a href="{{ route('admin.cards.assign') }}"
+                                    class="block px-2 py-1 text-sm font-medium rounded-md
+                {{ request()->routeIs('admin.cards.assign')
+                    ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
+                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }}">
+                                    Assign Cards
+                                </a>
+                            </li>
 
                             <li>
                                 <a href="{{ route('admin.cards.requests') }}"
@@ -350,7 +375,7 @@
 
                 @can('view-cards')
                     <li class="relative px-6 py-3" x-data="{
-                        openCards: {{ request()->routeIs('merchant.cards.assign') || request()->routeIs('merchant.cards.index') ? 'true' : 'false' }},
+                        openCards: {{ request()->routeIs('merchant.cards.*') ? 'true' : 'false' }},
                         height: 0,
                         setup() {
                             this.setMeasured = () => { this.height = this.$refs.cardsPanel ? this.$refs.cardsPanel.scrollHeight : 0 }
@@ -361,6 +386,9 @@
                         window.addEventListener('resize', () => { if (openCards) setMeasured() });
                     })"
                         x-on:destroy.window="window.removeEventListener('resize', () => {})">
+                        <span
+                        class="{{ request()->routeIs('merchant.cards.*') ? 'absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg' : '' }}"
+                        aria-hidden="true"></span>
 
                         <!-- Main Menu Button -->
                         <button
@@ -389,7 +417,9 @@
                                 </path>
                             </svg>
 
-                            <span class="ml-2 flex-1 text-left">Cards</span>
+                            <span class="ml-2 flex-1 text-left {{ request()->routeIs('merchant.cards.*')
+                    ? 'text-gray-800 dark:text-gray-200'
+                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }}">Cards</span>
 
                             <!-- Rotating Arrow -->
                             <svg class="w-4 h-4 ml-auto transform transition-transform duration-300 ease-in-out rotate-0"
@@ -425,13 +455,14 @@
                                 </a>
                             </li>
 
+
                         </ul>
                     </li>
                 @endcan
 
                 @can('view-market')
                     <li class="relative px-6 py-3" x-data="{
-                        openCards: {{ request()->is('request-cards') || request()->is('view-requests') ? 'true' : 'false' }},
+                        openCards: {{ request()->routeIs('merchant.marketplace.*') ? 'true' : 'false' }},
                         height: 0,
                         setup() {
                             this.setMeasured = () => { this.height = this.$refs.cardsPanel ? this.$refs.cardsPanel.scrollHeight : 0 }
@@ -442,6 +473,9 @@
                         window.addEventListener('resize', () => { if (openCards) setMeasured() });
                     })"
                         x-on:destroy.window="window.removeEventListener('resize', () => {})">
+                        <span
+                        class="{{ request()->routeIs('merchant.marketplace.*') ? 'absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg' : '' }}"
+                        aria-hidden="true"></span>
 
                         <!-- Main Menu Button -->
                         <button
@@ -465,7 +499,9 @@
                             <!-- Icon -->
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shopping-bag-icon lucide-shopping-bag"><path d="M16 10a4 4 0 0 1-8 0"/><path d="M3.103 6.034h17.794"/><path d="M3.4 5.467a2 2 0 0 0-.4 1.2V20a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6.667a2 2 0 0 0-.4-1.2l-2-2.667A2 2 0 0 0 17 2H7a2 2 0 0 0-1.6.8z"/></svg>
 
-                            <span class="ml-2 flex-1 text-left">MarketPlace</span>
+                            <span class="ml-2 flex-1 text-left {{ request()->routeIs('merchant.marketplace.*')
+                    ? 'text-gray-800 dark:text-gray-200'
+                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }}">MarketPlace</span>
 
                             <!-- Rotating Arrow -->
                             <svg class="w-4 h-4 ml-auto transform transition-transform duration-300 ease-in-out rotate-0"
@@ -494,9 +530,9 @@
         --}}
 
                             <li>
-                                <a href="/request-cards"
+                                <a href="{{ route('merchant.marketplace.request') }}"
                                     class="block px-2 py-1 text-sm font-medium rounded-md
-                {{ request()->is('request-cards')
+                {{ request()->routeIs('merchant.marketplace.request')
                     ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
                     : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }}">
                                     Request Cards
@@ -504,9 +540,9 @@
                             </li>
 
                             <li>
-                                <a href="/view-requests"
+                                <a href="{{ route('merchant.marketplace.view') }}"
                                     class="block px-2 py-1 text-sm font-medium rounded-md
-                {{ request()->is('view-requests')
+                {{ request()->routeIs('merchant.marketplace.view')
                     ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
                     : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }}">
                                     View Requests

@@ -43,6 +43,7 @@ Route::middleware('auth')->group(function () {
             Route::get('/', [CardsController::class, 'index'])->name('index');
             Route::get('/create', [DashboardController::class, 'createCard'])->name('create');
             Route::post('/', [CardsController::class, 'store'])->name('store');
+            Route::get('/assign', [CardsController::class, 'assignExisting'])->name('assign');
         });
 
         // Forms management
@@ -68,7 +69,7 @@ Route::middleware('auth')->group(function () {
     // ================================
 // Merchant-only routes (Customer Management)
 // ================================
-    Route::middleware('role:merchant')->group(function () {
+    Route::middleware('role:merchant')->prefix('merchant')->name('merchant.')->group(function () {
 
         // Customers management
         Route::prefix('customers')->name('customers.')->group(function () {
@@ -76,37 +77,42 @@ Route::middleware('auth')->group(function () {
             Route::get('/create', [DashboardController::class, 'createCustomer'])->name('create'); // Add customer
             Route::post('/', [DashboardController::class, 'storeCustomer'])->name('store');     // Save customer
         });
+        Route::prefix('cards')->name('cards.')->group(function () {
+            // 🟣 View all assigned diamond certificates
+            Route::get('/', [MerchantController::class, 'viewCards'])->name('index');
+
+            // 🟢 Show assign-cards page (form + table)
+            Route::get('/assign', [MerchantController::class, 'assignCardsPage'])->name('assign');
+
+            // 🟠 Handle card assignment form submission
+            Route::post('/assign', [MerchantController::class, 'assignCard'])->name('assign');
+        });
+        Route::prefix('marketplace')->name('marketplace.')->group(function () {
+            // Route::get('/card-requests', [MerchantController::class, 'viewRequests'])->name('cards.requests');
+            Route::get('/request', [MerchantController::class, 'requestCards'])->name('request');
+
+            // View Requests page
+            Route::get('/view', [MerchantController::class, 'viewRequests'])->name('view');
+        });
 
         // Card assignment
-        Route::get('/cards/assign', [DashboardController::class, 'assignCard'])->name('cards.assign');
-        Route::post('/cards/assign', [DashboardController::class, 'storeAssignment'])->name('cards.assign.store');
+        // Route::get('/cards/assign', [DashboardController::class, 'assignCard'])->name('cards.assign');
+        // Route::post('/cards/assign', [DashboardController::class, 'storeAssignment'])->name('cards.assign.store');
 
         // Requests management
         Route::get('/requests', [DashboardController::class, 'merchantRequests'])->name('merchant.requests');
         Route::post('/requests', [DashboardController::class, 'storeRequest'])->name('merchant.requests.store');
-    });
-    Route::middleware(['auth', 'can:view-cards'])->prefix('merchant')->name('merchant.')->group(function () {
 
-        // 🟣 View all assigned diamond certificates
-        Route::get('/cards', [MerchantController::class, 'viewCards'])->name('cards.index');
 
-        // 🟢 Show assign-cards page (form + table)
-        Route::get('/assign-cards', [MerchantController::class, 'assignCardsPage'])->name('cards.assign');
 
-        // 🟠 Handle card assignment form submission
-        Route::post('/assign-cards', [MerchantController::class, 'assignCard'])->name('assignCard');
+
 
         // 🔴 Handle card unassignment (delete assignment)
         Route::delete('/unassign-card/{id}', [MerchantController::class, 'unassignCard'])->name('unassignCard');
 
         // Optional: If you plan to show card requests
-        Route::get('/card-requests', [MerchantController::class, 'viewRequests'])->name('cards.requests');
+
     });
-    Route::get('/request-cards', [MerchantController::class, 'requestCards'])->name('merchant.cards.request');
-
-// View Requests page
-Route::get('/view-requests', [MerchantController::class, 'viewRequests'])->name('merchant.cards.view');
-
 });
 
 require __DIR__ . '/auth.php';
