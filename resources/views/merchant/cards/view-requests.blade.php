@@ -20,7 +20,8 @@
             <div class="w-full overflow-x-auto">
                 <table class="w-full whitespace-no-wrap">
                     <thead>
-                        <tr class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+                        <tr
+                            class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
                             <th class="px-4 py-3">#</th>
                             <th class="px-4 py-3">Holder Name</th>
                             <th class="px-4 py-3">Diamond Type</th>
@@ -34,8 +35,9 @@
                     </thead>
                     <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
                         {{-- @foreach ($requests as $index => $request) --}}
-                            <tr class="text-gray-700 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                                {{-- <td class="px-4 py-3 text-sm">{{ $index + 1 }}</td>
+                        <tr
+                            class="text-gray-700 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                            {{-- <td class="px-4 py-3 text-sm">{{ $index + 1 }}</td>
                                 <td class="px-4 py-3 text-sm">{{ $request->holder_name }}</td>
                                 <td class="px-4 py-3 text-sm">{{ $request->diamond_type }}</td>
                                 <td class="px-4 py-3 text-sm">{{ $request->carat_weight }} ct</td>
@@ -46,7 +48,7 @@
                                 <td class="px-4 py-3 text-sm">
                                     <div class="flex items-center space-x-2">
                                         {{-- Optional actions: Approve / Delete --}}
-                                        {{-- <form action="{{ route('merchant.cards.delete', $request->id) }}" method="POST" class="inline">
+                            {{-- <form action="{{ route('merchant.cards.delete', $request->id) }}" method="POST" class="inline">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" onclick="return confirm('Delete this request?')" class="text-red-600 hover:underline">
@@ -55,22 +57,21 @@
                                         </form>
                                     </div>
                                 </td> --}}
-                            </tr>
+                        </tr>
                         {{-- @endforeach --}}
                     </tbody>
                 </table>
             </div>
 
             <!-- Pagination Example -->
-            <div class="px-4 py-3 text-xs font-semibold tracking-wide text-gray-500 uppercase border-t dark:border-gray-700 bg-gray-50 sm:grid-cols-9 dark:text-gray-400 dark:bg-gray-800">
-                <span class="flex items-center col-span-3">
-                    {{-- Showing 1–10 of {{ $requests->total() ?? count($requests) }} --}}
-                </span>
-                <span class="col-span-2"></span>
-                <span class="flex col-span-4 mt-2 sm:mt-auto sm:justify-end">
-                    {{-- {{ $requests->links('pagination::tailwind') }} --}}
-                </span>
-            </div>
+            @include('components.pagination', [
+                'from' => 1,
+                'to' => 10,
+                'total' => 45,
+                'pages' => [1, 2, 3],
+                'current' => 2,
+            ])
+
 
         </div>
     </div>

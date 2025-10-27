@@ -61,7 +61,8 @@
             'title' => 'Sales Change',
             'value' => money_inr($metrics['sales_diff']),
             'color' => $metrics['sales_diff'] >= 0 ? 'blue' : 'red',
-            'icon' => 'M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z',
+            'icon' =>
+                'M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z',
             'meta' => arrow_badge($metrics['sales_diff_percent']),
         ], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
@@ -69,7 +70,7 @@
             'title' => 'New Customers (This Month)',
             'value' => $metrics['new_customers_this_month'],
             'color' => 'teal',
-'icon' => 'M11.3 11.5a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9zm7.3 9.5a7.5 7.5 0 1 0-15 0',
+            'icon' => 'M11.3 11.5a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9zm7.3 9.5a7.5 7.5 0 1 0-15 0',
             'meta' => arrow_badge($metrics['new_customers_diff_percent']),
         ], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
     </div>

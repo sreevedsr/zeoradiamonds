@@ -581,7 +581,7 @@
             </a>
 
             <!-- Settings -->
-            <a href="#"
+            {{-- <a href="#"
                 class="flex items-center px-2 py-2 mt-2 text-xs font-medium text-gray-700 dark:text-gray-300 rounded-md
                transition-colors duration-150
                hover:bg-gray-100 hover:text-gray-900
@@ -606,7 +606,7 @@
                     <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                 </svg>
                 Settings
-            </a>
+            </a> --}}
 
             <!-- Logout -->
             <form method="POST" action="{{ route('logout') }}">
