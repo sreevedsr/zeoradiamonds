@@ -15,18 +15,7 @@
     </h2>
 
     <!-- Cards -->
-    <div class="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4">
-        <?php echo $__env->make('dashboard.partials.card', ['title' => 'Total clients', 'value' => 6389, 'color' => 'orange','icon' => 'M10 2a8 8 0 100 16 8 8 0 000-16z'], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
-        <?php echo $__env->make('dashboard.partials.card', ['title' => 'Account balance', 'value' => '$46,760.89', 'color' => 'green','icon' => 'M10 2a8 8 0 100 16 8 8 0 000-16z'], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
-        <?php echo $__env->make('dashboard.partials.card', ['title' => 'New sales', 'value' => 376, 'color' => 'blue','icon' => 'M10 2a8 8 0 100 16 8 8 0 000-16z'], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
-        <?php echo $__env->make('dashboard.partials.card', ['title' => 'Pending contacts', 'value' => 35, 'color' => 'teal','icon' => 'M10 2a8 8 0 100 16 8 8 0 000-16z'], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
-    </div>
-
-    <!-- Table -->
-    <?php echo $__env->make('dashboard.partials.table', ['clients' => $clients ?? []], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
-
-    <!-- Charts -->
-    <?php echo $__env->make('dashboard.partials.charts', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+    
  <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54)): ?>

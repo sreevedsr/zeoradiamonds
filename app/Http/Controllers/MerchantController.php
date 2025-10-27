@@ -12,34 +12,42 @@ class MerchantController extends Controller
     {
         // List all merchants
         $merchants = User::where('role', 'merchant')->get();
-        return view('merchants.index', compact('merchants'));
+        return view('admin.merchants.index', compact('merchants'));
     }
 
     public function create()
     {
         // Show form to add merchant
-        return view('merchants.create');
+        return view('admin.merchants.create');
     }
 
     public function store(Request $request)
-    {
-        // Validate input
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:8|confirmed', // requires password_confirmation field
-        ]);
+{
+    // Validate input
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'owner_name' => 'required|string|max:255',
+        'business_name' => 'required|string|max:255',
+        'email' => 'required|email|unique:users,email',
+        'phone' => 'required|string|max:20',
+        'address' => 'required|string|max:500',
+    ]);
 
-        // Create merchant
-        User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'role' => 'merchant',
-        ]);
+    // Create merchant
+    User::create([
+        'name' => $request->name,
+        'business_name' => $request->business_name,
+        'email' => $request->email,
+        'phone' => $request->phone,
+        'address' => $request->address,
+        'role' => 'merchant',
+        'password' => Hash::make('merchant123'), // default or remove if nullable
+    ]);
 
-        return redirect()->route('merchants.index')->with('success', 'Merchant added successfully.');
-    }
+    return redirect()->route('admin.merchants.index')->with('success', 'Merchant added successfully.');
+}
+
+
     public function assignCardsPage()
 {
     // Fetch merchants, customers, and available cards if needed
@@ -47,7 +55,7 @@ class MerchantController extends Controller
     // $cards = \App\Models\Card::all();
 
     // Return your assign-cards view (create this if not existing)
-    return view('cards.merchants.assign');
+    return view('merchant.cards.assign');
 }
 public function viewCards()
 {
@@ -56,16 +64,16 @@ public function viewCards()
     // $cards = Card::all();
 
     // Return the view
-    return view('cards.merchants.index');
+    return view('merchant.cards.index');
 }
 public function requestCards()
     {
-        return view('merchants.request-cards'); // Make sure this blade exists
+        return view('merchant.cards.request-card');
     }
 
-    // Show View Requests page
     public function viewRequests()
     {
-        return view('merchants.view-requests'); // Make sure this blade exists
+        return view('merchant.cards.view-requests');
     }
 }
+

@@ -45,7 +45,7 @@ class DashboardController extends Controller
      */
     public function createCard()
     {
-        return view('cards.create'); // Blade
+        return view('admin.cards.create'); // Blade
     }
 
     /**
@@ -54,7 +54,7 @@ class DashboardController extends Controller
     public function storeCard(Request $request)
     {
         // Your card storing logic
-        return redirect()->route('cards');
+        return redirect()->route('admin.cards');
     }
 
     /**
@@ -70,7 +70,7 @@ class DashboardController extends Controller
      */
     public function requests()
     {
-        return view('dashboard.requests'); // Blade
+        return view('admin.cards.requests'); // Blade
     }
 
     /**
@@ -135,13 +135,13 @@ class DashboardController extends Controller
     {
         // Example: fetch customers from DB
         $customers = []; // Replace with Customer::all();
-        return view('customers.index', compact('customers'));
+        return view('merchant.customers.index', compact('customers'));
     }
 
     // Show form to add a new customer
     public function createCustomer()
     {
-        return view('customers.create');
+        return view('merchant.customers.create');
     }
 
     // Store new customer
@@ -156,6 +156,6 @@ class DashboardController extends Controller
     public function customerRequests()
     {
         $requests = []; // Replace with actual requests from DB
-        return view('cards.requests', compact('requests'));
+        return view('admin.cards.requests', compact('requests'));
     }
 }

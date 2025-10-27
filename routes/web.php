@@ -36,7 +36,7 @@ Route::middleware('auth')->group(function () {
     // ================================
     // Admin-only routes
     // ================================
-    Route::middleware('role:admin')->group(function () {
+    Route::middleware('role:admin')->prefix('admin')->name('admin.')->group(function () {
 
         // Cards management
         Route::prefix('cards')->name('cards.')->group(function () {
@@ -54,7 +54,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/requests', [DashboardController::class, 'requests'])->name('requests');
 
         // Merchant management
-        Route::middleware('can:view-merchants')->prefix('admin/merchants')->name('merchants.')->group(function () {
+        Route::middleware('can:view-merchants')->prefix('merchants')->name('merchants.')->group(function () {
             Route::get('/', [MerchantController::class, 'index'])->name('index');       // View merchants
             Route::get('/create', [MerchantController::class, 'create'])->name('create'); // Add merchant
             Route::post('/store', [MerchantController::class, 'store'])->name('store');  // Save merchant

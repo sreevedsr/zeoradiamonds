@@ -14,7 +14,7 @@ class CardsController extends Controller
             abort(403, 'Unauthorized access');
         }
 
-        return view('cards.index');
+        return view('admin.cards.index');
     }
 
     public function store(Request $request)
