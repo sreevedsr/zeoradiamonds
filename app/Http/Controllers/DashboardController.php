@@ -13,22 +13,93 @@ class DashboardController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $role = $user->role;
 
-        // // Load any shared or role-specific data here
-        // $cards = ($role === 'superadmin')
-        //     ? \App\Models\DigitalCard::all()
-        //     : \App\Models\DigitalCard::where('created_by', $user->id)->get();
+        // ---------------------------
+        // Dummy data (hardcoded)
+        // ---------------------------
+        // Overall vendor/admin data
+        $vendorData = [
+            'total_clients' => 152,
+            'sales_this_month' => 245000,   // in INR
+            'sales_last_month' => 210000,
+            'new_customers_this_month' => 12,
+            'new_customers_last_month' => 9,
+            'top_customers' => [
+                ['name' => 'Kumar Jewellers', 'orders' => 8, 'amount' => 78000],
+                ['name' => 'Radiant Gems', 'orders' => 5, 'amount' => 42000],
+                ['name' => 'S & Sons', 'orders' => 3, 'amount' => 29000],
+            ],
+            // last 6 months sales for chart
+            'monthly_sales' => [
+                ['label' => 'May', 'value' => 160000],
+                ['label' => 'Jun', 'value' => 175000],
+                ['label' => 'Jul', 'value' => 190000],
+                ['label' => 'Aug', 'value' => 205000],
+                ['label' => 'Sep', 'value' => 210000],
+                ['label' => 'Oct', 'value' => 245000],
+            ],
+        ];
 
-        // $requests = ($role === 'superadmin')
-        //     ? \App\Models\ProductRequest::all()
-        //     : \App\Models\ProductRequest::where('merchant_id', $user->id)->get();
+        // Merchant-specific sample (only their own)
+        $merchantData = [
+            'total_clients' => 38,
+            'sales_this_month' => 82000,
+            'sales_last_month' => 73000,
+            'new_customers_this_month' => 4,
+            'new_customers_last_month' => 3,
+            'top_customers' => [
+                ['name' => 'Local Buyer A', 'orders' => 2, 'amount' => 22000],
+                ['name' => 'Local Buyer B', 'orders' => 1, 'amount' => 18000],
+            ],
+            'monthly_sales' => [
+                ['label' => 'May', 'value' => 45000],
+                ['label' => 'Jun', 'value' => 48000],
+                ['label' => 'Jul', 'value' => 51000],
+                ['label' => 'Aug', 'value' => 56000],
+                ['label' => 'Sep', 'value' => 73000],
+                ['label' => 'Oct', 'value' => 82000],
+            ],
+        ];
 
-        // $logs = ($role === 'superadmin')
-        //     ? \App\Models\ActivityLog::all()
-        //     : null;
-// , 'cards', 'requests', 'logs'
-        return view('dashboard.main', compact('user', 'role'));
+        // pick which dataset to show
+        if ($user->role === 'vendor' || $user->role === 'admin') {
+            $data = $this->prepareMetrics($vendorData);
+            $scope = 'vendor';
+        } else {
+            // merchant
+            $data = $this->prepareMetrics($merchantData);
+            $scope = 'merchant';
+        }
+
+        return view('dashboard.main', [
+            'user' => $user,
+            'scope' => $scope,
+            'metrics' => $data,
+        ]);
+    }
+
+    /**
+     * Prepare metrics (calculate diffs, percent etc).
+     */
+    private function prepareMetrics(array $src)
+    {
+        $salesThis = $src['sales_this_month'];
+        $salesLast = $src['sales_last_month'];
+
+        $sales_diff = $salesThis - $salesLast;
+        $sales_diff_percent = $salesLast > 0 ? ($sales_diff / $salesLast) * 100 : null;
+
+        $newCustThis = $src['new_customers_this_month'];
+        $newCustLast = $src['new_customers_last_month'];
+        $newCust_diff = $newCustThis - $newCustLast;
+        $newCust_diff_percent = $newCustLast > 0 ? ($newCust_diff / $newCustLast) * 100 : null;
+
+        return array_merge($src, [
+            'sales_diff' => $sales_diff,
+            'sales_diff_percent' => $sales_diff_percent,
+            'new_customers_diff' => $newCust_diff,
+            'new_customers_diff_percent' => $newCust_diff_percent,
+        ]);
     }
 
 

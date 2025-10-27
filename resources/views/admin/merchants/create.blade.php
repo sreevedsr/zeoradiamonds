@@ -5,115 +5,88 @@
         Add Merchant
     </h2>
 
-    <div class="space-y-6">
-        <div class="p-6 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
-            <div class="max-w-xl text-gray-900 dark:text-gray-100">
+    <div class="mx-auto">
+        <div class="p-6 sm:p-8 bg-white dark:bg-gray-800 shadow-md rounded-lg">
+            @if (session('success'))
+                <div class="mb-4 text-green-600 font-medium bg-green-100 border border-green-300 rounded-md p-3">
+                    {{ session('success') }}
+                </div>
+            @endif
 
-                @if (session('success'))
-                    <div class="mb-4 text-green-500 font-semibold">
-                        {{ session('success') }}
-                    </div>
-                @endif
+            @if ($errors->any())
+                <div class="mb-4 text-red-500 font-semibold">
+                    <ul class="list-disc list-inside">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
 
-                @if ($errors->any())
-                    <div class="mb-4 text-red-500 font-semibold">
-                        <ul class="list-disc list-inside">
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
+            <form action="{{ route('admin.merchants.store') }}" method="POST" class="space-y-6">
+                @csrf
 
-                <form action="{{ route('admin.merchants.store') }}" method="POST" class="space-y-4">
-                    @csrf
-
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-400">Owner Name</label>
-                        <input type="text" name="name" value="{{ old('name') }}"
-                            class="mt-1 block w-full p-2 border rounded-md dark:bg-gray-700"
-                            placeholder="Enter shop owner's name" required>
-                    </div>
-
-                    {{-- <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-400">Owner Name</label>
-                        <input type="text" name="owner_name" value="{{ old('owner_name') }}"
-                            class="mt-1 block w-full p-2 border rounded-md dark:bg-gray-700"
-                            placeholder="Enter shop owner's name" required>
-                    </div> --}}
-
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-400">Business Name</label>
-                        <input type="text" name="business_name" value="{{ old('business_name') }}"
-                            class="mt-1 block w-full p-2 border rounded-md dark:bg-gray-700"
-                            placeholder="Enter business or shop name" required>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Owner Name -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Owner Name</label>
+                        <input type="text" name="name" value="{{ old('name') }}" required
+                            placeholder="Enter shop owner's name"
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md
+                                   dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-600
+                                   hover:border-purple-400 transition duration-150">
                     </div>
 
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-400">Shop Email</label>
-                        <input type="email" name="email" value="{{ old('email') }}"
-                            class="mt-1 block w-full p-2 border rounded-md dark:bg-gray-700"
-                            placeholder="Enter shop email address" required>
+                    <!-- Business Name -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Business Name</label>
+                        <input type="text" name="business_name" value="{{ old('business_name') }}" required
+                            placeholder="Enter business or shop name"
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md
+                                   dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-600
+                                   hover:border-purple-400 transition duration-150">
                     </div>
 
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-400">Shop Phone</label>
-                        <input type="text" name="phone" value="{{ old('phone') }}"
-                            class="mt-1 block w-full p-2 border rounded-md dark:bg-gray-700"
-                            placeholder="Enter shop phone number" required>
+                    <!-- Email -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Shop Email</label>
+                        <input type="email" name="email" value="{{ old('email') }}" required
+                            placeholder="Enter shop email address"
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md
+                                   dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-600
+                                   hover:border-purple-400 transition duration-150">
                     </div>
 
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-400">Address</label>
-                        <textarea name="address" class="mt-1 block w-full p-2 border rounded-md dark:bg-gray-700"
-                            placeholder="Enter full shop address" rows="3" required>{{ old('address') }}</textarea>
+                    <!-- Phone -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Shop Phone</label>
+                        <input type="text" name="phone" value="{{ old('phone') }}" required
+                            placeholder="Enter shop phone number"
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md
+                                   dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-600
+                                   hover:border-purple-400 transition duration-150">
                     </div>
 
+                    <!-- Address (Full Width) -->
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Address</label>
+                        <textarea name="address" rows="3" required
+                            placeholder="Enter full shop address"
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md
+                                   dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-600
+                                   hover:border-purple-400 transition duration-150">{{ old('address') }}</textarea>
+                    </div>
+                </div>
+
+                <!-- Submit -->
+                <div class="flex justify-start pt-4">
                     <button type="submit"
-                        class="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors duration-150">
+                        class="mt-4 px-6 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700
+                               focus:outline-none focus:ring-2 focus:ring-purple-500 transition duration-150">
                         Add Merchant
                     </button>
-                </form>
-
-                {{-- <form action="{{ route('admin.merchants.store') }}" method="POST" class="space-y-4">
-                    @csrf
-
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-400">Name</label>
-                        <input type="text" name="name" value="{{ old('name') }}"
-                            class="mt-1 block w-full p-2 border rounded-md dark:bg-gray-700"
-                            placeholder="Enter full name" required>
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-400">Email</label>
-                        <input type="email" name="email" value="{{ old('email') }}"
-                            class="mt-1 block w-full p-2 border rounded-md dark:bg-gray-700"
-                            placeholder="Enter email address" required>
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-400">Password</label>
-                        <input type="password" name="password"
-                            class="mt-1 block w-full p-2 border rounded-md dark:bg-gray-700"
-                            placeholder="Enter password" required>
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-400">Confirm
-                            Password</label>
-                        <input type="password" name="password_confirmation"
-                            class="mt-1 block w-full p-2 border rounded-md dark:bg-gray-700"
-                            placeholder="Confirm password" required>
-                    </div>
-
-                    <button type="submit"
-                        class="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors duration-150">
-                        Add Merchant
-                    </button>
-                </form> --}}
-
-            </div>
+                </div>
+            </form>
         </div>
     </div>
 </x-app-layout>

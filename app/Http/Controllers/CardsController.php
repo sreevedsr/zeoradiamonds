@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Card;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\Auth;
 
 class CardsController extends Controller
