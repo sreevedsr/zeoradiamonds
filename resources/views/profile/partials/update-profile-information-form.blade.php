@@ -1,4 +1,4 @@
-<section >
+<section>
     <header class="mb-6">
         <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
             {{ __('Profile Information') }}
@@ -65,9 +65,23 @@
             @endif
         </div>
 
+        <!-- Address Field -->
+        <div class="space-y-2">
+            <x-input-label for="address" :value="__('Address')" class="dark:text-gray-200" />
+            <textarea
+                id="address"
+                name="address"
+                rows="3"
+                class="block w-full mt-1 px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 resize-none"
+                placeholder="Enter your current address">{{ old('address', $user->address ?? '') }}</textarea>
+            <x-input-error class="text-sm text-red-600 dark:text-red-400" :messages="$errors->get('address')" />
+        </div>
+
         <!-- Save Button -->
         <div class="flex items-center gap-4 mt-4">
-            <x-primary-button class="px-4 py-2 rounded-md dark:bg-indigo-600 dark:hover:bg-indigo-500 dark:text-white">{{ __('Save') }}</x-primary-button>
+            <x-primary-button class="px-4 py-2 rounded-md dark:bg-indigo-600 dark:hover:bg-indigo-500 dark:text-white">
+                {{ __('Save') }}
+            </x-primary-button>
 
             @if (session('status') === 'profile-updated')
                 <p
@@ -76,7 +90,9 @@
                     x-transition
                     x-init="setTimeout(() => show = false, 2000)"
                     class="text-sm text-gray-600 dark:text-gray-400"
-                >{{ __('Saved.') }}</p>
+                >
+                    {{ __('Saved.') }}
+                </p>
             @endif
         </div>
     </form>

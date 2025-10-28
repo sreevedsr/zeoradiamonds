@@ -11,6 +11,7 @@
 
     <!-- Tailwind CSS -->
     <link rel="stylesheet" href="{{ asset('assets/css/tailwind.output.css') }}" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindplus/elements@1" type="module"></script>
 
     <!-- AlpineJS -->
     <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>

@@ -1,5 +1,5 @@
 <x-app-layout>
-    @slot('title', 'Zeeyame - Merchants')
+    @slot('title', 'Zeeyame - Card Requests')
 
     <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
         View Requests

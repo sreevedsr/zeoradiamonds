@@ -6,18 +6,7 @@
             <a class="ml-6 text-lg font-bold text-gray-800 dark:text-gray-200" href="#">
                 Zeeyame
             </a>
-            <?php if(auth()->guard()->check()): ?>
-                <div class="flex items-center mt-6 px-6">
-                    <img class="w-8 h-8 rounded-full object-cover"
-                        src="<?php echo e(Auth::user()->profile_photo_url ?? '/default-profile.png'); ?>" alt="<?php echo e(Auth::user()->name); ?>">
-
-                    <div class="ml-4">
-                        <p class="text-gray-800 dark:text-gray-200 font-semibold"><?php echo e(Auth::user()->name); ?></p>
-                        <p class="text-xs text-gray-500 dark:text-gray-400"><?php echo e(Auth::user()->email); ?></p>
-                    </div>
-
-                </div>
-            <?php endif; ?>
+            
 
             <!-- Navigation -->
             <ul class="mt-6">
@@ -75,8 +64,8 @@
                             class="flex items-start w-full text-sm font-semibold text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors duration-150 rounded-md focus:outline-none"
                             :aria-expanded="openMerchants.toString()">
                             <span
-                        class="<?php echo e(request()->routeIs('admin.merchants.*') ? 'absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg' : ''); ?>"
-                        aria-hidden="true"></span>
+                                class="<?php echo e(request()->routeIs('admin.merchants.*') ? 'absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg' : ''); ?>"
+                                aria-hidden="true"></span>
                             <!-- icon / label -->
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
                                 stroke-linecap="round" stroke-linejoin="round">
@@ -85,9 +74,10 @@
                                 </path>
                             </svg>
 
-                            <span class="ml-2 flex-1 text-left <?php echo e(request()->routeIs('admin.merchants.*')
-                    ? 'text-gray-800 dark:text-gray-200'
-                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>">Merchants</span>
+                            <span
+                                class="ml-2 flex-1 text-left <?php echo e(request()->routeIs('admin.merchants.*')
+                                    ? 'text-gray-800 dark:text-gray-200'
+                                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>">Merchants</span>
                             <svg class="w-4 h-4 ml-auto transform-gpu transition-transform duration-300 ease-in-out rotate-0"
                                 :class="openMerchants ? 'rotate-180' : 'rotate-0'" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd"
@@ -138,8 +128,8 @@
                     })"
                         x-on:destroy.window="window.removeEventListener('resize', () => {})">
                         <span
-                        class="<?php echo e(request()->routeIs('merchant.customers.*') ? 'absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg' : ''); ?>"
-                        aria-hidden="true"></span>
+                            class="<?php echo e(request()->routeIs('merchant.customers.*') ? 'absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg' : ''); ?>"
+                            aria-hidden="true"></span>
 
                         <!-- Main Menu Button -->
                         <button
@@ -169,9 +159,10 @@
                                 </path>
                             </svg>
 
-                            <span class="ml-2 flex-1 text-left <?php echo e(request()->routeIs('merchant.customers.*')
-                    ? 'text-gray-800 dark:text-gray-200'
-                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>">Customers</span>
+                            <span
+                                class="ml-2 flex-1 text-left <?php echo e(request()->routeIs('merchant.customers.*')
+                                    ? 'text-gray-800 dark:text-gray-200'
+                                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>">Customers</span>
 
                             <!-- Rotating Arrow -->
                             <svg class="w-4 h-4 ml-auto transform transition-transform duration-300 ease-in-out rotate-0"
@@ -226,11 +217,11 @@
                     })"
                         x-on:destroy.window="window.removeEventListener('resize', () => {})">
                         <span
-                        class="<?php echo e(request()->routeIs('cards.*') ? 'absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg' : ''); ?>"
-                        aria-hidden="true"></span>
+                            class="<?php echo e(request()->routeIs('cards.*') ? 'absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg' : ''); ?>"
+                            aria-hidden="true"></span>
                         <span
-                        class="<?php echo e(request()->routeIs('admin.cards.*') ? 'absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg' : ''); ?>"
-                        aria-hidden="true"></span>
+                            class="<?php echo e(request()->routeIs('admin.cards.*') ? 'absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg' : ''); ?>"
+                            aria-hidden="true"></span>
 
                         <!-- Main Menu Button -->
                         <button
@@ -258,9 +249,10 @@
                                 </path>
                             </svg>
 
-                            <span class="ml-2 flex-1 text-left <?php echo e(request()->routeIs('admin.cards.*')
-                    ? 'text-gray-800 dark:text-gray-200'
-                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>">Cards</span>
+                            <span
+                                class="ml-2 flex-1 text-left <?php echo e(request()->routeIs('admin.cards.*')
+                                    ? 'text-gray-800 dark:text-gray-200'
+                                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>">Cards</span>
                             <svg class="w-4 h-4 ml-auto transition-transform duration-300"
                                 :class="{ 'rotate-180': openCards }" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd"
@@ -324,8 +316,8 @@
                     })"
                         x-on:destroy.window="window.removeEventListener('resize', () => {})">
                         <span
-                        class="<?php echo e(request()->routeIs('merchant.cards.*') ? 'absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg' : ''); ?>"
-                        aria-hidden="true"></span>
+                            class="<?php echo e(request()->routeIs('merchant.cards.*') ? 'absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg' : ''); ?>"
+                            aria-hidden="true"></span>
 
                         <!-- Main Menu Button -->
                         <button
@@ -354,9 +346,10 @@
                                 </path>
                             </svg>
 
-                            <span class="ml-2 flex-1 text-left <?php echo e(request()->routeIs('merchant.cards.*')
-                    ? 'text-gray-800 dark:text-gray-200'
-                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>">Cards</span>
+                            <span
+                                class="ml-2 flex-1 text-left <?php echo e(request()->routeIs('merchant.cards.*')
+                                    ? 'text-gray-800 dark:text-gray-200'
+                                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>">Cards</span>
 
                             <!-- Rotating Arrow -->
                             <svg class="w-4 h-4 ml-auto transform transition-transform duration-300 ease-in-out rotate-0"
@@ -411,8 +404,8 @@
                     })"
                         x-on:destroy.window="window.removeEventListener('resize', () => {})">
                         <span
-                        class="<?php echo e(request()->routeIs('merchant.marketplace.*') ? 'absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg' : ''); ?>"
-                        aria-hidden="true"></span>
+                            class="<?php echo e(request()->routeIs('merchant.marketplace.*') ? 'absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg' : ''); ?>"
+                            aria-hidden="true"></span>
 
                         <!-- Main Menu Button -->
                         <button
@@ -434,11 +427,19 @@
                             :aria-expanded="openCards.toString()">
 
                             <!-- Icon -->
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shopping-bag-icon lucide-shopping-bag"><path d="M16 10a4 4 0 0 1-8 0"/><path d="M3.103 6.034h17.794"/><path d="M3.4 5.467a2 2 0 0 0-.4 1.2V20a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6.667a2 2 0 0 0-.4-1.2l-2-2.667A2 2 0 0 0 17 2H7a2 2 0 0 0-1.6.8z"/></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="lucide lucide-shopping-bag-icon lucide-shopping-bag">
+                                <path d="M16 10a4 4 0 0 1-8 0" />
+                                <path d="M3.103 6.034h17.794" />
+                                <path
+                                    d="M3.4 5.467a2 2 0 0 0-.4 1.2V20a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6.667a2 2 0 0 0-.4-1.2l-2-2.667A2 2 0 0 0 17 2H7a2 2 0 0 0-1.6.8z" />
+                            </svg>
 
-                            <span class="ml-2 flex-1 text-left <?php echo e(request()->routeIs('merchant.marketplace.*')
-                    ? 'text-gray-800 dark:text-gray-200'
-                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>">MarketPlace</span>
+                            <span
+                                class="ml-2 flex-1 text-left <?php echo e(request()->routeIs('merchant.marketplace.*')
+                                    ? 'text-gray-800 dark:text-gray-200'
+                                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>">MarketPlace</span>
 
                             <!-- Rotating Arrow -->
                             <svg class="w-4 h-4 ml-auto transform transition-transform duration-300 ease-in-out rotate-0"
@@ -486,43 +487,61 @@
         </div>
 
         <!-- Profile & Settings at bottom -->
-        <div class="px-6 mt-6 border-t border-gray-200 dark:border-gray-700 pt-4">
-            <!-- Profile -->
-            <a href="<?php echo e(route('profile.edit')); ?>"
-                class="flex items-center px-2 py-2 text-xs font-medium text-gray-700 dark:text-gray-300 rounded-md
-               transition-colors duration-150
-               hover:bg-gray-100 hover:text-gray-900
-               dark:hover:bg-black dark:hover:text-white">
-                <svg class="w-5 h-5 mr-3 transition-colors duration-150" fill="none" stroke="currentColor"
-                    stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                </svg>
-                Profile
-            </a>
+<?php if(auth()->guard()->check()): ?>
+<a href="<?php echo e(route('profile.edit')); ?>"
+   class="inline-flex w-full items-center justify-between gap-x-3 rounded-md
+           hover:bg-gray-200
+          dark:bg-white/10 dark:hover:bg-white/20
+          px-4 py-2 text-sm font-semibold
+          text-gray-800 dark:text-white
+          focus:outline-none focus:ring-2 focus:ring-indigo-500 mt-6 transition">
 
-            <!-- Settings -->
-            
+    <!-- Profile Image -->
+    <div class="flex items-start align-middle
+    ">
+        <img class="w-8 h-8 rounded-full object-cover border border-gray-300 dark:border-gray-600"
+             src="<?php echo e(Auth::user()->profile_photo_url ?? '/default-profile.png'); ?>"
+             alt="<?php echo e(Auth::user()->name); ?>">
+        <!-- User Info -->
+        <div class="ml-2 flex flex-col text-left">
+            <span class="text-sm font-semibold text-gray-900 dark:text-white">
+                <?php echo e(Auth::user()->name); ?>
 
-            <!-- Logout -->
-            <form method="POST" action="<?php echo e(route('logout')); ?>">
-                <?php echo csrf_field(); ?>
-                <button type="submit"
-                    class="flex items-center w-full px-2 py-2 mt-2 text-xs font-medium text-gray-700 dark:text-gray-300 rounded-md
-                   transition-colors duration-150
-                   hover:bg-gray-100 hover:text-gray-900
-                   dark:hover:bg-black dark:hover:text-white">
-                    <svg class="w-5 h-5 mr-3 transition-colors duration-150" fill="none" stroke="currentColor"
-                        stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M11 16l-4-4m0 0l4-4m-4
-                   4h14m-5 4v1a3 3 0 01-3
-                   3H6a3 3 0 01-3-3V7a3 3
-                   0 013-3h7a3 3 0 013 3v1">
-                        </path>
-                    </svg>
-                    Log out
-                </button>
-            </form>
+            </span>
+            <span class="text-xs text-gray-600 dark:text-gray-300">
+                <?php echo e(Auth::user()->email); ?>
+
+            </span>
         </div>
+    </div>
+
+    <!-- Chevron Icon -->
+    <svg xmlns="http://www.w3.org/2000/svg"
+         width="24" height="24" viewBox="0 0 24 24"
+         fill="none" stroke="currentColor" stroke-width="2"
+         stroke-linecap="round" stroke-linejoin="round"
+         class="ml-auto text-gray-700 dark:text-gray-300">
+        <path d="m7 15 5 5 5-5"/>
+        <path d="m7 9 5-5 5 5"/>
+    </svg>
+</a>
+<?php endif; ?>
+
+
+
+
+
+
+
+
+
+        
+
+        <!-- Settings -->
+        
+
+        <!-- Logout -->
+        
 
 
 

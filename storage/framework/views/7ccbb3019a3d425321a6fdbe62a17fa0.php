@@ -29,7 +29,7 @@
             <p class="text-gray-600 dark:text-gray-400 mb-4">
                 Clarity: VS1 | Color: F
             </p>
-            <button class="px-4 py-2 w-full text-white bg-blue-600 rounded hover:bg-blue-700">
+            <button class="px-4 py-2 w-full text-white bg-purple-600 rounded hover:bg-purple-700">
                 Request Stock
             </button>
         </div>
@@ -45,7 +45,7 @@
             <p class="text-gray-600 dark:text-gray-400 mb-4">
                 Clarity: VVS2 | Color: D
             </p>
-            <button class="px-4 py-2 w-full text-white bg-blue-600 rounded hover:bg-blue-700">
+            <button class="px-4 py-2 w-full text-white bg-purple-600 rounded hover:bg-purple-700">
                 Request Stock
             </button>
         </div>
@@ -61,7 +61,7 @@
             <p class="text-gray-600 dark:text-gray-400 mb-4">
                 Clarity: SI1 | Color: G
             </p>
-            <button class="px-4 py-2 w-full text-white bg-blue-600 rounded hover:bg-blue-700">
+            <button class="px-4 py-2 w-full text-white bg-purple-600 rounded hover:bg-purple-700">
                 Request Stock
             </button>
         </div>
@@ -77,7 +77,7 @@
             <p class="text-gray-600 dark:text-gray-400 mb-4">
                 Clarity: SI1 | Color: G
             </p>
-            <button class="px-4 py-2 w-full text-white bg-blue-600 rounded hover:bg-blue-700">
+            <button class="px-4 py-2 w-full text-white bg-purple-600 rounded hover:bg-purple-700">
                 Request Stock
             </button>
         </div>

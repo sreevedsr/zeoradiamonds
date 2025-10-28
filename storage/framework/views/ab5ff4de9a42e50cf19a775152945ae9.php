@@ -69,6 +69,15 @@
                         <!-- Diamond Type -->
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
+                                Category
+                            </label>
+                            <input type="text" name="diamond_type"
+                                class="w-full px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600
+                                       dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-600"
+                                placeholder="e.g., D6, D7" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
                                 Diamond Type
                             </label>
                             <input type="text" name="diamond_type"
@@ -101,19 +110,19 @@
 
                         <!-- Color -->
                         <!-- Color -->
-<div>
-    <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
-        Color <span class="text-red-500">*</span>
-    </label>
-    <select name="color" required
-        class="w-full px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
+                                Color <span class="text-red-500">*</span>
+                            </label>
+                            <select name="color" required
+                                class="w-full px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600
                dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-600">
-        <option value="" disabled selected>Select diamond color</option>
-        <?php $__currentLoopData = range('D', 'Z'); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $color): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-            <option value="<?php echo e($color); ?>"><?php echo e($color); ?></option>
-        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-    </select>
-</div>
+                                <option value="" disabled selected>Select diamond color</option>
+                                <?php $__currentLoopData = range('D', 'Z'); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $color): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <option value="<?php echo e($color); ?>"><?php echo e($color); ?></option>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                            </select>
+                        </div>
 
 
                         <!-- Cut -->
