@@ -1,7 +1,7 @@
 <?php $attributes ??= new \Illuminate\View\ComponentAttributeBag;
 
 $__newAttributes = [];
-$__propNames = \Illuminate\View\ComponentAttributeBag::extractPropNames((['value']));
+$__propNames = \Illuminate\View\ComponentAttributeBag::extractPropNames((['url']));
 
 foreach ($attributes->all() as $__key => $__value) {
     if (in_array($__key, $__propNames)) {
@@ -16,7 +16,7 @@ $attributes = new \Illuminate\View\ComponentAttributeBag($__newAttributes);
 unset($__propNames);
 unset($__newAttributes);
 
-foreach (array_filter((['value']), 'is_string', ARRAY_FILTER_USE_KEY) as $__key => $__value) {
+foreach (array_filter((['url']), 'is_string', ARRAY_FILTER_USE_KEY) as $__key => $__value) {
     $$__key = $$__key ?? $__value;
 }
 
@@ -27,11 +27,16 @@ foreach ($attributes->all() as $__key => $__value) {
 }
 
 unset($__defined_vars, $__key, $__value); ?>
+<tr>
+<td class="header">
+<a href="<?php echo new \Illuminate\Support\EncodedHtmlString($url); ?>" style="display: inline-block;">
+<?php if(trim($slot) === 'Laravel'): ?>
+<img src="https://laravel.com/img/notification-logo.png" class="logo" alt="Laravel Logo">
+<?php else: ?>
+<?php echo $slot; ?>
 
-<label <?php echo e($attributes->merge([
-    'class' => 'block font-medium text-sm text-gray-700 dark:text-gray-400 mt-2'
-])); ?>>
-    <?php echo e($value ?? $slot); ?>
-
-</label>
-<?php /**PATH C:\xampp\htdocs\Zeeyame\resources\views/components/input-label.blade.php ENDPATH**/ ?>
+<?php endif; ?>
+</a>
+</td>
+</tr>
+<?php /**PATH C:\xampp\htdocs\Zeeyame\vendor\laravel\framework\src\Illuminate\Mail/resources/views/html/header.blade.php ENDPATH**/ ?>

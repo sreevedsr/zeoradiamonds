@@ -226,7 +226,7 @@ class DashboardController extends Controller
     // View customer requests
     public function customerRequests()
     {
-        $requests = []; // Replace with actual requests from DB
-        return view('admin.cards.requests', compact('requests'));
+        // $requests = []; // Replace with actual requests from DB
+        return view('admin.cards.requests');
     }
 }

@@ -8,12 +8,39 @@ use Illuminate\Support\Facades\Hash;
 
 class MerchantController extends Controller
 {
-    public function index()
-    {
-        // List all merchants
-        $merchants = User::where('role', 'merchant')->get();
-        return view('admin.merchants.index', compact('merchants'));
-    }
+   public function index()
+{
+    $perPage = 10; // Number of merchants per page
+    $page = request()->get('page', 1); // Get current page number
+
+    // Query total merchants and paginated data
+    $total = User::where('role', 'merchant')->count();
+
+    $merchants = User::where('role', 'merchant')
+        ->skip(($page - 1) * $perPage)
+        ->take($perPage)
+        ->get();
+
+    // Calculate range for display
+    $from = ($page - 1) * $perPage + 1;
+    $to = min($from + $perPage - 1, $total);
+    $totalPages = ceil($total / $perPage);
+
+    $pages = range(1, $totalPages);
+
+    // Send merchants and pagination data to view
+    return view('admin.merchants.index', [
+        'merchants' => $merchants,
+        'pagination' => [
+            'from' => $from,
+            'to' => $to,
+            'total' => $total,
+            'pages' => $pages,
+            'current' => $page,
+        ],
+    ]);
+}
+
 
     public function create()
     {
@@ -22,50 +49,81 @@ class MerchantController extends Controller
     }
 
     public function store(Request $request)
-{
-    // Validate input
-    $request->validate([
-        'name' => 'required|string|max:255',
-        'business_name' => 'required|string|max:255',
-        'email' => 'required|email|unique:users,email',
-        'phone' => 'required|string|max:20',
-        'address' => 'required|string|max:500',
-    ]);
+    {
+        // Validate input
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'business_name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'phone' => 'required|string|max:20',
+            'address' => 'required|string|max:500',
+        ]);
 
-    // Create merchant
-    User::create([
-        'name' => $request->name,
-        'business_name' => $request->business_name,
-        'email' => $request->email,
-        'phone' => $request->phone,
-        'address' => $request->address,
-        'role' => 'merchant',
-        'password' => Hash::make('merchant123'), // default or remove if nullable
-    ]);
+        // Create merchant
+        User::create([
+            'name' => $request->name,
+            'business_name' => $request->business_name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'address' => $request->address,
+            'role' => 'merchant',
+            'password' => Hash::make('merchant123'), // default or remove if nullable
+        ]);
 
-    return redirect()->route('admin.merchants.index')->with('success', 'Merchant added successfully.');
-}
+        return redirect()->route('admin.merchants.index')->with('success', 'Merchant added successfully.');
+    }
+    public function edit($id)
+    {
+        $merchant = User::findOrFail($id);
+        return view('admin.merchants.edit', compact('merchant'));
+    }
+
+    // Update merchant details
+    public function update(Request $request, $id)
+    {
+        $merchant = User::findOrFail($id);
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'business_name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $merchant->id,
+            'phone' => 'required|string|max:20',
+            'address' => 'required|string|max:500',
+        ]);
+
+        $merchant->update($request->only(['name', 'business_name', 'email', 'phone', 'address']));
+
+        return redirect()->route('admin.merchants.index')->with('success', 'Merchant updated successfully.');
+    }
+
+    public function destroy($id)
+    {
+        $merchant = User::findOrFail($id);
+        $merchant->delete();
+
+        return redirect()->route('admin.merchants.index')->with('success', 'Merchant deleted successfully!');
+    }
 
 
     public function assignCardsPage()
-{
-    // Fetch merchants, customers, and available cards if needed
-    // $customers = \App\Models\Customer::all();
-    // $cards = \App\Models\Card::all();
+    {
+        // Fetch merchants, customers, and available cards if needed
+        // $customers = \App\Models\Customer::all();
+        // $cards = \App\Models\Card::all();
 
-    // Return your assign-cards view (create this if not existing)
-    return view('merchant.cards.assign');
-}
-public function viewCards()
-{
-    // Fetch cards from database if needed
-    // Example:
-    // $cards = Card::all();
+        // Return your assign-cards view (create this if not existing)
+        return view('merchant.cards.assign');
+    }
+    public function viewCards()
+    {
+        // Fetch cards from database if needed
+        // Example:
+        // $cards = Card::all();
 
-    // Return the view
-    return view('merchant.cards.index');
-}
-public function requestCards()
+        // Return the view
+        return view('merchant.cards.index');
+    }
+    public function requestCards()
     {
         return view('merchant.cards.request-card');
     }

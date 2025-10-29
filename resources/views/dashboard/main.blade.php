@@ -29,7 +29,7 @@
     @endphp
 
     <!-- Cards -->
-    <div class="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4">
+    <div class="grid gap-6 mb-8 sm:grid-cols-2 md:grid-cols-2 xl:grid-cols-4">
         @include('dashboard.partials.card', [
             'title' => 'Total Clients',
             'value' => $metrics['total_clients'],
@@ -68,38 +68,45 @@
 
     <!-- Content Row: Chart + Top customers table -->
     <div class="grid gap-6 mb-8 md:grid-cols-2">
-        <!-- Monthly Sales Chart -->
-        <div class="p-6 bg-white rounded-lg shadow-xs dark:bg-gray-800">
-            <h3 class="mb-4 text-lg font-semibold text-gray-700 dark:text-gray-200">Monthly Sales (last 6 months)</h3>
-            <canvas id="salesChart" width="400" height="200"></canvas>
-            <p class="mt-3 text-sm text-gray-500 dark:text-gray-400">Values displayed in INR</p>
+    <!-- Monthly Sales Chart -->
+    <div class="w-full p-6 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+        <h3 class="mb-4 text-lg font-semibold text-gray-700 dark:text-gray-200">
+            Monthly Sales (last 6 months)
+        </h3>
+        <div class="w-full overflow-hidden">
+            <canvas id="salesChart" class="w-full h-48 sm:h-56"></canvas>
         </div>
+        <p class="mt-3 text-sm text-gray-500 dark:text-gray-400">Values displayed in INR</p>
+    </div>
 
-        <!-- Top customers -->
-        <div class="p-6 bg-white rounded-lg shadow-xs dark:bg-gray-800">
-            <h3 class="mb-4 text-lg font-semibold text-gray-700 dark:text-gray-200">Top Customers</h3>
-            <div class="overflow-x-auto">
-                <table class="w-full whitespace-no-wrap">
-                    <thead>
-                        <tr class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase">
-                            <th class="px-4 py-3">Customer</th>
-                            <th class="px-4 py-3">Orders</th>
-                            <th class="px-4 py-3">Amount</th>
+    <!-- Top Customers -->
+    <div class="w-full p-6 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+        <h3 class="mb-4 text-lg font-semibold text-gray-700 dark:text-gray-200">Top Customers</h3>
+
+        <!-- Make table responsive and prevent overflow -->
+        <div class="overflow-x-auto max-w-full">
+            <table class="min-w-full table-auto border-collapse">
+                <thead class="bg-gray-50 dark:bg-gray-700">
+                    <tr class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase">
+                        <th class="px-4 py-3">Customer</th>
+                        <th class="px-4 py-3">Orders</th>
+                        <th class="px-4 py-3">Amount</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+                    @foreach ($metrics['top_customers'] as $c)
+                        <tr class="text-gray-700 dark:text-gray-200">
+                            <td class="px-4 py-3 text-sm break-words">{{ $c['name'] }}</td>
+                            <td class="px-4 py-3 text-sm">{{ $c['orders'] }}</td>
+                            <td class="px-4 py-3 text-sm">{{ money_inr($c['amount']) }}</td>
                         </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-                        @foreach ($metrics['top_customers'] as $c)
-                            <tr class="text-gray-700 dark:text-gray-200">
-                                <td class="px-4 py-3 text-sm">{{ $c['name'] }}</td>
-                                <td class="px-4 py-3 text-sm">{{ $c['orders'] }}</td>
-                                <td class="px-4 py-3 text-sm">{{ money_inr($c['amount']) }}</td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
+                    @endforeach
+                </tbody>
+            </table>
         </div>
     </div>
+</div>
+
 
     <!-- Small summary row -->
     <div class="grid gap-6 mb-8 md:grid-cols-3">

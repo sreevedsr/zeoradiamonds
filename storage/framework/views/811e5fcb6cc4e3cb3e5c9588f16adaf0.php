@@ -1,6 +1,6 @@
 <!-- Desktop Sidebar -->
-<aside class="z-20 hidden w-64 overflow-y-auto bg-white dark:bg-gray-800 md:block flex-shrink-0">
-    <div class="flex flex-col justify-between h-full py-4 text-gray-500 dark:text-gray-400">
+<div class="hidden w-64 overflow-y-auto bg-white dark:bg-gray-800 md:block flex-shrink-0">
+    <div class="flex flex-col justify-between h-full py-4 text-gray-500 dark:text-gray-400  bg-white dark:bg-gray-800">
         <div>
             <!-- Logo -->
             <a class="ml-6 text-lg font-bold text-gray-800 dark:text-gray-200" href="#">
@@ -16,7 +16,7 @@
                         aria-hidden="true"></span>
                     <a href="<?php echo e(route('dashboard')); ?>"
                         class="inline-flex items-start w-full text-sm font-semibold transition-colors duration-150
-                       <?php echo e(request()->routeIs('dashboard') ? 'text-gray-800 dark:text-gray-200' : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>">
+                           <?php echo e(request()->routeIs('dashboard') ? 'text-gray-800 dark:text-gray-200' : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
                             stroke-linecap="round" stroke-linejoin="round">
                             <path
@@ -43,23 +43,23 @@
                         <!-- Main Menu Button -->
                         <button
                             @click="
-      // toggle with nice animation:
-      if (!openMerchants) {
-        // opening: measure and set px height (animates from 0 -> measured)
-        setMeasured();
-        openMerchants = true;
-      } else {
-        // closing: set current measured height then force it to 0 to animate collapse
-        // (helps when height had been 'auto')
-        if ($refs.panel) {
-          height = $refs.panel.scrollHeight;
-          // wait a tick so browser registers starting height, then collapse
-          $nextTick(()=> { height = 0; openMerchants = false })
-        } else {
-          height = 0; openMerchants = false
-        }
-      }
-    "
+          // toggle with nice animation:
+          if (!openMerchants) {
+            // opening: measure and set px height (animates from 0 -> measured)
+            setMeasured();
+            openMerchants = true;
+          } else {
+            // closing: set current measured height then force it to 0 to animate collapse
+            // (helps when height had been 'auto')
+            if ($refs.panel) {
+              height = $refs.panel.scrollHeight;
+              // wait a tick so browser registers starting height, then collapse
+              $nextTick(()=> { height = 0; openMerchants = false })
+            } else {
+              height = 0; openMerchants = false
+            }
+          }
+        "
                             type="button"
                             class="flex items-start w-full text-sm font-semibold text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors duration-150 rounded-md focus:outline-none"
                             :aria-expanded="openMerchants.toString()">
@@ -92,21 +92,21 @@
                         <!-- Submenu -->
                         <ul x-ref="panel" :style="`height: ${height}px`"
                             @transitionend="
-      // after opening transition finish, if open -> make height 'auto' for flexible layout
-      if (openMerchants) { height = 'auto' }
-    "
+          // after opening transition finish, if open -> make height 'auto' for flexible layout
+          if (openMerchants) { height = 'auto' }
+        "
                             class="mt-2 space-y-2 px-4 overflow-hidden transition-all duration-300 ease-in-out">
                             <li>
                                 <a href="<?php echo e(route('admin.merchants.create')); ?>"
                                     class="block px-2 py-1 text-sm font-medium rounded-md
-           <?php echo e(request()->routeIs('admin.merchants.create') ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700' : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>">
+               <?php echo e(request()->routeIs('admin.merchants.create') ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700' : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>">
                                     Add Merchant
                                 </a>
                             </li>
                             <li>
                                 <a href="<?php echo e(route('admin.merchants.index')); ?>"
                                     class="block px-2 py-1 text-sm font-medium rounded-md
-           <?php echo e(request()->routeIs('admin.merchants.index') ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700' : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>">
+               <?php echo e(request()->routeIs('admin.merchants.index') ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700' : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>">
                                     View Merchants
                                 </a>
                             </li>
@@ -134,18 +134,18 @@
                         <!-- Main Menu Button -->
                         <button
                             @click="
-            if (!openCustomers) {
-                setMeasured();
-                openCustomers = true;
-            } else {
-                if ($refs.panel) {
-                    height = $refs.panel.scrollHeight;
-                    $nextTick(() => { height = 0; openCustomers = false });
+                if (!openCustomers) {
+                    setMeasured();
+                    openCustomers = true;
                 } else {
-                    height = 0; openCustomers = false;
+                    if ($refs.panel) {
+                        height = $refs.panel.scrollHeight;
+                        $nextTick(() => { height = 0; openCustomers = false });
+                    } else {
+                        height = 0; openCustomers = false;
+                    }
                 }
-            }
-        "
+            "
                             type="button"
                             class="flex items-start w-full text-sm font-semibold text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors duration-150 rounded-md focus:outline-none"
                             :aria-expanded="openCustomers.toString()">
@@ -181,9 +181,9 @@
                             <li>
                                 <a href="<?php echo e(route('merchant.customers.create')); ?>"
                                     class="block px-2 py-1 text-sm font-medium rounded-md
-                    <?php echo e(request()->routeIs('merchant.customers.create')
-                        ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
-                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>">
+                        <?php echo e(request()->routeIs('merchant.customers.create')
+                            ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
+                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>">
                                     Add Customer
                                 </a>
                             </li>
@@ -191,9 +191,9 @@
                             <li>
                                 <a href="<?php echo e(route('merchant.customers.index')); ?>"
                                     class="block px-2 py-1 text-sm font-medium rounded-md
-                    <?php echo e(request()->routeIs('merchant.customers.index')
-                        ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
-                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>">
+                        <?php echo e(request()->routeIs('merchant.customers.index')
+                            ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
+                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>">
                                     View Customers
                                 </a>
                             </li>
@@ -226,18 +226,18 @@
                         <!-- Main Menu Button -->
                         <button
                             @click="
-            if (!openCards) {
-                setMeasured();
-                openCards = true;
-            } else {
-                if ($refs.cardsPanel) {
-                    height = $refs.cardsPanel.scrollHeight;
-                    $nextTick(() => { height = 0; openCards = false });
+                if (!openCards) {
+                    setMeasured();
+                    openCards = true;
                 } else {
-                    height = 0; openCards = false;
+                    if ($refs.cardsPanel) {
+                        height = $refs.cardsPanel.scrollHeight;
+                        $nextTick(() => { height = 0; openCards = false });
+                    } else {
+                        height = 0; openCards = false;
+                    }
                 }
-            }
-        "
+            "
                             type="button"
                             class="flex items-start w-full text-sm font-semibold text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors duration-150 rounded-md focus:outline-none"
                             :aria-expanded="openCards.toString()">
@@ -253,8 +253,8 @@
                                 class="ml-2 flex-1 text-left <?php echo e(request()->routeIs('admin.cards.*')
                                     ? 'text-gray-800 dark:text-gray-200'
                                     : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>">Cards</span>
-                            <svg class="w-4 h-4 ml-auto transition-transform duration-300"
-                                :class="{ 'rotate-180': openCards }" fill="currentColor" viewBox="0 0 20 20">
+                            <svg class="w-4 h-4 ml-auto transition-transform duration-300" :class="{ 'rotate-180': openCards }"
+                                fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd"
                                     d="M5.293 7.293a1 1 0 0 1 1.414 0L10 10.586l3.293-3.293a1 1 0 1 1 1.414 1.414l-4 4a1 1 0 0 1-1.414 0l-4-4a1 1 0 0 1 0-1.414z"
                                     clip-rule="evenodd"></path>
@@ -269,7 +269,7 @@
                             <li>
                                 <a href="<?php echo e(route('admin.cards.create')); ?>"
                                     class="block px-2 py-1 text-sm font-medium rounded-md
-                <?php echo e(request()->routeIs('admin.cards.create') ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700' : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>">
+                    <?php echo e(request()->routeIs('admin.cards.create') ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700' : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>">
                                     Add Card
                                 </a>
                             </li>
@@ -277,16 +277,16 @@
                             <li>
                                 <a href="<?php echo e(route('admin.cards.index')); ?>"
                                     class="block px-2 py-1 text-sm font-medium rounded-md
-                <?php echo e(request()->routeIs('admin.cards.index') ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700' : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>">
+                    <?php echo e(request()->routeIs('admin.cards.index') ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700' : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>">
                                     View Cards
                                 </a>
                             </li>
                             <li>
                                 <a href="<?php echo e(route('admin.cards.assign')); ?>"
                                     class="block px-2 py-1 text-sm font-medium rounded-md
-                <?php echo e(request()->routeIs('admin.cards.assign')
-                    ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
-                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>">
+                    <?php echo e(request()->routeIs('admin.cards.assign')
+                        ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
+                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>">
                                     Assign Cards
                                 </a>
                             </li>
@@ -294,7 +294,7 @@
                             <li>
                                 <a href="<?php echo e(route('admin.cards.requests')); ?>"
                                     class="block px-2 py-1 text-sm font-medium rounded-md
-                <?php echo e(request()->routeIs('admin.cards.requests') ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700' : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>">
+                    <?php echo e(request()->routeIs('admin.cards.requests') ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700' : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>">
                                     View Card Requests
                                 </a>
                             </li>
@@ -322,25 +322,25 @@
                         <!-- Main Menu Button -->
                         <button
                             @click="
-            if (!openCards) {
-                setMeasured();
-                openCards = true;
-            } else {
-                if ($refs.cardsPanel) {
-                    height = $refs.cardsPanel.scrollHeight;
-                    $nextTick(() => { height = 0; openCards = false });
+                if (!openCards) {
+                    setMeasured();
+                    openCards = true;
                 } else {
-                    height = 0; openCards = false;
+                    if ($refs.cardsPanel) {
+                        height = $refs.cardsPanel.scrollHeight;
+                        $nextTick(() => { height = 0; openCards = false });
+                    } else {
+                        height = 0; openCards = false;
+                    }
                 }
-            }
-        "
+            "
                             type="button"
                             class="flex items-start w-full text-sm font-semibold text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors duration-150 rounded-md focus:outline-none"
                             :aria-expanded="openCards.toString()">
 
                             <!-- Icon -->
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"
-                                viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+                                stroke-linecap="round" stroke-linejoin="round">
                                 <path
                                     d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
                                 </path>
@@ -368,9 +368,9 @@
                             <li>
                                 <a href="<?php echo e(route('merchant.cards.assign')); ?>"
                                     class="block px-2 py-1 text-sm font-medium rounded-md
-                <?php echo e(request()->routeIs('merchant.cards.assign')
-                    ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
-                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>">
+                    <?php echo e(request()->routeIs('merchant.cards.assign')
+                        ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
+                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>">
                                     Assign Cards
                                 </a>
                             </li>
@@ -378,9 +378,9 @@
                             <li>
                                 <a href="<?php echo e(route('merchant.cards.index')); ?>"
                                     class="block px-2 py-1 text-sm font-medium rounded-md
-                <?php echo e(request()->routeIs('merchant.cards.index')
-                    ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
-                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>">
+                    <?php echo e(request()->routeIs('merchant.cards.index')
+                        ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
+                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>">
                                     View Cards
                                 </a>
                             </li>
@@ -410,18 +410,18 @@
                         <!-- Main Menu Button -->
                         <button
                             @click="
-            if (!openCards) {
-                setMeasured();
-                openCards = true;
-            } else {
-                if ($refs.cardsPanel) {
-                    height = $refs.cardsPanel.scrollHeight;
-                    $nextTick(() => { height = 0; openCards = false });
+                if (!openCards) {
+                    setMeasured();
+                    openCards = true;
                 } else {
-                    height = 0; openCards = false;
+                    if ($refs.cardsPanel) {
+                        height = $refs.cardsPanel.scrollHeight;
+                        $nextTick(() => { height = 0; openCards = false });
+                    } else {
+                        height = 0; openCards = false;
+                    }
                 }
-            }
-        "
+            "
                             type="button"
                             class="flex items-start w-full text-sm font-semibold text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors duration-150 rounded-md focus:outline-none"
                             :aria-expanded="openCards.toString()">
@@ -460,9 +460,9 @@
                             <li>
                                 <a href="<?php echo e(route('merchant.marketplace.request')); ?>"
                                     class="block px-2 py-1 text-sm font-medium rounded-md
-                <?php echo e(request()->routeIs('merchant.marketplace.request')
-                    ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
-                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>">
+                    <?php echo e(request()->routeIs('merchant.marketplace.request')
+                        ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
+                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>">
                                     Request Cards
                                 </a>
                             </li>
@@ -470,9 +470,9 @@
                             <li>
                                 <a href="<?php echo e(route('merchant.marketplace.view')); ?>"
                                     class="block px-2 py-1 text-sm font-medium rounded-md
-                <?php echo e(request()->routeIs('merchant.marketplace.view')
-                    ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
-                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>">
+                    <?php echo e(request()->routeIs('merchant.marketplace.view')
+                        ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
+                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>">
                                     View Requests
                                 </a>
                             </li>
@@ -487,45 +487,43 @@
         </div>
 
         <!-- Profile & Settings at bottom -->
-<?php if(auth()->guard()->check()): ?>
-<a href="<?php echo e(route('profile.edit')); ?>"
-   class="inline-flex w-full items-center justify-between gap-x-3 rounded-md
-           hover:bg-gray-200
-          dark:bg-white/10 dark:hover:bg-white/20
-          px-4 py-2 text-sm font-semibold
-          text-gray-800 dark:text-white
-          focus:outline-none focus:ring-2 focus:ring-indigo-500 mt-6 transition">
+        <?php if(auth()->guard()->check()): ?>
+            <a href="<?php echo e(route('profile.edit')); ?>"
+                class="inline-flex w-full items-center justify-between gap-x-3 rounded-md
+               hover:bg-gray-200
+              dark:bg-white/10 dark:hover:bg-white/20
+              px-4 py-2 text-sm font-semibold
+              text-gray-800 dark:text-white
+              focus:outline-none focus:ring-2 focus:ring-indigo-500 mt-6 transition">
 
-    <!-- Profile Image -->
-    <div class="flex items-start align-middle
-    ">
-        <img class="w-8 h-8 rounded-full object-cover border border-gray-300 dark:border-gray-600"
-             src="<?php echo e(Auth::user()->profile_photo_url ?? '/default-profile.png'); ?>"
-             alt="<?php echo e(Auth::user()->name); ?>">
-        <!-- User Info -->
-        <div class="ml-2 flex flex-col text-left">
-            <span class="text-sm font-semibold text-gray-900 dark:text-white">
-                <?php echo e(Auth::user()->name); ?>
+                <!-- Profile Image -->
+                <div class="flex items-start align-middle
+        ">
+                    <img class="w-8 h-8 rounded-full object-cover border border-gray-300 dark:border-gray-600"
+                        src="<?php echo e(Auth::user()->profile_photo_url ?? '/default-profile.png'); ?>"
+                        alt="<?php echo e(Auth::user()->name); ?>">
+                    <!-- User Info -->
+                    <div class="ml-2 flex flex-col text-left">
+                        <span class="text-sm font-semibold text-gray-900 dark:text-white">
+                            <?php echo e(Auth::user()->name); ?>
 
-            </span>
-            <span class="text-xs text-gray-600 dark:text-gray-300">
-                <?php echo e(Auth::user()->email); ?>
+                        </span>
+                        <span class="text-xs text-gray-600 dark:text-gray-300">
+                            <?php echo e(Auth::user()->email); ?>
 
-            </span>
-        </div>
-    </div>
+                        </span>
+                    </div>
+                </div>
 
-    <!-- Chevron Icon -->
-    <svg xmlns="http://www.w3.org/2000/svg"
-         width="24" height="24" viewBox="0 0 24 24"
-         fill="none" stroke="currentColor" stroke-width="2"
-         stroke-linecap="round" stroke-linejoin="round"
-         class="ml-auto text-gray-700 dark:text-gray-300">
-        <path d="m7 15 5 5 5-5"/>
-        <path d="m7 9 5-5 5 5"/>
-    </svg>
-</a>
-<?php endif; ?>
+                <!-- Chevron Icon -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="ml-auto text-gray-700 dark:text-gray-300">
+                    <path d="m7 15 5 5 5-5" />
+                    <path d="m7 9 5-5 5 5" />
+                </svg>
+            </a>
+        <?php endif; ?>
 
 
 
@@ -546,96 +544,145 @@
 
 
     </div>
-</aside>
+</div>
 
 <!-- Mobile Sidebar -->
-<div x-show="isSideMenuOpen" x-transition.opacity class="fixed inset-0 z-10 bg-black bg-opacity-50 md:hidden"></div>
 
-<aside class="fixed inset-y-0 z-20 w-64 mt-16 overflow-y-auto bg-white dark:bg-gray-800 md:hidden"
-    x-show="isSideMenuOpen" x-transition:enter="transition ease-in-out duration-150"
-    x-transition:enter-start="opacity-0 transform -translate-x-20" x-transition:enter-end="opacity-100"
-    x-transition:leave="transition ease-in-out duration-150" x-transition:leave-start="opacity-100"
-    x-transition:leave-end="opacity-0 transform -translate-x-20" @click.away="closeSideMenu"
-    @keydown.escape="closeSideMenu">
 
-    <div class="flex flex-col justify-between py-4 text-gray-500 dark:text-gray-400 h-full">
-        <div>
-            <!-- Logo -->
-            <a class="ml-6 text-lg font-bold text-gray-800 dark:text-gray-200" href="#">
-                Zeeyame
-            </a>
+    
 
-            <!-- Navigation -->
-            <ul class="mt-6">
-                <li class="relative px-6 py-3">
-                    <a href="<?php echo e(route('dashboard')); ?>"
-                        class="inline-flex items-start w-full text-sm font-semibold transition-colors duration-150
-                       <?php echo e(request()->routeIs('dashboard') ? 'text-gray-800 dark:text-gray-200' : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>">
-                        Dashboard
-                    </a>
-                </li>
-            </ul>
+        <div class="fixed inset-y-0 z-20 w-64 mt-16 overflow-y-auto bg-white dark:bg-gray-800 md:hidden flex flex-col justify-between py-4 text-gray-500 dark:text-gray-400 h-full"
+            x-show="isSideMenuOpen" x-transition:enter="transition ease-in-out duration-150"
+            x-transition:enter-start="opacity-0 transform -translate-x-20" x-transition:enter-end="opacity-100"
+            x-transition:leave="transition ease-in-out duration-150" x-transition:leave-start="opacity-100"
+            x-transition:leave-end="opacity-0 transform -translate-x-20" @click.away="closeSideMenu"
+            @keydown.escape="closeSideMenu">
+            <div>
+                <!-- Logo -->
+                <a class="ml-6 text-lg font-bold text-gray-800 dark:text-gray-200" href="#">
+                    Zeeyame
+                </a>
 
-            <ul>
-                <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('view-forms')): ?>
+                <!-- Navigation -->
+                <ul class="mt-6">
                     <li class="relative px-6 py-3">
-                        <a href="<?php echo e(route('forms.index')); ?>"
-                            class="inline-flex items-start w-full text-sm font-semibold transition-colors duration-150
-                       <?php echo e(request()->routeIs('forms.*') ? 'text-gray-800 dark:text-gray-200' : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>">
-                            Forms
+                        <a href="<?php echo e(route('dashboard')); ?>"
+                            class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150
+                        <?php echo e(request()->routeIs('dashboard') ? 'text-gray-800 dark:text-gray-200' : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>">
+                            Dashboard
                         </a>
                     </li>
-                <?php endif; ?>
+                </ul>
 
+                <!-- Merchants -->
+                <li class="relative px-6 py-3" x-data="{ openMerchants: <?php echo e(request()->routeIs('merchant.*') ? 'true' : 'false'); ?> }">
+                    <button @click="openMerchants = !openMerchants"
+                        class="inline-flex items-center justify-between w-full text-sm font-semibold transition-colors duration-150
+                    <?php echo e(request()->routeIs('merchant.*') ? 'text-gray-800 dark:text-gray-200' : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>">
+                        <span>Merchants</span>
+                        <svg class="w-4 h-4 ml-2 transform transition-transform duration-300"
+                            :class="{ 'rotate-180': openMerchants }" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd"
+                                d="M5.293 7.293a1 1 0 0 1 1.414 0L10 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414l-4 4a1 1 0 0 1-1.414 0l-4-4a1 1 0 0 1 0-1.414z"
+                                clip-rule="evenodd"></path>
+                        </svg>
+                    </button>
+                    <ul x-show="openMerchants" x-transition class="mt-2 space-y-2 pl-4">
+                        <li>
+                            <a href="<?php echo e(route('admin.merchants.index')); ?>"
+                                class="block text-sm font-medium
+                            <?php echo e(request()->routeIs('admin.merchants.index') ? 'text-gray-800 dark:text-gray-200' : 'text-gray-500 hover:text-gray-800 dark:hover:text-gray-200'); ?>">
+                                All Merchants
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<?php echo e(route('admin.merchants.create')); ?>"
+                                class="block text-sm font-medium
+                            <?php echo e(request()->routeIs('admin.merchants.create') ? 'text-gray-800 dark:text-gray-200' : 'text-gray-500 hover:text-gray-800 dark:hover:text-gray-200'); ?>">
+                                Add Merchant
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <!-- Customers -->
+                <li class="relative px-6 py-3" x-data="{ openCustomers: <?php echo e(request()->routeIs('customer.*') ? 'true' : 'false'); ?> }">
+                    <button @click="openCustomers = !openCustomers"
+                        class="inline-flex items-center justify-between w-full text-sm font-semibold transition-colors duration-150
+                    <?php echo e(request()->routeIs('customer.*') ? 'text-gray-800 dark:text-gray-200' : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>">
+                        <span>Customers</span>
+                        <svg class="w-4 h-4 ml-2 transform transition-transform duration-300"
+                            :class="{ 'rotate-180': openCustomers }" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd"
+                                d="M5.293 7.293a1 1 0 0 1 1.414 0L10 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414l-4 4a1 1 0 0 1-1.414 0l-4-4a1 1 0 0 1 0-1.414z"
+                                clip-rule="evenodd"></path>
+                        </svg>
+                    </button>
+                    <ul x-show="openCustomers" x-transition class="mt-2 space-y-2 pl-4">
+                        <li>
+                            <a href="<?php echo e(route('merchant.customers.index')); ?>"
+                                class="block text-sm font-medium
+                            <?php echo e(request()->routeIs('merchant.customers.index') ? 'text-gray-800 dark:text-gray-200' : 'text-gray-500 hover:text-gray-800 dark:hover:text-gray-200'); ?>">
+                                All Customers
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<?php echo e(route('merchant.customers.create')); ?>"
+                                class="block text-sm font-medium
+                            <?php echo e(request()->routeIs('merchant.customers.create') ? 'text-gray-800 dark:text-gray-200' : 'text-gray-500 hover:text-gray-800 dark:hover:text-gray-200'); ?>">
+                                Add Customer
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <!-- Cards -->
                 <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('view-cards')): ?>
                     <li class="relative px-6 py-3">
                         <a href="<?php echo e(route('admin.cards.index')); ?>"
-                            class="inline-flex items-start w-full text-sm font-semibold transition-colors duration-150
-                       <?php echo e(request()->routeIs('cards.*') ? 'text-gray-800 dark:text-gray-200' : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>">
+                            class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150
+                        <?php echo e(request()->routeIs('cards.*') ? 'text-gray-800 dark:text-gray-200' : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>">
                             Cards
                         </a>
                     </li>
                 <?php endif; ?>
-            </ul>
+            </div>
 
-            
-        </div>
-
-        <!-- Profile & Settings at bottom -->
-        <div class="px-6 mt-6 border-t border-gray-200 dark:border-gray-700 pt-4">
-            <a href="<?php echo e(route('profile.edit')); ?>"
-                class="flex items-center px-2 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700">
-                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
-                    stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                </svg>
-                Profile
-            </a>
-            <a href="#"
-                class="flex items-center px-2 py-2 mt-2 text-sm font-medium text-gray-700 dark:text-gray-200 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700">
-                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
-                    stroke-linecap="round" stroke-linejoin="round">
-                    <path
-                        d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z">
-                    </path>
-                    <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                </svg>
-                Settings
-            </a>
-            <form method="POST" action="<?php echo e(route('logout')); ?>">
-                <?php echo csrf_field(); ?>
-                <button type="submit"
-                    class="flex items-center w-full px-2 py-2 mt-2 text-sm font-medium text-gray-700 dark:text-gray-200 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700">
+            <!-- Profile & Settings at bottom -->
+            <div class="px-6 mt-6 border-t border-gray-200 dark:border-gray-700 pt-4">
+                <a href="<?php echo e(route('profile.edit')); ?>"
+                    class="flex items-center px-2 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2"
+                        viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                    </svg>
+                    Profile
+                </a>
+                <a href="#"
+                    class="flex items-center px-2 py-2 mt-2 text-sm font-medium text-gray-700 dark:text-gray-200 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700">
                     <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2"
                         viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
                         <path
-                            d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1">
+                            d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z">
                         </path>
+                        <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                     </svg>
-                    Log out
-                </button>
-            </form>
+                    Settings
+                </a>
+                <form method="POST" action="<?php echo e(route('logout')); ?>">
+                    <?php echo csrf_field(); ?>
+                    <button type="submit"
+                        class="flex items-center w-full px-2 py-2 mt-2 text-sm font-medium text-gray-700 dark:text-gray-200 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2"
+                            viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                            <path
+                                d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1">
+                            </path>
+                        </svg>
+                        Log out
+                    </button>
+                </form>
+            </div>
         </div>
-    </div>
-</aside>
+    
 <?php /**PATH C:\xampp\htdocs\Zeeyame\resources\views/layouts/sidebar.blade.php ENDPATH**/ ?>

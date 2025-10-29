@@ -28,5 +28,9 @@ foreach ($attributes->all() as $__key => $__value) {
 
 unset($__defined_vars, $__key, $__value); ?>
 
-<input <?php if($disabled): echo 'disabled'; endif; ?> <?php echo e($attributes->merge(['class' => 'border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm'])); ?>>
+<input <?php if($disabled): echo 'disabled'; endif; ?>
+    <?php echo e($attributes->merge([
+        'class' => 'w-full px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600
+                                       dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-600',
+    ])); ?>>
 <?php /**PATH C:\xampp\htdocs\Zeeyame\resources\views/components/text-input.blade.php ENDPATH**/ ?>

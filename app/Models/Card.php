@@ -2,13 +2,31 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Card extends Model
 {
-//     public function requests()
-// {
-//     return $this->hasMany(MerchantRequest::class);
-// }
+    use HasFactory;
+
+    protected $fillable = [
+        'certificate_id',
+        'diamond_purchase_location',
+        'category',
+        'diamond_type',
+        'carat_weight',
+        'clarity',
+        'color',
+        'cut',
+        'diamond_image',
+        'created_by',
+    ];
+    public function merchant()
+    {
+        return $this->belongsTo(User::class, 'merchant_id')
+            ->where('role', 'merchant');
+    }
+
 
 }
+

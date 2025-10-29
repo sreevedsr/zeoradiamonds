@@ -43,7 +43,13 @@ Route::middleware('auth')->group(function () {
             Route::get('/', [CardsController::class, 'index'])->name('index');
             Route::get('/create', [DashboardController::class, 'createCard'])->name('create');
             Route::post('/', [CardsController::class, 'store'])->name('store');
-            Route::get('/assign', [CardsController::class, 'assignExisting'])->name('assign');
+            Route::get('/assign', [CardsController::class, 'showAssignPage'])->name('assign');
+            Route::get('/requests', [DashboardController::class, 'customerRequests'])->name('requests');
+
+            Route::get('/{id}', [CardsController::class, 'show'])->name('show');
+            Route::get('/{id}/edit', [CardsController::class, 'edit'])->name('edit');
+            Route::put('/{id}', [CardsController::class, 'update'])->name('update');
+            Route::delete('/{id}', [CardsController::class, 'destroy'])->name('destroy');
         });
 
         // Forms management
@@ -54,16 +60,20 @@ Route::middleware('auth')->group(function () {
         Route::get('/logs', [DashboardController::class, 'logs'])->name('logs');
         Route::get('/requests', [DashboardController::class, 'requests'])->name('requests');
 
+        Route::get('/merchants/requests', [MerchantRequestController::class, 'index'])->name('merchants.request');
         // Merchant management
         Route::middleware('can:view-merchants')->prefix('merchants')->name('merchants.')->group(function () {
             Route::get('/', [MerchantController::class, 'index'])->name('index');       // View merchants
             Route::get('/create', [MerchantController::class, 'create'])->name('create'); // Add merchant
             Route::post('/store', [MerchantController::class, 'store'])->name('store');  // Save merchant
+
+            Route::get('/{id}/edit', [MerchantController::class, 'edit'])->name('edit');   // Edit form
+            Route::put('/{id}', [MerchantController::class, 'update'])->name('update');    // Update record
+            Route::delete('/{id}', [MerchantController::class, 'destroy'])->name('destroy'); // Delete merchant
+
         });
 
         // Merchant requests viewing
-        Route::get('/merchants/requests', [MerchantRequestController::class, 'index'])->name('merchants.request');
-        Route::get('/cards/requests', [DashboardController::class, 'customerRequests'])->name('cards.requests');
     });
 
     // ================================

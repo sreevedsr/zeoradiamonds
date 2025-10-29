@@ -17,10 +17,9 @@
     </x-danger-button>
 
     <!-- Modal -->
-    @push('modals')
         <x-modal name="confirm-user-deletion" :show="$errors->userDeletion->isNotEmpty()" focusable>
             <form method="post" action="{{ route('profile.destroy') }}"
-                class="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg max-w-md mx-auto">
+                class="p-6 bg-white dark:bg-gray-800">
                 @csrf
                 @method('delete')
 
@@ -57,5 +56,4 @@
                 </div>
             </form>
         </x-modal>
-    @endpush
 </section>

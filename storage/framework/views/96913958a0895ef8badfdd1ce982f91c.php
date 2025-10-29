@@ -37,7 +37,6 @@
 <?php endif; ?>
 
     <!-- Modal -->
-    <?php $__env->startPush('modals'); ?>
         <?php if (isset($component)) { $__componentOriginal9f64f32e90b9102968f2bc548315018c = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal9f64f32e90b9102968f2bc548315018c = $attributes; } ?>
 <?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.modal','data' => ['name' => 'confirm-user-deletion','show' => $errors->userDeletion->isNotEmpty(),'focusable' => true]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
@@ -49,7 +48,7 @@
 <?php endif; ?>
 <?php $component->withAttributes(['name' => 'confirm-user-deletion','show' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($errors->userDeletion->isNotEmpty()),'focusable' => true]); ?>
             <form method="post" action="<?php echo e(route('profile.destroy')); ?>"
-                class="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg max-w-md mx-auto">
+                class="p-6 bg-white dark:bg-gray-800">
                 <?php echo csrf_field(); ?>
                 <?php echo method_field('delete'); ?>
 
@@ -189,6 +188,5 @@
 <?php $component = $__componentOriginal9f64f32e90b9102968f2bc548315018c; ?>
 <?php unset($__componentOriginal9f64f32e90b9102968f2bc548315018c); ?>
 <?php endif; ?>
-    <?php $__env->stopPush(); ?>
 </section>
 <?php /**PATH C:\xampp\htdocs\Zeeyame\resources\views/profile/partials/delete-user-form.blade.php ENDPATH**/ ?>

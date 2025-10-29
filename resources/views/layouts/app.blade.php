@@ -26,24 +26,16 @@
 <body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 transition-colors duration-300">
     <div class="flex h-screen" :class="{ 'overflow-hidden': isSideMenuOpen }">
 
-        <!-- Sidebar -->
         @include('layouts.sidebar')
 
-        <!-- Main content area -->
         <div class="flex flex-col flex-1 w-full">
 
-            <!-- Navigation / Top bar -->
             @include('layouts.navigation')
 
-            <!-- Slot content with padding -->
             <main class="flex-1 overflow-y-auto px-6 py-6 transition-colors duration-300">
-                {{ $slot }} <!-- renders page content -->
+                {{ $slot }}
             </main>
         </div>
     </div>
-
-    <!-- Optional: Modals -->
-    @stack('modals')
 </body>
-
 </html>
