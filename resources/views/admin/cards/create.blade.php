@@ -1,7 +1,7 @@
 <x-app-layout>
     @slot('title', 'Zeeyame - Add Diamond Certificate')
 
-    <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
+    <h2 class="mb-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
         Add Diamond Certificate
     </h2>
 
@@ -28,8 +28,7 @@
                 @endif
 
                 <!-- Form -->
-                <form method="POST" action="{{ route('admin.cards.store') }}" enctype="multipart/form-data"
-                    class="space-y-6">
+                <form method="POST" action="{{ route('admin.cards.store') }}" enctype="multipart/form-data">
                     @csrf
 
                     <!-- Grid Layout -->

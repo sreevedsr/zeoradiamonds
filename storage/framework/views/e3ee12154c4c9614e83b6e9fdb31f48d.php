@@ -10,7 +10,7 @@
 <?php $component->withAttributes([]); ?>
     <?php $__env->slot('title', 'Zeeyame - Add Merchant'); ?>
 
-    <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
+    <h2 class="mb-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
         Add Merchant
     </h2>
 
@@ -33,7 +33,7 @@
                 </div>
             <?php endif; ?>
 
-            <form action="<?php echo e(route('admin.merchants.store')); ?>" method="POST" class="space-y-6">
+            <form action="<?php echo e(route('admin.merchants.store')); ?>" method="POST">
                 <?php echo csrf_field(); ?>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">

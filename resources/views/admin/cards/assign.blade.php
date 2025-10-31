@@ -1,12 +1,12 @@
 <x-app-layout>
     @slot('title', 'Zeeyame - Diamond Certificates')
 
-    <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
+    <h2 class="mb-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
         Manage Diamond Certificates
     </h2>
 
     <!-- Assign Certificate Section -->
-    <div class="mx-auto mb-8 max-w-5xl rounded-lg bg-white p-6 shadow dark:bg-gray-800">
+    <div class="mx-auto mb-8 rounded-lg bg-white p-6 shadow dark:bg-gray-800">
         <h3 class="mb-6 text-xl font-semibold text-gray-700 dark:text-gray-200">
             Assign a Diamond Certificate
         </h3>
@@ -36,7 +36,7 @@
                     class="overflow-hidden rounded-xl bg-white shadow-sm transition-all duration-200 hover:shadow-md dark:bg-gray-800">
 
                     <div class="border-b border-gray-100 p-5 dark:border-gray-700">
-                        <h3 class="mb-2 flex items-center gap-2 text-lg font-semibold text-gray-800 dark:text-gray-200">
+                        <h3 class="flex items-center gap-2 text-lg font-semibold text-gray-800 dark:text-gray-200">
                             <svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-5 w-5 text-purple-600"
                                 viewBox="0 0 20 20" fill="currentColor">
                                 <path
@@ -111,7 +111,7 @@
                     class="overflow-hidden rounded-xl bg-white shadow-sm transition-all duration-200 hover:shadow-md dark:bg-gray-800">
 
                     <div class="border-b border-gray-100 p-5 dark:border-gray-700">
-                        <h3 class="mb-2 flex items-center gap-2 text-lg font-semibold text-gray-800 dark:text-gray-200">
+                        <h3 class="flex items-center gap-2 text-lg font-semibold text-gray-800 dark:text-gray-200">
                             <svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-5 w-5 text-purple-600"
                                 viewBox="0 0 20 20" fill="currentColor">
                                 <path fill-rule="evenodd"
@@ -138,7 +138,7 @@
                         </div>
 
                         <!-- Cards List -->
-                        <div class="custom-scrollbar grid max-h-64 w-full grid-cols-2 gap-3 overflow-y-auto p-2">
+                        <div class="custom-scrollbar grid max-h-64 w-full grid-cols-1 sm:grid-cols-2 gap-3 overflow-y-auto p-2">
                             @foreach ($cards as $card)
                                 <template
                                     x-if="'{{ strtolower($card->card_number . ' ' . $card->clarity . ' ' . $card->color . ' ' . $card->cut . ' ' . $card->certificate_id) }}'

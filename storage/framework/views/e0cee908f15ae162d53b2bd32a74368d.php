@@ -56,21 +56,40 @@ unset($__defined_vars, $__key, $__value); ?>
 
 <div class="w-full overflow-hidden rounded-lg bg-white dark:bg-gray-800">
     <!-- Search & Filter Bar -->
-    <div
-        class="flex flex-col md:flex-row md:items-center justify-between border-b dark:border-gray-700 space-y-3 md:space-y-0">
-        <form method="GET" action="<?php echo e($route ?? url()->current()); ?>"
-            class="flex flex-col md:flex-row md:items-center gap-3 w-full">
+    <div x-data="{
+        query: '<?php echo e($searchQuery); ?>',
+        results: [],
+        timeout: null,
+        async search() {
+            clearTimeout(this.timeout);
+            this.timeout = setTimeout(async () => {
+                const response = await fetch('<?php echo e($route ?? url()->current()); ?>?search=' + encodeURIComponent(this.query));
+                const html = await response.text();
 
+                // Extract the table or main content (optional customization)
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const newTable = doc.querySelector('#data-table'); // use your actual table wrapper ID
+
+                if (newTable) {
+                    document.querySelector('#data-table').innerHTML = newTable.innerHTML;
+                }
+            }, 300); // debounce 300ms
+        }
+    }"
+        class="flex flex-col justify-between space-y-3 border-b dark:border-gray-700 md:flex-row md:items-center md:space-y-0">
+
+        <div class="flex w-full flex-col gap-3 md:flex-row md:items-center">
             <!-- Search box -->
             <div
-                class="flex flex-col md:flex-row md:items-center justify-between p-4 dark:border-gray-700 space-y-3 md:space-y-0">
+                class="flex flex-col justify-between space-y-3 p-4 dark:border-gray-700 md:flex-row md:items-center md:space-y-0">
                 <div class="relative flex-grow">
-                    <input id="search-input" type="text" placeholder="<?php echo e($searchPlaceholder); ?>"
-                        value="<?php echo e($searchQuery); ?>"
-                        class="w-full px-4 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-purple-600 dark:bg-gray-900 dark:border-gray-700 dark:text-gray-200" />
+                    <input id="search-input" x-model="query" @input="search" type="text"
+                        placeholder="<?php echo e($searchPlaceholder); ?>"
+                        class="w-full rounded-lg border px-4 py-2 text-sm focus:ring-2 focus:ring-purple-600 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200" />
                     <button type="button"
                         class="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-gray-500 hover:text-purple-700 dark:text-gray-300 dark:hover:text-purple-400">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" stroke="currentColor"
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" stroke="currentColor"
                             stroke-width="1.5" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round"
                                 d="m21 21-4.35-4.35M10.5 18a7.5 7.5 0 1 1 7.5-7.5 7.508 7.508 0 0 1-7.5 7.5z" />
@@ -79,11 +98,11 @@ unset($__defined_vars, $__key, $__value); ?>
                 </div>
             </div>
 
-
             <!-- Filter dropdown (optional) -->
             <?php if($filters): ?>
-                <select name="filter" onchange="this.form.submit()"
-                    class="px-4 py-2 border rounded-lg text-sm dark:bg-gray-900 dark:border-gray-700 dark:text-gray-200">
+                <select name="filter"
+                    onchange="window.location='<?php echo e($route ?? url()->current()); ?>?filter=' + this.value"
+                    class="rounded-lg border px-4 py-2 text-sm dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200">
                     <option value="">All</option>
                     <?php $__currentLoopData = $filters; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $label): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                         <option value="<?php echo e($key); ?>" <?php echo e($selectedFilter == $key ? 'selected' : ''); ?>>
@@ -93,22 +112,22 @@ unset($__defined_vars, $__key, $__value); ?>
                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </select>
             <?php endif; ?>
-        </form>
+        </div>
     </div>
 
     <!-- Data Table -->
     <div class="w-full overflow-x-auto">
-        <table class="w-full text-left whitespace-nowrap">
+        <table class="w-full whitespace-nowrap text-left">
             <thead>
                 <tr
-                    class="text-xs font-semibold tracking-wide text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+                    class="border-b bg-gray-50 text-xs font-semibold uppercase tracking-wide text-gray-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400">
                     <?php $__currentLoopData = $headers; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $header): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                         <th class="px-4 py-3"><?php echo e($header); ?></th>
                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </tr>
             </thead>
 
-            <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+            <tbody class="divide-y bg-white dark:divide-gray-700 dark:bg-gray-800">
                 <?php echo e($slot); ?>
 
             </tbody>
@@ -125,34 +144,34 @@ unset($__defined_vars, $__key, $__value); ?>
     ], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 </div>
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-    const searchInput = document.getElementById('search-input');
-    const tableBody = document.querySelector('tbody');
-    let timer;
+    document.addEventListener('DOMContentLoaded', () => {
+        const searchInput = document.getElementById('search-input');
+        const tableBody = document.querySelector('tbody');
+        let timer;
 
-    searchInput.addEventListener('input', function () {
-        clearTimeout(timer);
-        timer = setTimeout(() => {
-            const query = this.value.trim();
-            const url = "<?php echo e($route ?? url()->current()); ?>" + "?search=" + encodeURIComponent(query);
+        searchInput.addEventListener('input', function() {
+            clearTimeout(timer);
+            timer = setTimeout(() => {
+                const query = this.value.trim();
+                const url = "<?php echo e($route ?? url()->current()); ?>" + "?search=" +
+                    encodeURIComponent(query);
 
-            fetch(url, {
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            })
-            .then(res => res.text())
-            .then(html => {
-                // Parse the new table body only from response
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(html, 'text/html');
-                const newBody = doc.querySelector('tbody');
-                if (newBody) tableBody.innerHTML = newBody.innerHTML;
-            })
-            .catch(err => console.error('Live search error:', err));
-        }, 300); // delay 300ms for smoother typing
+                fetch(url, {
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    })
+                    .then(res => res.text())
+                    .then(html => {
+                        // Parse the new table body only from response
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(html, 'text/html');
+                        const newBody = doc.querySelector('tbody');
+                        if (newBody) tableBody.innerHTML = newBody.innerHTML;
+                    })
+                    .catch(err => console.error('Live search error:', err));
+            }, 300); // delay 300ms for smoother typing
+        });
     });
-});
 </script>
-
 <?php /**PATH C:\xampp\htdocs\Zeeyame\resources\views/components/table.blade.php ENDPATH**/ ?>

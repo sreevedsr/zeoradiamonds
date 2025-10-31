@@ -10,7 +10,7 @@
 <?php $component->withAttributes([]); ?>
     <?php $__env->slot('title', 'Zeeyame - Dashboard'); ?>
 
-    <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
+    <h2 class="mb-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
         Dashboard
     </h2>
 

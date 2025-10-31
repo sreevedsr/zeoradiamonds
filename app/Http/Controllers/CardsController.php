@@ -16,11 +16,19 @@ class CardsController extends Controller
 
         $cards = Card::with('merchant')
             ->when($search, function ($query, $search) {
-                $query->where('certificate_id', 'like', "%{$search}%")
-                    ->orWhereHas('merchant', function ($q) use ($search) {
-                        $q->where('name', 'like', "%{$search}%");
-                    })
-                    ->orWhere('clarity', 'like', "%{$search}%");
+                $query->where(function ($q) use ($search) {
+                    $q->where('certificate_id', 'like', "%{$search}%")
+                        ->orWhere('diamond_purchase_location', 'like', "%{$search}%")
+                        ->orWhere('category', 'like', "%{$search}%")
+                        ->orWhere('diamond_shape', 'like', "%{$search}%")
+                        ->orWhere('carat_weight', 'like', "%{$search}%")
+                        ->orWhere('clarity', 'like', "%{$search}%")
+                        ->orWhere('color', 'like', "%{$search}%")
+                        ->orWhere('cut', 'like', "%{$search}%")
+                        ->orWhereHas('merchant', function ($m) use ($search) {
+                            $m->where('name', 'like', "%{$search}%");
+                        });
+                });
             })
             ->orderByDesc('created_at')
             ->paginate(10);
@@ -29,6 +37,7 @@ class CardsController extends Controller
 
         return view('admin.cards.index', compact('cards', 'merchants'));
     }
+
 
     public function store(Request $request)
     {
