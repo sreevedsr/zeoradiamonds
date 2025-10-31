@@ -1,66 +1,97 @@
-<x-guest-layout>
-    <div class="flex flex-col md:flex-row max-w-4xl mx-auto overflow-hidden bg-white rounded-lg shadow-xl dark:bg-gray-800">
-        <!-- Left image -->
-        <div class="h-48 md:h-auto md:w-1/2">
-            <img
-                class="object-cover w-full h-full dark:hidden"
-                src="{{ asset('assets/img/forgot-password-office.jpeg') }}"
-                alt="Office"
-            />
-            <img
-                class="hidden object-cover w-full h-full dark:block"
-                src="{{ asset('assets/img/forgot-password-office-dark.jpeg') }}"
-                alt="Office"
-            />
-        </div>
-
-        <!-- Right form -->
-        <div class="flex items-center justify-center p-6 sm:p-12 md:w-1/2">
-            <div class="w-full">
-                <h1 class="mb-4 text-xl font-semibold text-gray-700 dark:text-gray-200">
-                    {{ __('Forgot password') }}
-                </h1>
-
-                <p class="mb-4 text-sm text-gray-600 dark:text-gray-400">
-                    {{ __('Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.') }}
-                </p>
-
-                <!-- Session Status -->
-                <x-auth-session-status class="mb-4" :status="session('status')" />
-
-                <form method="POST" action="{{ route('password.email') }}">
-                    @csrf
-
-                    <!-- Email -->
-                    <div class="mb-4">
-                        <x-input-label for="email" :value="__('Email')" />
-                        <x-text-input
-                            id="email"
-                            class="block mt-1 w-full form-input dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 dark:focus:shadow-outline-gray focus:border-purple-400 focus:outline-none focus:shadow-outline-purple"
-                            type="email"
-                            name="email"
-                            :value="old('email')"
-                            required
-                            autofocus
-                            placeholder="you@example.com"
-                        />
-                        <x-input-error :messages="$errors->get('email')" class="mt-2" />
-                    </div>
-
-                    <x-primary-button class="w-full px-4 py-2 bg-purple-600 hover:bg-purple-700">
-                        {{ __('Email Password Reset Link') }}
-                    </x-primary-button>
-                </form>
-
-                <p class="mt-4 text-center">
-                    <a
-                        href="{{ route('login') }}"
-                        class="text-sm font-medium text-purple-600 dark:text-purple-400 hover:underline"
-                    >
-                        {{ __('Back to login') }}
-                    </a>
-                </p>
-            </div>
-        </div>
+<x-guest-layout title="Forgot Password">
+  <div class="flex h-screen flex-col md:flex-row">
+    <!-- Left Image Section -->
+    <div class="relative w-full md:w-1/2 overflow-hidden">
+      <img
+        src="{{ asset('assets/img/login.jpeg') }}"
+        class="h-full w-full object-cover dark:hidden"
+        alt="Office"
+      />
+      <img
+        src="{{ asset('assets/img/login-office-dark.jpeg') }}"
+        class="hidden h-full w-full object-cover dark:block"
+        alt="Office"
+      />
+      <div
+        class="absolute inset-0 bg-gradient-to-tr from-purple-700/60 via-indigo-600/50 to-transparent backdrop-blur-sm transition-all duration-500"
+      ></div>
+      <div
+        class="absolute bottom-10 left-10 max-w-sm text-white drop-shadow-lg md:max-w-md"
+      >
+        <h2 class="mb-2 text-4xl font-extrabold tracking-tight">
+          Reset Your Password 🔐
+        </h2>
+        <p class="text-sm leading-relaxed text-gray-100/90">
+          Don’t worry! We’ll send a password reset link to your email.
+        </p>
+      </div>
     </div>
+
+    <!-- Right Form Section -->
+    <div
+      class="flex w-full items-center justify-center bg-white/70 dark:bg-gray-900/80 backdrop-blur-xl md:w-1/2 p-6 sm:p-10"
+    >
+      <div
+        class="w-full max-w-md rounded-2xl border border-gray-200/50 dark:border-gray-700/50 bg-white/60 dark:bg-gray-800/60 p-8 shadow-2xl backdrop-blur-lg transition-all duration-300 hover:shadow-purple-200/50 dark:hover:shadow-purple-900/40"
+      >
+        <div class="mb-8 text-center">
+          <h1
+            class="text-3xl font-bold text-gray-800 dark:text-white tracking-tight"
+          >
+            Forgot Password?
+          </h1>
+          <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+            Enter your registered email to receive a reset link.
+          </p>
+        </div>
+
+        <!-- Status Message -->
+        <x-auth-session-status class="mb-4" :status="session('status')" />
+
+        <!-- Forgot Password Form -->
+        <form method="POST" action="{{ route('password.email') }}" class="space-y-6">
+          @csrf
+
+          <!-- Email -->
+          <div>
+            <label
+              class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
+              >Email</label
+            >
+            <input
+              name="email"
+              type="email"
+              required
+              value="{{ old('email') }}"
+              class="w-full rounded-lg border border-gray-300/70 bg-white/80 px-4 py-2 text-sm text-gray-900 placeholder-gray-400 shadow-sm focus:border-transparent focus:ring-2 focus:ring-purple-500 dark:border-gray-700 dark:bg-gray-800/80 dark:text-gray-100 dark:placeholder-gray-500"
+              placeholder="you@example.com"
+            />
+            @error('email')
+              <span class="text-xs text-red-600 dark:text-red-400"
+                >{{ $message }}</span
+              >
+            @enderror
+          </div>
+
+          <!-- Submit Button -->
+          <button
+            type="submit"
+            class="mt-6 w-full rounded-lg bg-gradient-to-r from-purple-600 to-indigo-500 py-2.5 text-sm font-semibold text-white shadow-lg transition-all duration-300 hover:scale-[1.02] hover:from-purple-700 hover:to-indigo-600 focus:ring-4 focus:ring-purple-300 dark:focus:ring-purple-800"
+          >
+            Send Reset Link
+          </button>
+        </form>
+
+        <!-- Back to Login -->
+        <div class="mt-6 text-left text-sm text-gray-600 dark:text-gray-400">
+          <a
+            href="{{ route('login') }}"
+            class="text-purple-600 hover:underline dark:text-purple-400"
+          >
+            ← Back to login
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
 </x-guest-layout>

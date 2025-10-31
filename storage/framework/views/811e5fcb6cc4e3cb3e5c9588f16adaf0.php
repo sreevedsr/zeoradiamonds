@@ -269,8 +269,8 @@
                             <svg class="ml-auto h-4 w-4 transform transition-transform duration-300 ease-in-out"
                                 :class="{ 'rotate-180': openCards }" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 0 1 1.414 0L10 10.586l3.293-3.293
-                       a1 1 0 1 1 1.414 1.414l-4 4a1 1 0 0 1-1.414 0l-4-4
-                       a1 1 0 0 1 0-1.414z" clip-rule="evenodd"></path>
+                           a1 1 0 1 1 1.414 1.414l-4 4a1 1 0 0 1-1.414 0l-4-4
+                           a1 1 0 0 1 0-1.414z" clip-rule="evenodd"></path>
                             </svg>
                         </button>
 
@@ -322,35 +322,41 @@
                     <li class="relative px-6 py-3" x-data="{
                         openCards: <?php echo e(request()->routeIs('merchant.cards.*') ? 'true' : 'false'); ?>,
                         height: 0,
-                        setup() {
-                            this.setMeasured = () => { this.height = this.$refs.cardsPanel ? this.$refs.cardsPanel.scrollHeight : 0 }
+                        toggleCards() {
+                            if (!this.openCards) {
+                                this.height = this.$refs.cardsPanel ? this.$refs.cardsPanel.scrollHeight : 0;
+                                this.openCards = true;
+                            } else {
+                                if (this.$refs.cardsPanel) {
+                                    this.height = this.$refs.cardsPanel.scrollHeight;
+                                    this.$nextTick(() => {
+                                        this.height = 0;
+                                        this.openCards = false;
+                                    });
+                                } else {
+                                    this.height = 0;
+                                    this.openCards = false;
+                                }
+                            }
+                        },
+                        setMeasured() {
+                            this.height = this.$refs.cardsPanel ? this.$refs.cardsPanel.scrollHeight : 0;
                         }
                     }" x-init="$nextTick(() => {
-                        setup();
                         if (openCards) setMeasured();
-                        window.addEventListener('resize', () => { if (openCards) setMeasured() });
+                        window.addEventListener('resize', () => {
+                            if (openCards) setMeasured();
+                        });
                     })"
                         x-on:destroy.window="window.removeEventListener('resize', () => {})">
+
+                        <!-- Active Highlight -->
                         <span
                             class="<?php echo e(request()->routeIs('merchant.cards.*') ? 'absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg' : ''); ?>"
                             aria-hidden="true"></span>
 
                         <!-- Main Menu Button -->
-                        <button
-                            @click="
-                if (!openCards) {
-                    setMeasured();
-                    openCards = true;
-                } else {
-                    if ($refs.cardsPanel) {
-                        height = $refs.cardsPanel.scrollHeight;
-                        $nextTick(() => { height = 0; openCards = false });
-                    } else {
-                        height = 0; openCards = false;
-                    }
-                }
-            "
-                            type="button"
+                        <button @click="toggleCards" type="button"
                             class="flex w-full items-start rounded-md text-sm font-semibold text-gray-500 transition-colors duration-150 hover:text-gray-800 focus:outline-none dark:text-gray-400 dark:hover:text-gray-200"
                             :aria-expanded="openCards.toString()">
 
@@ -365,7 +371,9 @@
                             <span
                                 class="<?php echo e(request()->routeIs('merchant.cards.*')
                                     ? 'text-gray-800 dark:text-gray-200'
-                                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?> ml-2 flex-1 text-left">Cards</span>
+                                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?> ml-2 flex-1 text-left">
+                                Cards
+                            </span>
 
                             <!-- Rotating Arrow -->
                             <svg class="ml-auto h-4 w-4 rotate-0 transform transition-transform duration-300 ease-in-out"
@@ -570,63 +578,62 @@
 
         <!-- Merchants -->
         <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('view-merchants')): ?>
-
-        <li class="relative px-6 py-3" x-data="{ openMerchants: <?php echo e(request()->routeIs('merchant.*') ? 'true' : 'false'); ?> }">
-            <button @click="openMerchants = !openMerchants"
-            class="<?php echo e(request()->routeIs('merchant.*') ? 'text-gray-800 dark:text-gray-200' : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?> inline-flex w-full items-center justify-between text-sm font-semibold transition-colors duration-150">
-            <span>Merchants</span>
-            <svg class="ml-2 h-4 w-4 transform transition-transform duration-300"
-            :class="{ 'rotate-180': openMerchants }" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd"
-            d="M5.293 7.293a1 1 0 0 1 1.414 0L10 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414l-4 4a1 1 0 0 1-1.414 0l-4-4a1 1 0 0 1 0-1.414z"
-                        clip-rule="evenodd"></path>
-                </svg>
-            </button>
-            <ul x-show="openMerchants" x-transition class="mt-2 space-y-2 pl-4">
-                <li>
-                    <a href="<?php echo e(route('admin.merchants.index')); ?>"
-                    class="<?php echo e(request()->routeIs('admin.merchants.index') ? 'text-gray-800 dark:text-gray-200' : 'text-gray-500 hover:text-gray-800 dark:hover:text-gray-200'); ?> block text-sm font-medium">
-                    All Merchants
-                </a>
+            <li class="relative px-6 py-3" x-data="{ openMerchants: <?php echo e(request()->routeIs('merchant.*') ? 'true' : 'false'); ?> }">
+                <button @click="openMerchants = !openMerchants"
+                    class="<?php echo e(request()->routeIs('merchant.*') ? 'text-gray-800 dark:text-gray-200' : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?> inline-flex w-full items-center justify-between text-sm font-semibold transition-colors duration-150">
+                    <span>Merchants</span>
+                    <svg class="ml-2 h-4 w-4 transform transition-transform duration-300"
+                        :class="{ 'rotate-180': openMerchants }" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd"
+                            d="M5.293 7.293a1 1 0 0 1 1.414 0L10 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414l-4 4a1 1 0 0 1-1.414 0l-4-4a1 1 0 0 1 0-1.414z"
+                            clip-rule="evenodd"></path>
+                    </svg>
+                </button>
+                <ul x-show="openMerchants" x-transition class="mt-2 space-y-2 pl-4">
+                    <li>
+                        <a href="<?php echo e(route('admin.merchants.index')); ?>"
+                            class="<?php echo e(request()->routeIs('admin.merchants.index') ? 'text-gray-800 dark:text-gray-200' : 'text-gray-500 hover:text-gray-800 dark:hover:text-gray-200'); ?> block text-sm font-medium">
+                            All Merchants
+                        </a>
+                    </li>
+                    <li>
+                        <a href="<?php echo e(route('admin.merchants.create')); ?>"
+                            class="<?php echo e(request()->routeIs('admin.merchants.create') ? 'text-gray-800 dark:text-gray-200' : 'text-gray-500 hover:text-gray-800 dark:hover:text-gray-200'); ?> block text-sm font-medium">
+                            Add Merchant
+                        </a>
+                    </li>
+                </ul>
             </li>
-            <li>
-                <a href="<?php echo e(route('admin.merchants.create')); ?>"
-                class="<?php echo e(request()->routeIs('admin.merchants.create') ? 'text-gray-800 dark:text-gray-200' : 'text-gray-500 hover:text-gray-800 dark:hover:text-gray-200'); ?> block text-sm font-medium">
-                Add Merchant
-            </a>
-                </li>
-            </ul>
-        </li>
         <?php endif; ?>
 
         <!-- Customers -->
         <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('view-customers')): ?>
-        <li class="relative px-6 py-3" x-data="{ openCustomers: <?php echo e(request()->routeIs('customer.*') ? 'true' : 'false'); ?> }">
-            <button @click="openCustomers = !openCustomers"
-            class="<?php echo e(request()->routeIs('customer.*') ? 'text-gray-800 dark:text-gray-200' : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?> inline-flex w-full items-center justify-between text-sm font-semibold transition-colors duration-150">
-            <span>Customers</span>
-            <svg class="ml-2 h-4 w-4 transform transition-transform duration-300"
-            :class="{ 'rotate-180': openCustomers }" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd"
-                        d="M5.293 7.293a1 1 0 0 1 1.414 0L10 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414l-4 4a1 1 0 0 1-1.414 0l-4-4a1 1 0 0 1 0-1.414z"
-                        clip-rule="evenodd"></path>
-                </svg>
-            </button>
-            <ul x-show="openCustomers" x-transition class="mt-2 space-y-2 pl-4">
-                <li>
-                    <a href="<?php echo e(route('merchant.customers.index')); ?>"
-                        class="<?php echo e(request()->routeIs('merchant.customers.index') ? 'text-gray-800 dark:text-gray-200' : 'text-gray-500 hover:text-gray-800 dark:hover:text-gray-200'); ?> block text-sm font-medium">
-                        All Customers
-                    </a>
-                </li>
-                <li>
-                    <a href="<?php echo e(route('merchant.customers.create')); ?>"
-                        class="<?php echo e(request()->routeIs('merchant.customers.create') ? 'text-gray-800 dark:text-gray-200' : 'text-gray-500 hover:text-gray-800 dark:hover:text-gray-200'); ?> block text-sm font-medium">
-                        Add Customer
-                    </a>
-                </li>
-            </ul>
-        </li>
+            <li class="relative px-6 py-3" x-data="{ openCustomers: <?php echo e(request()->routeIs('customer.*') ? 'true' : 'false'); ?> }">
+                <button @click="openCustomers = !openCustomers"
+                    class="<?php echo e(request()->routeIs('customer.*') ? 'text-gray-800 dark:text-gray-200' : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?> inline-flex w-full items-center justify-between text-sm font-semibold transition-colors duration-150">
+                    <span>Customers</span>
+                    <svg class="ml-2 h-4 w-4 transform transition-transform duration-300"
+                        :class="{ 'rotate-180': openCustomers }" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd"
+                            d="M5.293 7.293a1 1 0 0 1 1.414 0L10 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414l-4 4a1 1 0 0 1-1.414 0l-4-4a1 1 0 0 1 0-1.414z"
+                            clip-rule="evenodd"></path>
+                    </svg>
+                </button>
+                <ul x-show="openCustomers" x-transition class="mt-2 space-y-2 pl-4">
+                    <li>
+                        <a href="<?php echo e(route('merchant.customers.index')); ?>"
+                            class="<?php echo e(request()->routeIs('merchant.customers.index') ? 'text-gray-800 dark:text-gray-200' : 'text-gray-500 hover:text-gray-800 dark:hover:text-gray-200'); ?> block text-sm font-medium">
+                            All Customers
+                        </a>
+                    </li>
+                    <li>
+                        <a href="<?php echo e(route('merchant.customers.create')); ?>"
+                            class="<?php echo e(request()->routeIs('merchant.customers.create') ? 'text-gray-800 dark:text-gray-200' : 'text-gray-500 hover:text-gray-800 dark:hover:text-gray-200'); ?> block text-sm font-medium">
+                            Add Customer
+                        </a>
+                    </li>
+                </ul>
+            </li>
         <?php endif; ?>
 
         <!-- Cards -->

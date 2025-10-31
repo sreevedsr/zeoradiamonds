@@ -50,7 +50,7 @@
         </div>
 
         <div class="flex items-center gap-4">
-            <x-primary-button class="px-4 py-2 dark:bg-indigo-600 dark:hover:bg-indigo-500 dark:text-white rounded-md">{{ __('Save') }}</x-primary-button>
+            <x-primary-button >{{ __('Save') }}</x-primary-button>
 
             @if (session('status') === 'password-updated')
                 <p

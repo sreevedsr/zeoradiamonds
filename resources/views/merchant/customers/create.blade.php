@@ -30,7 +30,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <!-- Customer Name -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Customer Name</label>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Customer Name <span class="text-red-500">*</span></label>
                         <input type="text" name="name" required
                             placeholder="Enter full name"
                             class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md
@@ -39,7 +39,7 @@
 
                     <!-- Email -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Email <span class="text-red-500">*</span></label>
                         <input type="email" name="email" required
                             placeholder="Enter email address"
                             class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md
@@ -48,7 +48,7 @@
 
                     <!-- Phone -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Phone Number</label>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Phone Number <span class="text-red-500">*</span></label>
                         <input type="text" name="phone" required
                             placeholder="Enter phone number"
                             class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md
@@ -58,7 +58,7 @@
                     <!-- City -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">City</label>
-                        <input type="text" name="city" required
+                        <input type="text" name="city"
                             placeholder="Enter city"
                             class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md
                                    dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-600">
@@ -67,7 +67,7 @@
                     <!-- State -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">State</label>
-                        <input type="text" name="state" required
+                        <input type="text" name="state"
                             placeholder="Enter state"
                             class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md
                                    dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-600">
@@ -76,7 +76,7 @@
                     <!-- Address (full width) -->
                     <div class="md:col-span-2">
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Address</label>
-                        <textarea name="address" rows="3" required
+                        <textarea name="address" rows="3"
                             placeholder="Enter full address"
                             class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md
                                    dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-600"></textarea>

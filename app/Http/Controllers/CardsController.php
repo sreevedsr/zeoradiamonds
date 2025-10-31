@@ -56,6 +56,7 @@ class CardsController extends Controller
             'clarity' => 'required|string|max:50',
             'color' => 'required|string|size:1',
             'cut' => 'required|string|max:50',
+            'valuation' => 'required|numeric|min:0', // ✅ New validation rule
             'diamond_image' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:10240', // 10MB max
         ]);
 
@@ -75,12 +76,14 @@ class CardsController extends Controller
             'clarity' => $validatedData['clarity'],
             'color' => $validatedData['color'],
             'cut' => $validatedData['cut'],
+            'valuation' => $validatedData['valuation'], // ✅ Save valuation
             'diamond_image' => $imagePath,
         ]);
 
         // ✅ Redirect back with success message
         return redirect()->back()->with('success', 'Diamond certificate added successfully!');
     }
+
 
     public function update(Request $request, $id)
     {

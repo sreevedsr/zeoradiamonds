@@ -5,27 +5,22 @@
         View Merchants
     </h2>
 
-    <div class="p-6 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
-        <div class="max-w-7xl mx-auto text-gray-900 dark:text-gray-100">
+    <div class="bg-white p-6 shadow dark:bg-gray-800 sm:rounded-lg sm:p-8">
+        <div class="mx-auto max-w-7xl text-gray-900 dark:text-gray-100">
 
             <!-- Success Message -->
             @if (session('success'))
-                <div class="mb-4 p-3 bg-green-200 text-green-800 rounded">
+                <div class="mb-4 rounded bg-green-200 p-3 text-green-800">
                     {{ session('success') }}
                 </div>
             @endif
 
             <!-- Merchants Table -->
-            <x-table
-                :headers="['#', 'Owner Name', 'Business Name', 'Created At', 'Actions']"
-                :from="$pagination['from'] ?? 1"
-                :to="$pagination['to'] ?? 10"
-                :total="$pagination['total'] ?? count($merchants)"
-                :pages="$pagination['pages'] ?? [1]"
-                :current="$pagination['current'] ?? 1"
-            >
+            <x-table :headers="['#', 'Owner Name', 'Business Name', 'Created At', 'Actions']" :from="$pagination['from'] ?? 1" :to="$pagination['to'] ?? 10" :total="$pagination['total'] ?? count($merchants)" :pages="$pagination['pages'] ?? [1]"
+                :current="$pagination['current'] ?? 1">
                 @foreach ($merchants as $index => $merchant)
-                    <tr class="text-gray-700 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                    <tr
+                        class="text-gray-700 transition-colors hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-700">
                         <td class="px-4 py-3 text-sm">{{ $index + 1 }}</td>
 
                         <td class="px-4 py-3 text-sm">
@@ -40,9 +35,7 @@
                             <div class="flex items-center space-x-3">
                                 <!-- Edit Button -->
                                 <a href="{{ route('admin.merchants.edit', $merchant->id) }}">
-                                    <x-secondary-button
-                                        type="button"
-                                        x-data
+                                    <x-secondary-button type="button" x-data
                                         x-on:click.prevent="
                                             $dispatch('open-modal', 'edit-merchant-modal');
                                             setTimeout(() => {
@@ -59,12 +52,19 @@
                                 </a>
 
                                 <!-- Delete Button -->
-                                <form action="{{ route('admin.merchants.destroy', $merchant->id) }}" method="POST" class="inline">
+                                <form action="{{ route('admin.merchants.destroy', $merchant->id) }}" method="POST"
+                                    class="inline">
                                     @csrf
                                     @method('DELETE')
-                                    <x-danger-button onclick="return confirm('Are you sure you want to delete this merchant?')">
+                                    <!-- Delete Button -->
+                                    <x-danger-button type="button" x-data
+                                        x-on:click.prevent="
+        $dispatch('open-modal', 'confirm-delete-modal');
+        document.getElementById('deleteMerchantForm').action = '{{ route('admin.merchants.destroy', $merchant->id) }}';
+    ">
                                         {{ __('Delete') }}
                                     </x-danger-button>
+
                                 </form>
                             </div>
                         </td>
@@ -95,8 +95,8 @@
 
                         <div>
                             <x-input-label for="edit_business_name" value="{{ __('Business Name') }}" />
-                            <x-text-input id="edit_business_name" name="business_name" type="text" class="mt-1 block w-full"
-                                placeholder="{{ __('Enter business name') }}" required />
+                            <x-text-input id="edit_business_name" name="business_name" type="text"
+                                class="mt-1 block w-full" placeholder="{{ __('Enter business name') }}" required />
                         </div>
 
                         <div>
@@ -123,12 +123,39 @@
                             {{ __('Cancel') }}
                         </x-secondary-button>
 
-                        <x-primary-button >
+                        <x-primary-button>
                             {{ __('Save Changes') }}
                         </x-primary-button>
                     </div>
                 </form>
             </x-modal>
+
+            <!-- Delete Confirmation Modal -->
+            <x-modal name="confirm-delete-modal" focusable>
+                <form method="POST" id="deleteMerchantForm" class="p-6">
+                    @csrf
+                    @method('DELETE')
+
+                    <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
+                        {{ __('Confirm Deletion') }}
+                    </h2>
+
+                    <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                        {{ __('Are you sure you want to delete this merchant? This action cannot be undone.') }}
+                    </p>
+
+                    <div class="mt-6 flex justify-end space-x-3">
+                        <x-secondary-button type="button" x-on:click="$dispatch('close')">
+                            {{ __('Cancel') }}
+                        </x-secondary-button>
+
+                        <x-danger-button>
+                            {{ __('Yes, Delete') }}
+                        </x-danger-button>
+                    </div>
+                </form>
+            </x-modal>
+
         </div>
     </div>
 </x-app-layout>

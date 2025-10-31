@@ -20,6 +20,7 @@ class Card extends Model
         'cut',
         'diamond_image',
         'merchant_id',
+        'valuation'
     ];
     public function merchant()
     {

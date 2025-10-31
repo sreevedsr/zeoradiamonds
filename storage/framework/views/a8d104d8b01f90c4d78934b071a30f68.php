@@ -28,28 +28,31 @@ foreach ($attributes->all() as $__key => $__value) {
 
 unset($__defined_vars, $__key, $__value); ?>
 
-
 <!DOCTYPE html>
-<html :class="{ 'theme-dark': dark }" x-data="data()" lang="en">
+<html :class="{ 'dark': dark }" x-data="data()" lang="en">
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title><?php echo e($title); ?></title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="<?php echo e(asset('assets/css/tailwind.output.css')); ?>" />
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title><?php echo e($title); ?></title>
 
-  <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
-  <script src="<?php echo e(asset('assets/js/init-alpine.js')); ?>"></script>
-</head>
+        <!-- Fonts -->
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+            rel="stylesheet" />
 
-<body>
-  <div class="flex items-center min-h-screen p-6 bg-gray-50 dark:bg-gray-900">
-    <div class="flex-1 h-full max-w-4xl mx-auto overflow-hidden bg-white rounded-lg shadow-xl dark:bg-gray-800">
-      <?php echo e($slot); ?>
+        <!-- Vite Assets -->
+        <?php echo app('Illuminate\Foundation\Vite')(['resources/css/app.css', 'resources/js/app.js']); ?>
+        <script src="https://cdn.jsdelivr.net/npm/@tailwindplus/elements@1" type="module"></script>
 
-    </div>
-  </div>
-</body>
+        <!-- Alpine.js -->
+        <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+        <script src="<?php echo e(asset('assets/js/init-alpine.js')); ?>"></script>
+    </head>
 
-</html><?php /**PATH C:\xampp\htdocs\Zeeyame\resources\views/layouts/guest.blade.php ENDPATH**/ ?>
+    <body>
+        <?php echo e($slot); ?>
+
+    </body>
+
+</html>
+<?php /**PATH C:\xampp\htdocs\Zeeyame\resources\views/layouts/guest.blade.php ENDPATH**/ ?>

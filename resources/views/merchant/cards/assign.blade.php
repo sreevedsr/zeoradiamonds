@@ -5,159 +5,149 @@
         Assign Diamond Certificates
     </h2>
 
-    <div class="p-6 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
-        <div class="max-w-5xl mx-auto text-gray-900 dark:text-gray-100 space-y-8">
+        <div class="mx-auto text-gray-900 dark:text-gray-100 bg-white p-6 shadow dark:bg-gray-800 sm:rounded-lg sm:p-8">
 
             <!-- Success / Error Messages -->
             @if (session('success'))
-                <div class="p-3 bg-green-200 text-green-800 rounded">
+                <div class="rounded bg-green-200 p-3 text-green-800">
                     {{ session('success') }}
                 </div>
             @elseif (session('error'))
-                <div class="p-3 bg-red-200 text-red-800 rounded">
+                <div class="rounded bg-red-200 p-3 text-red-800">
                     {{ session('error') }}
                 </div>
             @endif
 
             <!-- Assignment Form -->
             <div>
-                <h3 class="text-lg font-semibold mb-4">Assign Certificate to Customer</h3>
+                <h3 class="mb-4 text-lg font-semibold text-gray-800 dark:text-gray-100">Assign Certificate to Customer
+                </h3>
 
-                <form action="{{ route('merchant.cards.assign') }}" method="POST" class="space-y-4">
+                <form action="{{ route('merchant.cards.assign') }}" method="POST" class="space-y-6">
                     @csrf
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div x-data="{
+                        selectedCard: '',
+                        valuation: '',
+                        cards: {{ Js::from($cards) }},
+                        price: '',
+                        discount: '',
+                        get finalPrice() {
+                            if (this.price && this.discount) {
+                                return (this.price - (this.price * this.discount / 100)).toFixed(2);
+                            }
+                            return this.price || '';
+                        }
+                    }" class="grid grid-cols-1 gap-6 md:grid-cols-2">
+
                         <!-- Select Customer -->
-                        <div class="mb-6">
+                        <div>
                             <label for="customer"
-                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
                                 Select Customer
                             </label>
                             <select id="customer" name="customer" required
-                                class="block w-full px-3 py-2 text-sm bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200
-                    border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm
-                    focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500
-                    transition ease-in-out duration-200">
+                                class="block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-800 shadow-sm transition duration-200 ease-in-out focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200">
                                 <option value="" disabled selected>-- Select Customer --</option>
-                                <option value="1">John Doe</option>
-                                <option value="2">Jane Smith</option>
-                                {{-- @foreach ($customers as $customer)
-                        <option value="{{ $customer->id }}">{{ $customer->name }}</option>
-                    @endforeach --}}
+                                @foreach ($customers as $customer)
+                                    <option value="{{ $customer->id }}">{{ $customer->name }}</option>
+                                @endforeach
                             </select>
                         </div>
 
-                        <!-- Select Certificate -->
-                        <div class="mb-6">
+                        <!-- Select Card -->
+                        <div>
                             <label for="card_id"
-                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                Select Certificate
+                                class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                Select Card
                             </label>
-                            <select name="card_id" id="card_id" required
-                                class="block w-full px-3 py-2 text-sm bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200
-                    border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm
-                    focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500
-                    transition ease-in-out duration-200">
-                                <option value="" disabled selected>-- Select Certificate --</option>
-                                <option value="1">Certificate 1</option>
-                                <option value="2">Certificate 2</option>
-                                {{-- @foreach ($cards as $card)
-                        <option value="{{ $card->id }}">
-                            {{ $card->certificate_id }} — {{ $card->diamond_type }} ({{ $card->carat_weight }} ct)
-                        </option>
-                    @endforeach --}}
+                            <select id="card_id" name="card_id" required x-model="selectedCard"
+                                @change="valuation = cards.find(c => c.id == selectedCard)?.valuation || ''"
+                                class="block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-800 shadow-sm transition duration-200 ease-in-out focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200">
+                                <option value="" disabled selected>-- Select Card --</option>
+                                @foreach ($cards as $card)
+                                    <option value="{{ $card->id }}">{{ $card->certificate_id }}</option>
+                                @endforeach
                             </select>
                         </div>
 
-                        <!-- Card Valuation (Auto Fetched) -->
-                        <div class="mb-6">
+                        <!-- Card Valuation -->
+                        <div>
                             <label for="valuation"
-                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
                                 Card Valuation
                             </label>
-                            <input type="text" id="valuation" name="valuation" readonly
-                                class="block w-full px-3 py-2 text-sm bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200
-                    border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm
-                    focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500
-                    transition ease-in-out duration-200"
+                            <input type="text" id="valuation" name="valuation" x-model="valuation" readonly
+                                class="block w-full rounded-lg border border-gray-300 bg-gray-100 px-3 py-2 text-sm text-gray-800 shadow-sm transition duration-200 ease-in-out focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200"
                                 placeholder="Auto-fetched from database" />
                         </div>
 
-                        <!-- Price -->
-                        <div class="mb-6">
+                        <!-- Selling Price -->
+                        <div>
                             <label for="price"
-                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
                                 Selling Price
                             </label>
-                            <input type="number" step="0.01" id="price" name="price" required
-                                class="block w-full px-3 py-2 text-sm bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200
-                    border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm
-                    focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500
-                    transition ease-in-out duration-200"
+                            <input type="number" step="0.01" id="price" name="price" x-model="price" required
+                                class="block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-800 shadow-sm transition duration-200 ease-in-out focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200"
                                 placeholder="Enter selling price" />
                         </div>
 
                         <!-- Discount -->
-                        <div class="mb-6">
+                        <div>
                             <label for="discount"
-                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
                                 Discount (%)
                             </label>
-                            <input type="number" step="0.1" id="discount" name="discount"
-                                class="block w-full px-3 py-2 text-sm bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200
-                    border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm
-                    focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500
-                    transition ease-in-out duration-200"
+                            <input type="number" step="0.1" id="discount" name="discount" x-model="discount"
+                                class="block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-800 shadow-sm transition duration-200 ease-in-out focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200"
                                 placeholder="Enter discount percentage" />
                         </div>
 
-                        <!-- Final Price (Auto Calculated) -->
-                        <div class="mb-6">
+                        <!-- Final Price -->
+                        <div>
                             <label for="final_price"
-                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
                                 Final Price
                             </label>
-                            <input type="text" id="final_price" name="final_price" readonly
-                                class="block w-full px-3 py-2 text-sm bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200
-                    border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm
-                    focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500
-                    transition ease-in-out duration-200"
+                            <input type="text" id="final_price" name="final_price" x-bind:value="finalPrice"
+                                readonly
+                                class="block w-full rounded-lg border border-gray-300 bg-gray-100 px-3 py-2 text-sm text-gray-800 shadow-sm transition duration-200 ease-in-out focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200"
                                 placeholder="Auto-calculated" />
                         </div>
-                    </div>
 
-                    <!-- Assign Button -->
-                    <div>
-                        <button type="submit"
-                            class="px-4 my-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-400">
-                            Assign Certificate
-                        </button>
+                        <!-- Submit Button -->
+                        <div class="flex justify-end md:col-span-2">
+                            <button type="submit"
+                                class="rounded-lg bg-purple-600 px-4 py-2 text-sm font-medium text-white shadow hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500">
+                                Assign Certificate
+                            </button>
+                        </div>
                     </div>
                 </form>
             </div>
-
-            <div class="p-6"></div>
-            <!-- Assigned Certificates Table -->
-            <div>
-                <h3 class="text-lg font-semibold my-4">Assigned Certificates</h3>
-                <div class="w-full overflow-x-auto">
-                    <table class="w-full whitespace-no-wrap">
-                        <thead>
-                            <tr
-                                class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
-                                <th class="px-4 py-3">#</th>
-                                <th class="px-4 py-3">Customer</th>
-                                <th class="px-4 py-3">Certificate ID</th>
-                                <th class="px-4 py-3">Diamond Type</th>
-                                <th class="px-4 py-3">Carat Weight</th>
-                                <th class="px-4 py-3">Assigned On</th>
-                                <th class="px-4 py-3">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-                            {{-- @forelse ($assignedCards as $index => $assigned) --}}
-                            <tr class="text-gray-700 dark:text-gray-400">
-                                {{-- <td class="px-4 py-3 text-sm">{{ $index + 1 }}</td>
+        </div>
+        <!-- Assigned Certificates Table -->
+        <div class="bg-white p-6 shadow dark:bg-gray-800 sm:rounded-lg sm:p-8 mt-4">
+            <h3 class="my-4 text-lg font-semibold">Assigned Certificates</h3>
+            <div class="w-full overflow-x-auto">
+                <table class="whitespace-no-wrap w-full">
+                    <thead>
+                        <tr
+                            class="border-b bg-gray-50 text-left text-xs font-semibold uppercase tracking-wide text-gray-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400">
+                            <th class="px-4 py-3">#</th>
+                            <th class="px-4 py-3">Customer</th>
+                            <th class="px-4 py-3">Certificate ID</th>
+                            <th class="px-4 py-3">Diamond Type</th>
+                            <th class="px-4 py-3">Carat Weight</th>
+                            <th class="px-4 py-3">Assigned On</th>
+                            <th class="px-4 py-3">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y bg-white dark:divide-gray-700 dark:bg-gray-800">
+                        {{-- @forelse ($assignedCards as $index => $assigned) --}}
+                        <tr class="text-gray-700 dark:text-gray-400">
+                            {{-- <td class="px-4 py-3 text-sm">{{ $index + 1 }}</td>
                                     <td class="px-4 py-3 text-sm">{{ $assigned->customer->name }}</td>
                                     <td class="px-4 py-3 text-sm">{{ $assigned->card->certificate_id }}</td>
                                     <td class="px-4 py-3 text-sm">{{ $assigned->card->diamond_type }}</td>
@@ -170,22 +160,20 @@
                                             @method('DELETE')
                                             <button class="text-red-600 hover:underline">Unassign</button>
                                         </form> --}}
-                                </td>
-                            </tr>
-                            {{-- @empty --}}
-                            {{-- <tr>
+                            </td>
+                        </tr>
+                        {{-- @empty --}}
+                        {{-- <tr>
                                     <td colspan="7" class="px-4 py-3 text-center text-sm text-gray-500 dark:text-gray-400">
                                         No assigned certificates found.
                                     </td>
                                 </tr>
                             @endforelse --}}
-                        </tbody>
-                    </table>
-                </div>
+                    </tbody>
+                </table>
             </div>
-
         </div>
-    </div>
+
     <script>
         document.getElementById('card_id').addEventListener('change', function() {
             // Simulate DB fetch — replace with AJAX route call

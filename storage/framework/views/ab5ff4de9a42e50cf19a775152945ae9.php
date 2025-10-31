@@ -158,7 +158,7 @@
                                 x-transition:leave="transition ease-in duration-150"
                                 x-transition:leave-start="opacity-100 scale-100 translate-y-0"
                                 x-transition:leave-end="opacity-0 scale-95 translate-y-1"
-                                class="absolute z-10 mt-2 grid max-h-[120px] w-full grid-cols-7 gap-2 overflow-y-auto rounded-lg border border-gray-200 bg-white p-3 shadow-lg dark:border-gray-700 dark:bg-gray-800">
+                                class="absolute z-10 mt-2 grid  w-full grid-cols-7 gap-2 overflow-y-auto rounded-lg border border-gray-200 bg-white p-3 shadow-lg dark:border-gray-700 dark:bg-gray-800">
 
                                 <?php $__currentLoopData = range('D', 'Z'); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $color): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                     <div @click="selectedColor = '<?php echo e($color); ?>'; open = false"
@@ -268,6 +268,14 @@
                                     </div>
                                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </div>
+                        </div>
+                        <div>
+                            <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-200">
+                                Certificate Valuation <span class="text-red-500">*</span>
+                            </label>
+                            <input type="number" name="valuation"
+                                class="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-600 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100"
+                                placeholder="Enter Valuation of the card" required>
                         </div>
 
                         

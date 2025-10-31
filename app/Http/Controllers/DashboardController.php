@@ -144,51 +144,6 @@ class DashboardController extends Controller
         return view('admin.cards.requests'); // Blade
     }
 
-    /**
-     * Merchant-only: view buyers.
-     */
-    public function buyers()
-    {
-        return view('dashboard.buyers'); // Blade: resources/views/dashboard/buyers.blade.php
-    }
-
-    /**
-     * Merchant-only: show create buyer form.
-     */
-    public function createBuyer()
-    {
-        return view('dashboard.buyers-create'); // Blade
-    }
-
-    /**
-     * Merchant-only: store new buyer.
-     */
-    public function storeBuyer(Request $request)
-    {
-        // Your buyer storing logic
-        return redirect()->route('buyers');
-    }
-
-    /**
-     * Merchant-only: assign card to buyers.
-     */
-    public function assignCard()
-    {
-        return view('dashboard.assign-card'); // Blade
-    }
-
-    /**
-     * Merchant-only: store card assignment.
-     */
-    public function storeAssignment(Request $request)
-    {
-        // Logic to assign card
-        return redirect()->route('cards.assign');
-    }
-
-    /**
-     * Merchant-only: view requests.
-     */
     public function merchantRequests()
     {
         return view('dashboard.merchant-requests'); // Blade
@@ -202,12 +157,7 @@ class DashboardController extends Controller
         // Logic to store merchant request
         return redirect()->route('merchant.requests');
     }
-    public function customers()
-    {
-        // Example: fetch customers from DB
-        $customers = []; // Replace with Customer::all();
-        return view('merchant.customers.index', compact('customers'));
-    }
+
 
     // Show form to add a new customer
     public function createCustomer()
@@ -216,12 +166,7 @@ class DashboardController extends Controller
     }
 
     // Store new customer
-    public function storeCustomer(Request $request)
-    {
-        // Validate and save customer
-        // Customer::create($request->all());
-        return redirect()->route('customers.index')->with('success', 'Customer added successfully!');
-    }
+
 
     // View customer requests
     public function customerRequests()

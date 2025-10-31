@@ -48,7 +48,7 @@
 <?php endif; ?>
 <?php $component->withAttributes(['name' => 'confirm-user-deletion','show' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($errors->userDeletion->isNotEmpty()),'focusable' => true]); ?>
             <form method="post" action="<?php echo e(route('profile.destroy')); ?>"
-                class="p-6 bg-white dark:bg-gray-800">
+                class="p-6 bg-white dark:bg-gray-800 max-w-xl">
                 <?php echo csrf_field(); ?>
                 <?php echo method_field('delete'); ?>
 

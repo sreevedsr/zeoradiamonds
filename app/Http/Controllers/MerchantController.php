@@ -2,135 +2,92 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
+use App\Models\Card;
+use App\Models\Customer;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class MerchantController extends Controller
 {
-   public function index()
-{
-    $perPage = 10; // Number of merchants per page
-    $page = request()->get('page', 1); // Get current page number
-
-    // Query total merchants and paginated data
-    $total = User::where('role', 'merchant')->count();
-
-    $merchants = User::where('role', 'merchant')
-        ->skip(($page - 1) * $perPage)
-        ->take($perPage)
-        ->get();
-
-    // Calculate range for display
-    $from = ($page - 1) * $perPage + 1;
-    $to = min($from + $perPage - 1, $total);
-    $totalPages = ceil($total / $perPage);
-
-    $pages = range(1, $totalPages);
-
-    // Send merchants and pagination data to view
-    return view('admin.merchants.index', [
-        'merchants' => $merchants,
-        'pagination' => [
-            'from' => $from,
-            'to' => $to,
-            'total' => $total,
-            'pages' => $pages,
-            'current' => $page,
-        ],
-    ]);
-}
-
-
-    public function create()
+    public function customers(Request $request)
     {
-        // Show form to add merchant
-        return view('admin.merchants.create');
+        $search = $request->input('search');
+
+        $query = Customer::where('merchant_id', Auth::id());
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('phone', 'like', "%{$search}%")
+                    ->orWhere('city', 'like', "%{$search}%")
+                    ->orWhere('state', 'like', "%{$search}%");
+            });
+        }
+
+        $customers = $query->orderBy('created_at', 'desc')->paginate(10);
+
+        // // Handle AJAX search request
+        // if ($request->ajax()) {
+        //     return view('merchant.customers.partials.table', compact('customers'))->render();
+        // }
+
+        return view('merchant.customers.index', compact('customers'));
     }
 
-    public function store(Request $request)
+    public function storeCustomer(Request $request)
     {
-        // Validate input
-        $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'business_name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
+            'email' => 'required|email|unique:customers,email',
             'phone' => 'required|string|max:20',
-            'address' => 'required|string|max:500',
+            'city' => 'nullable|string|max:100',
+            'state' => 'nullable|string|max:100',
+            'address' => 'nullable|string|max:255',
         ]);
 
-        // Create merchant
-        User::create([
-            'name' => $request->name,
-            'business_name' => $request->business_name,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'address' => $request->address,
-            'role' => 'merchant',
-            'password' => Hash::make('merchant123'), // default or remove if nullable
+        // Add the logged-in merchant's ID
+        $validated['merchant_id'] = Auth::id();
+
+        Customer::create($validated);
+
+        return redirect()
+            ->route('merchant.customers.index')
+            ->with('success', 'Customer added successfully!');
+    }
+
+    public function assignCard(Request $request)
+    {
+        $validated = $request->validate([
+            'customer' => 'required|exists:customers,id',
+            'card_id' => 'required|exists:cards,id',
+            'price' => 'required|numeric',
+            'discount' => 'nullable|numeric',
         ]);
 
-        return redirect()->route('admin.merchants.index')->with('success', 'Merchant added successfully.');
-    }
-    public function edit($id)
-    {
-        $merchant = User::findOrFail($id);
-        return view('admin.merchants.edit', compact('merchant'));
-    }
+        $card = Card::findOrFail($validated['card_id']);
 
-    // Update merchant details
-    public function update(Request $request, $id)
-    {
-        $merchant = User::findOrFail($id);
+        // Assign the card to the selected customer
+        $card->customer_id = $validated['customer'];
+        $card->price = $validated['price'];
+        $card->discount = $validated['discount'] ?? 0;
+        $card->final_price = $validated['price'] - (($validated['discount'] ?? 0) / 100 * $validated['price']);
+        $card->save();
 
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'business_name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $merchant->id,
-            'phone' => 'required|string|max:20',
-            'address' => 'required|string|max:500',
-        ]);
-
-        $merchant->update($request->only(['name', 'business_name', 'email', 'phone', 'address']));
-
-        return redirect()->route('admin.merchants.index')->with('success', 'Merchant updated successfully.');
-    }
-
-    public function destroy($id)
-    {
-        $merchant = User::findOrFail($id);
-        $merchant->delete();
-
-        return redirect()->route('admin.merchants.index')->with('success', 'Merchant deleted successfully!');
+        return redirect()
+            ->back()
+            ->with('success', 'Certificate assigned successfully!');
     }
 
 
     public function assignCardsPage()
     {
-        // Fetch merchants, customers, and available cards if needed
-        // $customers = \App\Models\Customer::all();
-        // $cards = \App\Models\Card::all();
+        $merchant = Auth::user(); // get logged-in merchant
 
-        // Return your assign-cards view (create this if not existing)
-        return view('merchant.cards.assign');
-    }
-    public function viewCards()
-    {
-        // Fetch cards from database if needed
-        // Example:
-        // $cards = Card::all();
+        $customers = Customer::all();
+        $cards = Card::where('merchant_id', $merchant->id)->get(['id', 'certificate_id', 'valuation']); // only this merchant’s cards
 
-        // Return the view
-        return view('merchant.cards.index');
-    }
-    public function requestCards()
-    {
-        return view('merchant.cards.request-card');
+        return view('merchant.cards.assign', compact('customers', 'cards'));
     }
 
-    public function viewRequests()
-    {
-        return view('merchant.cards.view-requests');
-    }
 }
-

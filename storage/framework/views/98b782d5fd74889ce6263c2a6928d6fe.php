@@ -14,12 +14,12 @@
         View Merchants
     </h2>
 
-    <div class="p-6 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
-        <div class="max-w-7xl mx-auto text-gray-900 dark:text-gray-100">
+    <div class="bg-white p-6 shadow dark:bg-gray-800 sm:rounded-lg sm:p-8">
+        <div class="mx-auto max-w-7xl text-gray-900 dark:text-gray-100">
 
             <!-- Success Message -->
             <?php if(session('success')): ?>
-                <div class="mb-4 p-3 bg-green-200 text-green-800 rounded">
+                <div class="mb-4 rounded bg-green-200 p-3 text-green-800">
                     <?php echo e(session('success')); ?>
 
                 </div>
@@ -37,7 +37,8 @@
 <?php endif; ?>
 <?php $component->withAttributes(['headers' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(['#', 'Owner Name', 'Business Name', 'Created At', 'Actions']),'from' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($pagination['from'] ?? 1),'to' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($pagination['to'] ?? 10),'total' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($pagination['total'] ?? count($merchants)),'pages' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($pagination['pages'] ?? [1]),'current' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($pagination['current'] ?? 1)]); ?>
                 <?php $__currentLoopData = $merchants; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $merchant): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                    <tr class="text-gray-700 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                    <tr
+                        class="text-gray-700 transition-colors hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-700">
                         <td class="px-4 py-3 text-sm"><?php echo e($index + 1); ?></td>
 
                         <td class="px-4 py-3 text-sm">
@@ -97,19 +98,27 @@
                                 </a>
 
                                 <!-- Delete Button -->
-                                <form action="<?php echo e(route('admin.merchants.destroy', $merchant->id)); ?>" method="POST" class="inline">
+                                <form action="<?php echo e(route('admin.merchants.destroy', $merchant->id)); ?>" method="POST"
+                                    class="inline">
                                     <?php echo csrf_field(); ?>
                                     <?php echo method_field('DELETE'); ?>
+                                    <!-- Delete Button -->
                                     <?php if (isset($component)) { $__componentOriginal656e8c5ea4d9a4fa173298297bfe3f11 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal656e8c5ea4d9a4fa173298297bfe3f11 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.danger-button','data' => ['onclick' => 'return confirm(\'Are you sure you want to delete this merchant?\')']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.danger-button','data' => ['type' => 'button','xData' => true,'xOn:click.prevent' => '
+        $dispatch(\'open-modal\', \'confirm-delete-modal\');
+        document.getElementById(\'deleteMerchantForm\').action = \''.e(route('admin.merchants.destroy', $merchant->id)).'\';
+    ']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('danger-button'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['onclick' => 'return confirm(\'Are you sure you want to delete this merchant?\')']); ?>
+<?php $component->withAttributes(['type' => 'button','x-data' => true,'x-on:click.prevent' => '
+        $dispatch(\'open-modal\', \'confirm-delete-modal\');
+        document.getElementById(\'deleteMerchantForm\').action = \''.e(route('admin.merchants.destroy', $merchant->id)).'\';
+    ']); ?>
                                         <?php echo e(__('Delete')); ?>
 
                                      <?php echo $__env->renderComponent(); ?>
@@ -122,6 +131,7 @@
 <?php $component = $__componentOriginal656e8c5ea4d9a4fa173298297bfe3f11; ?>
 <?php unset($__componentOriginal656e8c5ea4d9a4fa173298297bfe3f11); ?>
 <?php endif; ?>
+
                                 </form>
                             </div>
                         </td>
@@ -437,6 +447,91 @@
 <?php $component = $__componentOriginal9f64f32e90b9102968f2bc548315018c; ?>
 <?php unset($__componentOriginal9f64f32e90b9102968f2bc548315018c); ?>
 <?php endif; ?>
+
+            <!-- Delete Confirmation Modal -->
+            <?php if (isset($component)) { $__componentOriginal9f64f32e90b9102968f2bc548315018c = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal9f64f32e90b9102968f2bc548315018c = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.modal','data' => ['name' => 'confirm-delete-modal','focusable' => true]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('modal'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['name' => 'confirm-delete-modal','focusable' => true]); ?>
+                <form method="POST" id="deleteMerchantForm" class="p-6">
+                    <?php echo csrf_field(); ?>
+                    <?php echo method_field('DELETE'); ?>
+
+                    <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
+                        <?php echo e(__('Confirm Deletion')); ?>
+
+                    </h2>
+
+                    <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                        <?php echo e(__('Are you sure you want to delete this merchant? This action cannot be undone.')); ?>
+
+                    </p>
+
+                    <div class="mt-6 flex justify-end space-x-3">
+                        <?php if (isset($component)) { $__componentOriginal3b0e04e43cf890250cc4d85cff4d94af = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal3b0e04e43cf890250cc4d85cff4d94af = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.secondary-button','data' => ['type' => 'button','xOn:click' => '$dispatch(\'close\')']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('secondary-button'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['type' => 'button','x-on:click' => '$dispatch(\'close\')']); ?>
+                            <?php echo e(__('Cancel')); ?>
+
+                         <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal3b0e04e43cf890250cc4d85cff4d94af)): ?>
+<?php $attributes = $__attributesOriginal3b0e04e43cf890250cc4d85cff4d94af; ?>
+<?php unset($__attributesOriginal3b0e04e43cf890250cc4d85cff4d94af); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal3b0e04e43cf890250cc4d85cff4d94af)): ?>
+<?php $component = $__componentOriginal3b0e04e43cf890250cc4d85cff4d94af; ?>
+<?php unset($__componentOriginal3b0e04e43cf890250cc4d85cff4d94af); ?>
+<?php endif; ?>
+
+                        <?php if (isset($component)) { $__componentOriginal656e8c5ea4d9a4fa173298297bfe3f11 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal656e8c5ea4d9a4fa173298297bfe3f11 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.danger-button','data' => []] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('danger-button'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+                            <?php echo e(__('Yes, Delete')); ?>
+
+                         <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal656e8c5ea4d9a4fa173298297bfe3f11)): ?>
+<?php $attributes = $__attributesOriginal656e8c5ea4d9a4fa173298297bfe3f11; ?>
+<?php unset($__attributesOriginal656e8c5ea4d9a4fa173298297bfe3f11); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal656e8c5ea4d9a4fa173298297bfe3f11)): ?>
+<?php $component = $__componentOriginal656e8c5ea4d9a4fa173298297bfe3f11; ?>
+<?php unset($__componentOriginal656e8c5ea4d9a4fa173298297bfe3f11); ?>
+<?php endif; ?>
+                    </div>
+                </form>
+             <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal9f64f32e90b9102968f2bc548315018c)): ?>
+<?php $attributes = $__attributesOriginal9f64f32e90b9102968f2bc548315018c; ?>
+<?php unset($__attributesOriginal9f64f32e90b9102968f2bc548315018c); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal9f64f32e90b9102968f2bc548315018c)): ?>
+<?php $component = $__componentOriginal9f64f32e90b9102968f2bc548315018c; ?>
+<?php unset($__componentOriginal9f64f32e90b9102968f2bc548315018c); ?>
+<?php endif; ?>
+
         </div>
     </div>
  <?php echo $__env->renderComponent(); ?>

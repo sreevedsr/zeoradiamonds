@@ -79,7 +79,7 @@
 
         <!-- Save Button -->
         <div class="flex items-center gap-4 mt-4">
-            <x-primary-button class="px-4 py-2 rounded-md dark:bg-indigo-600 dark:hover:bg-indigo-500 dark:text-white">
+            <x-primary-button>
                 {{ __('Save') }}
             </x-primary-button>
 
