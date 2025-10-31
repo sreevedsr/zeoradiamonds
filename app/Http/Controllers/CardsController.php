@@ -16,7 +16,7 @@ class CardsController extends Controller
 
         $cards = Card::with('merchant')
             ->when($search, function ($query, $search) {
-                $query->where('card_number', 'like', "%{$search}%")
+                $query->where('certificate_id', 'like', "%{$search}%")
                     ->orWhereHas('merchant', function ($q) use ($search) {
                         $q->where('name', 'like', "%{$search}%");
                     })
@@ -137,27 +137,60 @@ class CardsController extends Controller
     // Handle card assignment
     public function assignCard(Request $request)
     {
+        // Base merchant validation (exists as user + has role merchant)
         $request->validate([
-            'merchant_id' => 'required|exists:merchants,id',
-            'card_number' => 'required|string|max:255|unique:cards,card_number',
-            'carat_weight' => 'required|numeric|min:0',
-            'clarity' => 'required|string|max:50',
-            'color' => 'required|string|max:50',
-            'cut' => 'required|string|max:50',
+            'merchant_id' => [
+                'required',
+                'exists:users,id',
+                function ($attribute, $value, $fail) {
+                    $user = User::find($value);
+                    if (!$user || $user->role !== 'merchant') {
+                        $fail('The selected user is not a merchant.');
+                    }
+                },
+            ],
         ]);
 
-        Card::create([
-            'merchant_id' => $request->merchant_id,
-            'card_number' => $request->card_number,
-            'carat_weight' => $request->carat_weight,
-            'clarity' => $request->clarity,
-            'color' => $request->color,
-            'cut' => $request->cut,
+        $merchantId = $request->merchant_id;
+
+        // If card_id provided -> assign existing card to merchant
+
+        $request->validate([
+            'card_id' => 'required|exists:cards,id',
         ]);
+
+        $card = Card::find($request->card_id);
+
+        \Log::info('Before refresh', [
+            'card_id' => $card->id,
+            'merchant_id_in_card' => $card->merchant_id,
+            'merchant_id_in_request' => $request->merchant_id,
+            'same_before_refresh' => $card->merchant_id == $request->merchant_id,
+        ]);
+
+        $card->refresh();
+
+        \Log::info('After refresh', [
+            'merchant_id_in_card' => $card->merchant_id,
+            'merchant_id_in_request' => $request->merchant_id,
+            'same_after_refresh' => $card->merchant_id == $request->merchant_id,
+        ]);
+        // optional: check if already assigned
+        if ($card->merchant_id == $merchantId) {
+            return redirect()->route('admin.cards.assign')
+                ->with('info', 'Card is already assigned to the selected merchant.');
+
+        }
+
+        $card->merchant_id = $merchantId;
+        $card->save();
+        // dd($card->merchant_id, $card->merchant ? $card->merchant->id : null);
+
 
         return redirect()->route('admin.cards.assign')
-            ->with('success', 'Card assigned successfully!');
+            ->with('success', 'Card assigned to merchant successfully!');
     }
+
 
     public function edit($id)
     {

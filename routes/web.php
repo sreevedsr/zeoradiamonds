@@ -44,6 +44,7 @@ Route::middleware('auth')->group(function () {
             Route::get('/create', [DashboardController::class, 'createCard'])->name('create');
             Route::post('/', [CardsController::class, 'store'])->name('store');
             Route::get('/assign', [CardsController::class, 'showAssignPage'])->name('assign');
+            Route::post('/assign', [CardsController::class, 'assignCard'])->name('assign');
             Route::get('/requests', [DashboardController::class, 'customerRequests'])->name('requests');
 
             Route::get('/{id}', [CardsController::class, 'show'])->name('show');
