@@ -41,7 +41,7 @@
                     <tr class="text-gray-700 dark:text-gray-400">
                         <td class="px-4 py-3 text-sm"><?php echo e($index + 1); ?></td>
                         <td class="px-4 py-3 text-sm"><?php echo e($card->certificate_id); ?></td>
-                        <td class="px-4 py-3 text-sm"><?php echo e($card->diamond_type); ?></td>
+                        <td class="px-4 py-3 text-sm"><?php echo e($card->diamond_shape); ?></td>
                         <td class="px-4 py-3 text-sm"><?php echo e($card->carat_weight); ?> ct</td>
                         <td class="px-4 py-3 text-sm"><?php echo e($card->clarity); ?></td>
                         <td class="px-4 py-3 text-sm"><?php echo e($card->color); ?></td>

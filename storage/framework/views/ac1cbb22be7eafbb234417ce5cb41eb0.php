@@ -14,37 +14,41 @@
         Manage Diamond Certificates
     </h2>
 
-
     <!-- Assign Certificate Section -->
-    <div class="p-6 mb-8 bg-white dark:bg-gray-800 rounded-lg shadow max-w-5xl mx-auto">
-        <h3 class="text-xl font-semibold text-gray-700 dark:text-gray-200 mb-6">
+    <div class="mx-auto mb-8 max-w-5xl rounded-lg bg-white p-6 shadow dark:bg-gray-800">
+        <h3 class="mb-6 text-xl font-semibold text-gray-700 dark:text-gray-200">
             Assign a Diamond Certificate
         </h3>
 
         <!-- Success Message -->
         <?php if(session('success')): ?>
-            <div class="mb-4 p-3 bg-green-100 text-green-700 border border-green-300 rounded-md">
+            <div class="mb-4 rounded-md border border-green-300 bg-green-100 p-3 text-green-700">
                 <?php echo e(session('success')); ?>
 
             </div>
         <?php endif; ?>
         <?php if(session('info')): ?>
-            <div class="mb-4 p-3 bg-green-100 text-green-700 border border-green-300 rounded-md">
+            <div class="mb-4 rounded-md border border-green-300 bg-green-100 p-3 text-green-700">
                 <?php echo e(session('info')); ?>
 
             </div>
         <?php endif; ?>
-        <form method="POST" action="<?php echo e(route('admin.cards.assign')); ?>" class="space-y-6" x-data="{ merchantSearch: '', cardSearch: '' }">
+        <form method="POST" action="<?php echo e(route('admin.cards.assign')); ?>" class="space-y-6" x-data="{
+            merchantSearch: '',
+            cardSearch: '',
+            selectedMerchant: null,
+            selectedCard: null
+        }">
             <?php echo csrf_field(); ?>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 rounded-xl">
+            <div class="grid grid-cols-1 gap-6 rounded-xl md:grid-cols-2">
                 <!-- Merchant Selection -->
-                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden transition-all duration-200 hover:shadow-md"
-                    x-data="{ merchantSearch: '', selectedMerchant: null }">
+                <div
+                    class="overflow-hidden rounded-xl bg-white shadow-sm transition-all duration-200 hover:shadow-md dark:bg-gray-800">
 
-                    <div class="p-5 border-b border-gray-100 dark:border-gray-700">
-                        <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 flex items-center gap-2 mb-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-purple-600 mr-2"
+                    <div class="border-b border-gray-100 p-5 dark:border-gray-700">
+                        <h3 class="mb-2 flex items-center gap-2 text-lg font-semibold text-gray-800 dark:text-gray-200">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-5 w-5 text-purple-600"
                                 viewBox="0 0 20 20" fill="currentColor">
                                 <path
                                     d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z" />
@@ -55,7 +59,7 @@
 
                     <div class="p-5">
                         <div class="relative mb-4">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400"
                                     viewBox="0 0 20 20" fill="currentColor">
                                     <path fill-rule="evenodd"
@@ -64,12 +68,11 @@
                                 </svg>
                             </div>
                             <input type="text" x-model="merchantSearch" placeholder="Search merchant..."
-                                class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600
-                dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200" />
+                                class="w-full rounded-lg border border-gray-300 py-3 pl-10 pr-4 transition-all duration-200 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-purple-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100" />
                         </div>
 
                         <!-- Merchants List -->
-                        <div class="space-y-3 max-h-64 overflow-y-auto custom-scrollbar">
+                        <div class="custom-scrollbar max-h-64 space-y-3 overflow-y-auto p-2">
                             <?php $__currentLoopData = $merchants; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $merchant): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                 <template
                                     x-if="'<?php echo e(strtolower($merchant->name . ' ' . $merchant->business_name)); ?>'.includes(merchantSearch.toLowerCase())
@@ -78,7 +81,7 @@
                                         :class="selectedMerchant === <?php echo e($merchant->id); ?> ?
                                             'border-purple-500 bg-purple-50 dark:bg-purple-900/30' :
                                             'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800'"
-                                        class="border rounded-lg p-4 cursor-pointer transition-all duration-200 hover:shadow-md mb-2">
+                                        class="mb-2 cursor-pointer rounded-lg border p-4 transition-all duration-200 hover:shadow-md">
                                         <div class="flex items-center justify-between">
                                             <div>
                                                 <h4 class="font-semibold text-gray-800 dark:text-gray-200">
@@ -106,7 +109,7 @@
                         <!-- Reset button (appears when selected) -->
                         <div class="mt-4" x-show="selectedMerchant" x-transition>
                             <button type="button" @click="selectedMerchant = null"
-                                class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-md text-sm hover:bg-gray-300 dark:hover:bg-gray-600 transition">
+                                class="rounded-md bg-gray-200 px-4 py-2 text-sm text-gray-800 transition hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600">
                                 Unselect Merchant
                             </button>
                         </div>
@@ -116,14 +119,13 @@
                     <input type="hidden" name="merchant_id" :value="selectedMerchant">
                 </div>
 
-
                 <!-- Card Selection -->
-                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden transition-all duration-200 hover:shadow-md"
-                    x-data="{ cardSearch: '', selectedCard: null }">
+                <div
+                    class="overflow-hidden rounded-xl bg-white shadow-sm transition-all duration-200 hover:shadow-md dark:bg-gray-800">
 
-                    <div class="p-5 border-b border-gray-100 dark:border-gray-700">
-                        <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 flex items-center gap-2 mb-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-purple-600 mr-2"
+                    <div class="border-b border-gray-100 p-5 dark:border-gray-700">
+                        <h3 class="mb-2 flex items-center gap-2 text-lg font-semibold text-gray-800 dark:text-gray-200">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-5 w-5 text-purple-600"
                                 viewBox="0 0 20 20" fill="currentColor">
                                 <path fill-rule="evenodd"
                                     d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z"
@@ -136,7 +138,7 @@
                     <div class="p-5">
                         <!-- Search -->
                         <div class="relative mb-4">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400"
                                     viewBox="0 0 20 20" fill="currentColor">
                                     <path fill-rule="evenodd"
@@ -145,12 +147,11 @@
                                 </svg>
                             </div>
                             <input type="text" x-model="cardSearch" placeholder="Search card..."
-                                class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600
-                dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200" />
+                                class="w-full rounded-lg border border-gray-300 py-3 pl-10 pr-4 transition-all duration-200 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-purple-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100" />
                         </div>
 
                         <!-- Cards List -->
-                        <div class="grid grid-cols-2 gap-3 max-h-64 overflow-y-auto custom-scrollbar w-full">
+                        <div class="custom-scrollbar grid max-h-64 w-full grid-cols-2 gap-3 overflow-y-auto p-2">
                             <?php $__currentLoopData = $cards; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $card): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                 <template
                                     x-if="'<?php echo e(strtolower($card->card_number . ' ' . $card->clarity . ' ' . $card->color . ' ' . $card->cut . ' ' . $card->certificate_id)); ?>'
@@ -160,45 +161,46 @@
                                         :class="selectedCard === <?php echo e($card->id); ?> ?
                                             'border-purple-500 ring-2 ring-purple-400 ring-offset-2 bg-purple-50 dark:bg-purple-900/30 dark:ring-offset-gray-900' :
                                             'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800'"
-                                        class="border rounded-lg p-4 cursor-pointer transition-all duration-200 hover:shadow-md hover:border-purple-300 relative">
+                                        class="relative cursor-pointer rounded-lg border p-4 transition-all duration-200 hover:border-purple-300 hover:shadow-md">
 
-                                        <div class="flex justify-between items-start">
+                                        <div class="flex items-start justify-between">
                                             <div>
                                                 <h4 class="font-semibold text-gray-800 dark:text-gray-200">
                                                     Card #<?php echo e($card->certificate_id); ?>
 
                                                 </h4>
-                                                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                                                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
                                                     <?php echo e($card->card_number); ?>
 
                                                 </p>
                                             </div>
                                             <span
-                                                class="text-sm font-semibold bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200 px-2 py-1 rounded-full">
+                                                class="rounded-full bg-purple-100 px-2 py-1 text-sm font-semibold text-purple-800 dark:bg-purple-900 dark:text-purple-200">
                                                 <?php echo e($card->carat_weight); ?>ct
                                             </span>
                                         </div>
 
-                                        <div class="flex flex-wrap gap-2 mt-2">
+                                        <div class="mt-2 flex flex-wrap gap-2">
                                             <span
-                                                class="text-xs text-gray-700 dark:bg-gray-700 bg-gray-100 dark:text-gray-300 px-2 py-1 rounded">
+                                                class="rounded bg-gray-100 px-2 py-1 text-xs text-gray-700 dark:bg-gray-700 dark:text-gray-300">
                                                 <?php echo e($card->clarity); ?>
 
                                             </span>
                                             <span
-                                                class="text-xs dark:bg-gray-700 bg-gray-100 text-gray-700 dark:text-gray-300 px-2 py-1 rounded">
+                                                class="rounded bg-gray-100 px-2 py-1 text-xs text-gray-700 dark:bg-gray-700 dark:text-gray-300">
                                                 <?php echo e($card->color); ?>
 
                                             </span>
                                             <span
-                                                class="text-xs bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300 px-2 py-1 rounded">
+                                                class="rounded bg-gray-100 px-2 py-1 text-xs text-gray-700 dark:bg-gray-700 dark:text-gray-300">
                                                 <?php echo e($card->cut); ?>
 
                                             </span>
                                             <template x-if="selectedCard === <?php echo e($card->id); ?>">
-                                                <div class=" top-3 right-3">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-purple-600"
-                                                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <div class="right-3 top-3">
+                                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                                        class="h-6 w-6 text-purple-600" fill="none"
+                                                        viewBox="0 0 24 24" stroke="currentColor">
                                                         <path stroke-linecap="round" stroke-linejoin="round"
                                                             stroke-width="2" d="M5 13l4 4L19 7" />
                                                     </svg>
@@ -211,11 +213,10 @@
                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </div>
 
-
                         <!-- Unselect button -->
                         <div class="mt-4" x-show="selectedCard" x-transition>
                             <button type="button" @click="selectedCard = null"
-                                class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-md text-sm hover:bg-gray-300 dark:hover:bg-gray-600 transition">
+                                class="rounded-md bg-gray-200 px-4 py-2 text-sm text-gray-800 transition hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600">
                                 Unselect Card
                             </button>
                         </div>
@@ -261,8 +262,7 @@
 
             <div class="flex justify-end">
                 <button type="submit"
-                    class="px-6 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700
-                   focus:outline-none focus:ring-2 focus:ring-purple-500 transition duration-150">
+                    class="rounded-md bg-purple-600 px-6 py-2 text-white transition duration-150 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500">
                     Assign Card
                 </button>
             </div>
@@ -283,7 +283,7 @@
 <?php $component->withAttributes(['headers' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(['Certificate No', 'Merchant', 'Carat', 'Clarity', 'Color', 'Cut', 'Assigned Date']),'from' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($cards->firstItem()),'to' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($cards->lastItem()),'total' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($cards->total()),'pages' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(range(1, $cards->lastPage())),'current' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($cards->currentPage()),'route' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(route('admin.cards.assign')),'searchPlaceholder' => 'Search certificates...']); ?>
 
         <?php $__empty_1 = true; $__currentLoopData = $cards; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $card): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
-            <tr class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">
+            <tr class="border-b hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-700">
                 <td class="px-4 py-3"><?php echo e($card->certificate_id); ?></td>
                 <td class="px-4 py-3"><?php echo e($card->merchant ? $card->merchant->name : '—'); ?></td>
                 <td class="px-4 py-3"><?php echo e($card->carat_weight); ?></td>

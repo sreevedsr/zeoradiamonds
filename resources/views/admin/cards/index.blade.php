@@ -23,7 +23,7 @@
                     <tr class="text-gray-700 dark:text-gray-400">
                         <td class="px-4 py-3 text-sm">{{ $index + 1 }}</td>
                         <td class="px-4 py-3 text-sm">{{ $card->certificate_id }}</td>
-                        <td class="px-4 py-3 text-sm">{{ $card->diamond_type }}</td>
+                        <td class="px-4 py-3 text-sm">{{ $card->diamond_shape }}</td>
                         <td class="px-4 py-3 text-sm">{{ $card->carat_weight }} ct</td>
                         <td class="px-4 py-3 text-sm">{{ $card->clarity }}</td>
                         <td class="px-4 py-3 text-sm">{{ $card->color }}</td>

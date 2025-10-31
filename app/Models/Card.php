@@ -13,7 +13,7 @@ class Card extends Model
         'certificate_id',
         'diamond_purchase_location',
         'category',
-        'diamond_type',
+        'diamond_shape',
         'carat_weight',
         'clarity',
         'color',

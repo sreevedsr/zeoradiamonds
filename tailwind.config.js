@@ -8,8 +8,8 @@ export default {
         "./vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php",
         "./storage/framework/views/*.php",
         "./resources/views/**/*.blade.php",
+        "./resources/js/**/*.js",
     ],
-    safelist: ["grid-cols-2", "grid-cols-3", "lg:grid-cols-3"],
     theme: {
         extend: {
             fontFamily: {
@@ -17,6 +17,5 @@ export default {
             },
         },
     },
-
     plugins: [forms],
 };
