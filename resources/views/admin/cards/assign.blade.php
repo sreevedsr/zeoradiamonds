@@ -7,9 +7,9 @@
 
     <!-- Assign Certificate Section -->
     <div class="mx-auto mb-8 rounded-lg bg-white p-6 shadow dark:bg-gray-800">
-        <h3 class="mb-6 text-xl font-semibold text-gray-700 dark:text-gray-200">
+        {{-- <h3 class="mb-6 text-xl font-semibold text-gray-700 dark:text-gray-200">
             Assign a Diamond Certificate
-        </h3>
+        </h3> --}}
 
         <!-- Success Message -->
         @if (session('success'))
@@ -22,7 +22,7 @@
                 {{ session('info') }}
             </div>
         @endif
-        <form method="POST" action="{{ route('admin.cards.assign') }}" class="space-y-6" x-data="{
+        <form method="POST" action="{{ route('admin.cards.assign') }}" x-data="{
             merchantSearch: '',
             cardSearch: '',
             selectedMerchant: null,
@@ -30,7 +30,7 @@
         }">
             @csrf
 
-            <div class="grid grid-cols-1 gap-6 rounded-xl md:grid-cols-2">
+            <div class="grid grid-cols-1 gap-6 rounded-xl md:grid-cols-2 mb-3">
                 <!-- Merchant Selection -->
                 <div
                     class="overflow-hidden rounded-xl bg-white shadow-sm transition-all duration-200 hover:shadow-md dark:bg-gray-800">
@@ -138,7 +138,8 @@
                         </div>
 
                         <!-- Cards List -->
-                        <div class="custom-scrollbar grid max-h-64 w-full grid-cols-1 sm:grid-cols-2 gap-3 overflow-y-auto p-2">
+                        <div
+                            class="custom-scrollbar grid max-h-64 w-full grid-cols-1 gap-3 overflow-y-auto p-2 sm:grid-cols-2">
                             @foreach ($cards as $card)
                                 <template
                                     x-if="'{{ strtolower($card->card_number . ' ' . $card->clarity . ' ' . $card->color . ' ' . $card->cut . ' ' . $card->certificate_id) }}'
@@ -211,43 +212,118 @@
             </div>
 
             <style>
-                .custom-scrollbar::-webkit-scrollbar {
-                    width: 6px;
-                }
-
-                .custom-scrollbar::-webkit-scrollbar-track {
-                    background: #f1f5f9;
-                    border-radius: 3px;
-                }
-
-                .custom-scrollbar::-webkit-scrollbar-thumb {
-                    background: #c7d2fe;
-                    border-radius: 3px;
-                }
-
-                .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-                    background: #a5b4fc;
-                }
-
-                .dark .custom-scrollbar::-webkit-scrollbar-track {
-                    background: #374151;
-                }
-
-                .dark .custom-scrollbar::-webkit-scrollbar-thumb {
-                    background: #4b5563;
-                }
-
-                .dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-                    background: #6b7280;
-                }
+                
             </style>
 
-            <div class="flex justify-end">
-                <button type="submit"
-                    class="rounded-md bg-purple-600 px-6 py-2 text-white transition duration-150 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500">
-                    Assign Card
-                </button>
-            </div>
+            <x-primary-button type="button" x-data
+                x-on:click.prevent="
+        if (selectedMerchant && selectedCard) {
+            $dispatch('open-modal', 'confirm-assign-modal');
+            document.getElementById('assignMerchantForm').action = '{{ route('admin.cards.assign') }}';
+        } else {
+            alert('Please select both a merchant and a card before assigning.');
+        }
+    ">
+                {{ __('Assign Card') }}
+            </x-primary-button>
+
+            <x-modal name="confirm-assign-modal" focusable>
+                <div class="p-6">
+                    <form method="POST" id="assignMerchantForm" class="space-y-6">
+                        @csrf
+                        <input type="hidden" name="merchant_id" :value="selectedMerchant">
+                        <input type="hidden" name="card_id" :value="selectedCard">
+
+                        <!-- Modal Header -->
+                        <div
+                            class="flex items-center justify-between border-b border-gray-200 pb-3 dark:border-gray-700">
+                            <h2 class="flex items-center gap-2 text-lg font-semibold text-gray-900 dark:text-gray-100">
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                    class="h-5 w-5 text-purple-600 dark:text-purple-400" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M5 13l4 4L19 7" />
+                                </svg>
+                                {{ __('Confirm Card Assignment') }}
+                            </h2>
+                            <button type="button" x-on:click="$dispatch('close')"
+                                class="text-gray-500 transition hover:text-gray-700 dark:hover:text-gray-300">
+                                ✕
+                            </button>
+                        </div>
+
+                        <!-- Modal Description -->
+                        <p class="py-3 text-sm text-gray-600 dark:text-gray-400">
+                            {{ __('Please review and confirm the following assignment details:') }}
+                        </p>
+
+                        <!-- Assignment Details -->
+
+                        <div class="p-3">
+                            <!-- Merchant Info -->
+                            <div
+                                class="flex items-center justify-between rounded-lg bg-purple-50 px-4 py-3 text-sm transition hover:bg-purple-100 dark:bg-purple-900/30 dark:hover:bg-purple-900/40 mb-3">
+                                <span class="flex items-center gap-2 font-medium text-gray-700 dark:text-gray-300">
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                        class="h-4 w-4 text-purple-600 dark:text-purple-400" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M4 6h16M4 12h16m-7 6h7" />
+                                    </svg>
+                                    Merchant
+                                </span>
+                                <template x-if="selectedMerchant">
+                                    <span class="ml-2 font-semibold">
+                                        @foreach ($merchants as $m)
+                                            <span x-show="selectedMerchant == {{ $m->id }}">
+                                                {{ $m->name }} <span
+                                                    class="text-gray-500 dark:text-gray-400">({{ $m->business_name }})</span>
+                                            </span>
+                                        @endforeach
+                                    </span>
+                                </template>
+                            </div>
+
+                            <!-- Card Info -->
+                            <div
+                                class="flex items-center justify-between rounded-lg bg-purple-50 px-4 py-3 text-sm transition hover:bg-purple-100 dark:bg-purple-900/30 dark:hover:bg-purple-900/40">
+                                <span class="flex items-center gap-2 font-medium text-gray-700 dark:text-gray-300">
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                        class="h-4 w-4 text-purple-600 dark:text-purple-400" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M9 12h6m2 4H7m10-8H7" />
+                                    </svg>
+                                    Card
+                                </span>
+                                <template x-if="selectedCard">
+                                    <span class="ml-2 font-semibold">
+                                        @foreach ($cards as $c)
+                                            <span x-show="selectedCard == {{ $c->id }}">
+                                                Card #{{ $c->certificate_id }}
+                                                <span
+                                                    class="text-gray-500 dark:text-gray-400">({{ $c->card_number }})</span>
+                                            </span>
+                                        @endforeach
+                                    </span>
+                                </template>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="flex justify-end space-x-3 border-t border-gray-200 pt-4 dark:border-gray-700">
+                            <x-secondary-button type="button" x-on:click="$dispatch('close')">
+                                {{ __('Cancel') }}
+                            </x-secondary-button>
+
+                            <x-primary-button>
+                                {{ __('Confirm & Assign') }}
+                            </x-primary-button>
+                        </div>
+                    </form>
+                </div>
+            </x-modal>
+
         </form>
 
     </div>

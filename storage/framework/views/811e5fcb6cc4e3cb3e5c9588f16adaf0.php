@@ -25,9 +25,6 @@
                     </a>
                 </li>
                 
-                
-                
-                
                 <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('view-merchants')): ?>
                     <li class="relative px-6 py-3" x-data="{
                         openMerchants: <?php echo e(request()->routeIs('admin.merchants.*') ? 'true' : 'false'); ?>,
@@ -116,6 +113,7 @@
                         </ul>
                     </li>
                 <?php endif; ?>
+
                 <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('view-customers')): ?>
                     <li class="relative px-6 py-3" x-data="{
                         openCustomers: <?php echo e(request()->routeIs('merchant.customers.*') ? 'true' : 'false'); ?>,
@@ -269,8 +267,8 @@
                             <svg class="ml-auto h-4 w-4 transform transition-transform duration-300 ease-in-out"
                                 :class="{ 'rotate-180': openCards }" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 0 1 1.414 0L10 10.586l3.293-3.293
-                           a1 1 0 1 1 1.414 1.414l-4 4a1 1 0 0 1-1.414 0l-4-4
-                           a1 1 0 0 1 0-1.414z" clip-rule="evenodd"></path>
+                                   a1 1 0 1 1 1.414 1.414l-4 4a1 1 0 0 1-1.414 0l-4-4
+                                   a1 1 0 0 1 0-1.414z" clip-rule="evenodd"></path>
                             </svg>
                         </button>
 
@@ -502,59 +500,73 @@
 
             </ul>
 
-            
+
         </div>
 
         <!-- Profile & Settings at bottom -->
         <?php if(auth()->guard()->check()): ?>
-            <div class="p-4 pb-0">
-                <a href="<?php echo e(route('profile.edit')); ?>"
+            <div x-data="{ open: false }" class="relative p-4 pb-0">
+                <!-- Profile Button -->
+                <button @click="open = !open"
                     class="mt-6 inline-flex w-full items-center justify-between gap-x-3 rounded-md px-4 py-2 text-sm font-semibold text-gray-800 transition hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-white/10 dark:text-white dark:hover:bg-white/20">
-                    <!-- Profile Image -->
+                    <!-- Profile Info -->
                     <div class="flex items-start align-middle">
                         <img class="h-8 w-8 rounded-full border border-gray-300 object-cover dark:border-gray-600"
                             src="<?php echo e(Auth::user()->profile_photo_url ?? '/default-profile.png'); ?>"
                             alt="<?php echo e(Auth::user()->name); ?>">
-                        <!-- User Info -->
                         <div class="ml-2 flex flex-col text-left">
                             <span class="text-sm font-semibold text-gray-900 dark:text-white">
                                 <?php echo e(Auth::user()->name); ?>
 
                             </span>
                             <span class="text-xs text-gray-600 dark:text-gray-300">
-                                <?php echo e(Auth::user()->email); ?>
+                                <?php echo e(Auth::user()->role); ?>
 
                             </span>
                         </div>
                     </div>
+
                     <!-- Chevron Icon -->
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round" class="ml-auto text-gray-700 dark:text-gray-300">
-                        <path d="m7 15 5 5 5-5" />
-                        <path d="m7 9 5-5 5 5" />
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"
+                        :class="{ 'rotate-180': open, 'rotate-0': !open }"
+                        class="ml-auto transform text-gray-700 transition-transform duration-200 dark:text-gray-300">
+                        <path d="m7 10 5 5 5-5" />
                     </svg>
-                </a>
+                </button>
+
+                <!-- Dropdown -->
+                <div x-show="open" @click.outside="open = false" x-transition:enter="transition ease-out duration-150"
+                    x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0"
+                    x-transition:leave="transition ease-in duration-100"
+                    x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 translate-y-2"
+                    class="absolute bottom-16 left-4 right-4 z-50 w-auto rounded-md border border-gray-200 bg-white shadow-md dark:border-gray-700 dark:bg-gray-800">
+                    <div class="p-3 border-b border-gray-100 dark:border-gray-700">
+                        <p class="text-sm font-semibold text-gray-800 dark:text-white"><?php echo e(Auth::user()->name); ?></p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400"><?php echo e(Auth::user()->merchant_code); ?></p>
+                    </div>
+                    <div class="p-2">
+                        <a href="<?php echo e(route('profile.edit')); ?>"
+                            class="block rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700">
+                            Edit Profile
+                        </a>
+                        <form method="POST" action="<?php echo e(route('logout')); ?>">
+                            <?php echo csrf_field(); ?>
+                            <button type="submit"
+                                class="w-full text-left rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700">
+                                Logout
+                            </button>
+                        </form>
+                    </div>
+                </div>
             </div>
         <?php endif; ?>
-
-        
-
-        <!-- Settings -->
-        
-
-        <!-- Logout -->
-        
-
     </div>
 </div>
 
 <!-- Mobile Sidebar -->
 
-
-
-
-<div class="fixed inset-y-0 z-20 mt-16 flex h-full w-64 flex-col justify-between overflow-y-auto bg-white py-4 text-gray-500 dark:bg-gray-800 dark:text-gray-400 md:hidden"
+<div class="fixed inset-y-0 z-20 mt-16 flex w-64 flex-col justify-between overflow-y-auto bg-white py-4 text-gray-500 dark:bg-gray-800 dark:text-gray-400 md:hidden"
     x-show="isSideMenuOpen" x-transition:enter="transition ease-in-out duration-150"
     x-transition:enter-start="opacity-0 transform -translate-x-20" x-transition:enter-end="opacity-100"
     x-transition:leave="transition ease-in-out duration-150" x-transition:leave-start="opacity-100"
@@ -647,41 +659,64 @@
         <?php endif; ?>
     </div>
 
-    <!-- Profile & Settings at bottom -->
-    <div class="mt-6 border-t border-gray-200 px-6 pt-4 dark:border-gray-700">
-        <a href="<?php echo e(route('profile.edit')); ?>"
-            class="flex items-center rounded-md px-2 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700">
-            <svg class="mr-3 h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
-                stroke-linecap="round" stroke-linejoin="round">
-                <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-            </svg>
-            Profile
-        </a>
-        <a href="#"
-            class="mt-2 flex items-center rounded-md px-2 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700">
-            <svg class="mr-3 h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
-                stroke-linecap="round" stroke-linejoin="round">
-                <path
-                    d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z">
-                </path>
-                <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-            </svg>
-            Settings
-        </a>
-        <form method="POST" action="<?php echo e(route('logout')); ?>">
-            <?php echo csrf_field(); ?>
-            <button type="submit"
-                class="mt-2 flex w-full items-center rounded-md px-2 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700">
-                <svg class="mr-3 h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
-                    stroke-linecap="round" stroke-linejoin="round">
-                    <path
-                        d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1">
-                    </path>
+    <?php if(auth()->guard()->check()): ?>
+        <div x-data="{ open: false }" class="relative p-4 pb-0">
+            <!-- Profile Button -->
+            <button @click="open = !open"
+                class="mt-6 inline-flex w-full items-center justify-between gap-x-3 rounded-md px-4 py-2 text-sm font-semibold text-gray-800 transition hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-white/10 dark:text-white dark:hover:bg-white/20">
+                <!-- Profile Info -->
+                <div class="flex items-start align-middle">
+                    <img class="h-8 w-8 rounded-full border border-gray-300 object-cover dark:border-gray-600"
+                        src="<?php echo e(Auth::user()->profile_photo_url ?? '/default-profile.png'); ?>"
+                        alt="<?php echo e(Auth::user()->name); ?>">
+                    <div class="ml-2 flex flex-col text-left">
+                        <span class="text-sm font-semibold text-gray-900 dark:text-white">
+                            <?php echo e(Auth::user()->name); ?>
+
+                        </span>
+                        <span class="text-xs text-gray-600 dark:text-gray-300">
+                            <?php echo e(Auth::user()->role); ?>
+
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Chevron Icon -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"
+                    :class="{ 'rotate-180': open, 'rotate-0': !open }"
+                    class="ml-auto transform text-gray-700 transition-transform duration-200 dark:text-gray-300">
+                    <path d="m7 10 5 5 5-5" />
                 </svg>
-                Log out
             </button>
-        </form>
-    </div>
+
+            <!-- Dropdown -->
+            <div x-show="open" @click.outside="open = false" x-transition:enter="transition ease-out duration-150"
+                x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0"
+                x-transition:leave="transition ease-in duration-100" x-transition:leave-start="opacity-100 translate-y-0"
+                x-transition:leave-end="opacity-0 translate-y-2"
+                class="absolute bottom-16 left-4 right-4 z-50 w-auto rounded-md border border-gray-200 bg-white shadow-md dark:border-gray-700 dark:bg-gray-800">
+                <div class="p-3 border-b border-gray-100 dark:border-gray-700">
+                    <p class="text-sm font-semibold text-gray-800 dark:text-white"><?php echo e(Auth::user()->name); ?></p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400"><?php echo e(Auth::user()->role); ?></p>
+                </div>
+                <div class="p-2">
+                    <a href="<?php echo e(route('profile.edit')); ?>"
+                        class="block rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700">
+                        Edit Profile
+                    </a>
+                    <form method="POST" action="<?php echo e(route('logout')); ?>">
+                        <?php echo csrf_field(); ?>
+                        <button type="submit"
+                            class="w-full text-left rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700">
+                            Logout
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    <?php endif; ?>
+
 </div>
 
 <?php /**PATH C:\xampp\htdocs\Zeeyame\resources\views/layouts/sidebar.blade.php ENDPATH**/ ?>

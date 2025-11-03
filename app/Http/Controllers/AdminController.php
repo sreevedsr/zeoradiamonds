@@ -8,39 +8,38 @@ use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
-   public function index()
-{
-    $perPage = 10; // Number of merchants per page
-    $page = request()->get('page', 1); // Get current page number
+    public function index()
+    {
+        $perPage = 10; // Number of merchants per page
+        $page = request()->get('page', 1); // Get current page number
 
-    // Query total merchants and paginated data
-    $total = User::where('role', 'merchant')->count();
+        // Query total merchants and paginated data
+        $total = User::where('role', 'merchant')->count();
 
-    $merchants = User::where('role', 'merchant')
-        ->skip(($page - 1) * $perPage)
-        ->take($perPage)
-        ->get();
+        $merchants = User::where('role', 'merchant')
+            ->skip(($page - 1) * $perPage)
+            ->take($perPage)
+            ->get();
 
-    // Calculate range for display
-    $from = ($page - 1) * $perPage + 1;
-    $to = min($from + $perPage - 1, $total);
-    $totalPages = ceil($total / $perPage);
+        // Calculate range for display
+        $from = ($page - 1) * $perPage + 1;
+        $to = min($from + $perPage - 1, $total);
+        $totalPages = ceil($total / $perPage);
 
-    $pages = range(1, $totalPages);
+        $pages = range(1, $totalPages);
 
-    // Send merchants and pagination data to view
-    return view('admin.merchants.index', [
-        'merchants' => $merchants,
-        'pagination' => [
-            'from' => $from,
-            'to' => $to,
-            'total' => $total,
-            'pages' => $pages,
-            'current' => $page,
-        ],
-    ]);
-}
-
+        // Send merchants and pagination data to view
+        return view('admin.merchants.index', [
+            'merchants' => $merchants,
+            'pagination' => [
+                'from' => $from,
+                'to' => $to,
+                'total' => $total,
+                'pages' => $pages,
+                'current' => $page,
+            ],
+        ]);
+    }
 
     public function create()
     {
@@ -50,31 +49,35 @@ class AdminController extends Controller
 
     public function store(Request $request)
     {
-        // Validate input
         $request->validate([
-            'name' => 'required|string|max:255',
-            'business_name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'phone' => 'required|string|max:20',
+            'merchant_code' => 'required|string|max:50|unique:users,merchant_code',
+            'merchant_name' => 'required|string|max:255',
             'address' => 'required|string|max:500',
+            'phone' => 'required|string|max:20',
+            'state_code' => 'required|string|max:10',
+            'state' => 'required|string|max:100',
+            'gst_no' => 'required|string|max:20|unique:users,gst_no',
         ]);
 
-        // Create merchant
         User::create([
-            'name' => $request->name,
-            'business_name' => $request->business_name,
-            'email' => $request->email,
-            'phone' => $request->phone,
+            'merchant_code' => $request->merchant_code,
+            'name' => $request->merchant_name,
             'address' => $request->address,
+            'phone' => $request->phone,
+            'state_code' => $request->state_code,
+            'state' => $request->state,
+            'gst_no' => $request->gst_no,
             'role' => 'merchant',
-            'password' => Hash::make('merchant123'), // default or remove if nullable
+            'password' => Hash::make('merchant123'),
         ]);
 
-        return redirect()->route('admin.merchants.index')->with('success', 'Merchant added successfully.');
+        return redirect()->route('admin.merchants.index')->with('success', 'Merchant registered successfully.');
     }
+
     public function edit($id)
     {
         $merchant = User::findOrFail($id);
+
         return view('admin.merchants.edit', compact('merchant'));
     }
 
@@ -86,7 +89,7 @@ class AdminController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'business_name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $merchant->id,
+            'email' => 'required|email|unique:users,email,'.$merchant->id,
             'phone' => 'required|string|max:20',
             'address' => 'required|string|max:500',
         ]);
@@ -104,8 +107,6 @@ class AdminController extends Controller
         return redirect()->route('admin.merchants.index')->with('success', 'Merchant deleted successfully!');
     }
 
-
-
     public function viewCards()
     {
         // Fetch cards from database if needed
@@ -115,6 +116,7 @@ class AdminController extends Controller
         // Return the view
         return view('merchant.cards.index');
     }
+
     public function requestCards()
     {
         return view('merchant.cards.request-card');
@@ -125,4 +127,3 @@ class AdminController extends Controller
         return view('merchant.cards.view-requests');
     }
 }
-

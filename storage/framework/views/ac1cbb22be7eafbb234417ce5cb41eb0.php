@@ -16,9 +16,7 @@
 
     <!-- Assign Certificate Section -->
     <div class="mx-auto mb-8 rounded-lg bg-white p-6 shadow dark:bg-gray-800">
-        <h3 class="mb-6 text-xl font-semibold text-gray-700 dark:text-gray-200">
-            Assign a Diamond Certificate
-        </h3>
+        
 
         <!-- Success Message -->
         <?php if(session('success')): ?>
@@ -33,7 +31,7 @@
 
             </div>
         <?php endif; ?>
-        <form method="POST" action="<?php echo e(route('admin.cards.assign')); ?>" class="space-y-6" x-data="{
+        <form method="POST" action="<?php echo e(route('admin.cards.assign')); ?>" x-data="{
             merchantSearch: '',
             cardSearch: '',
             selectedMerchant: null,
@@ -41,7 +39,7 @@
         }">
             <?php echo csrf_field(); ?>
 
-            <div class="grid grid-cols-1 gap-6 rounded-xl md:grid-cols-2">
+            <div class="grid grid-cols-1 gap-6 rounded-xl md:grid-cols-2 mb-3">
                 <!-- Merchant Selection -->
                 <div
                     class="overflow-hidden rounded-xl bg-white shadow-sm transition-all duration-200 hover:shadow-md dark:bg-gray-800">
@@ -151,7 +149,8 @@
                         </div>
 
                         <!-- Cards List -->
-                        <div class="custom-scrollbar grid max-h-64 w-full grid-cols-1 sm:grid-cols-2 gap-3 overflow-y-auto p-2">
+                        <div
+                            class="custom-scrollbar grid max-h-64 w-full grid-cols-1 gap-3 overflow-y-auto p-2 sm:grid-cols-2">
                             <?php $__currentLoopData = $cards; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $card): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                 <template
                                     x-if="'<?php echo e(strtolower($card->card_number . ' ' . $card->clarity . ' ' . $card->color . ' ' . $card->cut . ' ' . $card->certificate_id)); ?>'
@@ -229,43 +228,202 @@
             </div>
 
             <style>
-                .custom-scrollbar::-webkit-scrollbar {
-                    width: 6px;
-                }
-
-                .custom-scrollbar::-webkit-scrollbar-track {
-                    background: #f1f5f9;
-                    border-radius: 3px;
-                }
-
-                .custom-scrollbar::-webkit-scrollbar-thumb {
-                    background: #c7d2fe;
-                    border-radius: 3px;
-                }
-
-                .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-                    background: #a5b4fc;
-                }
-
-                .dark .custom-scrollbar::-webkit-scrollbar-track {
-                    background: #374151;
-                }
-
-                .dark .custom-scrollbar::-webkit-scrollbar-thumb {
-                    background: #4b5563;
-                }
-
-                .dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-                    background: #6b7280;
-                }
+                
             </style>
 
-            <div class="flex justify-end">
-                <button type="submit"
-                    class="rounded-md bg-purple-600 px-6 py-2 text-white transition duration-150 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500">
-                    Assign Card
-                </button>
-            </div>
+            <?php if (isset($component)) { $__componentOriginald411d1792bd6cc877d687758b753742c = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginald411d1792bd6cc877d687758b753742c = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.primary-button','data' => ['type' => 'button','xData' => true,'xOn:click.prevent' => '
+        if (selectedMerchant && selectedCard) {
+            $dispatch(\'open-modal\', \'confirm-assign-modal\');
+            document.getElementById(\'assignMerchantForm\').action = \''.e(route('admin.cards.assign')).'\';
+        } else {
+            alert(\'Please select both a merchant and a card before assigning.\');
+        }
+    ']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('primary-button'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['type' => 'button','x-data' => true,'x-on:click.prevent' => '
+        if (selectedMerchant && selectedCard) {
+            $dispatch(\'open-modal\', \'confirm-assign-modal\');
+            document.getElementById(\'assignMerchantForm\').action = \''.e(route('admin.cards.assign')).'\';
+        } else {
+            alert(\'Please select both a merchant and a card before assigning.\');
+        }
+    ']); ?>
+                <?php echo e(__('Assign Card')); ?>
+
+             <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginald411d1792bd6cc877d687758b753742c)): ?>
+<?php $attributes = $__attributesOriginald411d1792bd6cc877d687758b753742c; ?>
+<?php unset($__attributesOriginald411d1792bd6cc877d687758b753742c); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginald411d1792bd6cc877d687758b753742c)): ?>
+<?php $component = $__componentOriginald411d1792bd6cc877d687758b753742c; ?>
+<?php unset($__componentOriginald411d1792bd6cc877d687758b753742c); ?>
+<?php endif; ?>
+
+            <?php if (isset($component)) { $__componentOriginal9f64f32e90b9102968f2bc548315018c = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal9f64f32e90b9102968f2bc548315018c = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.modal','data' => ['name' => 'confirm-assign-modal','focusable' => true]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('modal'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['name' => 'confirm-assign-modal','focusable' => true]); ?>
+                <div class="p-6">
+                    <form method="POST" id="assignMerchantForm" class="space-y-6">
+                        <?php echo csrf_field(); ?>
+                        <input type="hidden" name="merchant_id" :value="selectedMerchant">
+                        <input type="hidden" name="card_id" :value="selectedCard">
+
+                        <!-- Modal Header -->
+                        <div
+                            class="flex items-center justify-between border-b border-gray-200 pb-3 dark:border-gray-700">
+                            <h2 class="flex items-center gap-2 text-lg font-semibold text-gray-900 dark:text-gray-100">
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                    class="h-5 w-5 text-purple-600 dark:text-purple-400" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M5 13l4 4L19 7" />
+                                </svg>
+                                <?php echo e(__('Confirm Card Assignment')); ?>
+
+                            </h2>
+                            <button type="button" x-on:click="$dispatch('close')"
+                                class="text-gray-500 transition hover:text-gray-700 dark:hover:text-gray-300">
+                                ✕
+                            </button>
+                        </div>
+
+                        <!-- Modal Description -->
+                        <p class="py-3 text-sm text-gray-600 dark:text-gray-400">
+                            <?php echo e(__('Please review and confirm the following assignment details:')); ?>
+
+                        </p>
+
+                        <!-- Assignment Details -->
+
+                        <div class="p-3">
+                            <!-- Merchant Info -->
+                            <div
+                                class="flex items-center justify-between rounded-lg bg-purple-50 px-4 py-3 text-sm transition hover:bg-purple-100 dark:bg-purple-900/30 dark:hover:bg-purple-900/40 mb-3">
+                                <span class="flex items-center gap-2 font-medium text-gray-700 dark:text-gray-300">
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                        class="h-4 w-4 text-purple-600 dark:text-purple-400" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M4 6h16M4 12h16m-7 6h7" />
+                                    </svg>
+                                    Merchant
+                                </span>
+                                <template x-if="selectedMerchant">
+                                    <span class="ml-2 font-semibold">
+                                        <?php $__currentLoopData = $merchants; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $m): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                            <span x-show="selectedMerchant == <?php echo e($m->id); ?>">
+                                                <?php echo e($m->name); ?> <span
+                                                    class="text-gray-500 dark:text-gray-400">(<?php echo e($m->business_name); ?>)</span>
+                                            </span>
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                    </span>
+                                </template>
+                            </div>
+
+                            <!-- Card Info -->
+                            <div
+                                class="flex items-center justify-between rounded-lg bg-purple-50 px-4 py-3 text-sm transition hover:bg-purple-100 dark:bg-purple-900/30 dark:hover:bg-purple-900/40">
+                                <span class="flex items-center gap-2 font-medium text-gray-700 dark:text-gray-300">
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                        class="h-4 w-4 text-purple-600 dark:text-purple-400" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M9 12h6m2 4H7m10-8H7" />
+                                    </svg>
+                                    Card
+                                </span>
+                                <template x-if="selectedCard">
+                                    <span class="ml-2 font-semibold">
+                                        <?php $__currentLoopData = $cards; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $c): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                            <span x-show="selectedCard == <?php echo e($c->id); ?>">
+                                                Card #<?php echo e($c->certificate_id); ?>
+
+                                                <span
+                                                    class="text-gray-500 dark:text-gray-400">(<?php echo e($c->card_number); ?>)</span>
+                                            </span>
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                    </span>
+                                </template>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="flex justify-end space-x-3 border-t border-gray-200 pt-4 dark:border-gray-700">
+                            <?php if (isset($component)) { $__componentOriginal3b0e04e43cf890250cc4d85cff4d94af = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal3b0e04e43cf890250cc4d85cff4d94af = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.secondary-button','data' => ['type' => 'button','xOn:click' => '$dispatch(\'close\')']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('secondary-button'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['type' => 'button','x-on:click' => '$dispatch(\'close\')']); ?>
+                                <?php echo e(__('Cancel')); ?>
+
+                             <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal3b0e04e43cf890250cc4d85cff4d94af)): ?>
+<?php $attributes = $__attributesOriginal3b0e04e43cf890250cc4d85cff4d94af; ?>
+<?php unset($__attributesOriginal3b0e04e43cf890250cc4d85cff4d94af); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal3b0e04e43cf890250cc4d85cff4d94af)): ?>
+<?php $component = $__componentOriginal3b0e04e43cf890250cc4d85cff4d94af; ?>
+<?php unset($__componentOriginal3b0e04e43cf890250cc4d85cff4d94af); ?>
+<?php endif; ?>
+
+                            <?php if (isset($component)) { $__componentOriginald411d1792bd6cc877d687758b753742c = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginald411d1792bd6cc877d687758b753742c = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.primary-button','data' => []] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('primary-button'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+                                <?php echo e(__('Confirm & Assign')); ?>
+
+                             <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginald411d1792bd6cc877d687758b753742c)): ?>
+<?php $attributes = $__attributesOriginald411d1792bd6cc877d687758b753742c; ?>
+<?php unset($__attributesOriginald411d1792bd6cc877d687758b753742c); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginald411d1792bd6cc877d687758b753742c)): ?>
+<?php $component = $__componentOriginald411d1792bd6cc877d687758b753742c; ?>
+<?php unset($__componentOriginald411d1792bd6cc877d687758b753742c); ?>
+<?php endif; ?>
+                        </div>
+                    </form>
+                </div>
+             <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal9f64f32e90b9102968f2bc548315018c)): ?>
+<?php $attributes = $__attributesOriginal9f64f32e90b9102968f2bc548315018c; ?>
+<?php unset($__attributesOriginal9f64f32e90b9102968f2bc548315018c); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal9f64f32e90b9102968f2bc548315018c)): ?>
+<?php $component = $__componentOriginal9f64f32e90b9102968f2bc548315018c; ?>
+<?php unset($__componentOriginal9f64f32e90b9102968f2bc548315018c); ?>
+<?php endif; ?>
+
         </form>
 
     </div>

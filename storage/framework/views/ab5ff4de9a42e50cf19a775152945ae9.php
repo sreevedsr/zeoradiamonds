@@ -79,9 +79,11 @@
                             </label>
 
                             <!-- Dropdown trigger -->
-                            <button type="button" @click="openDropdown === 'shape' ? openDropdown = null : openDropdown = 'shape'"
+                            <button type="button"
+                                @click="openDropdown === 'shape' ? openDropdown = null : openDropdown = 'shape'"
                                 class="flex w-full items-center justify-between rounded-md border border-gray-300 px-3 py-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-purple-600 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100">
-                                <span x-text="selectedShape || 'Select diamond shape'"></span>
+                                <span x-text="selectedShape || 'Select diamond shape'"
+                                    :class="selectedShape ? 'text-gray-900 dark:text-gray-100' : 'text-gray-400'"></span>
                                 <svg xmlns="http://www.w3.org/2000/svg"
                                     class="ml-2 h-4 w-4 transform transition-transform duration-300 dark:text-gray-100"
                                     :class="openDropdown ? 'rotate-180' : 'rotate-0'" fill="none" viewBox="0 0 24 24"
@@ -99,13 +101,12 @@
                                 x-transition:leave="transition ease-in duration-150"
                                 x-transition:leave-start="opacity-100 scale-100 translate-y-0"
                                 x-transition:leave-end="opacity-0 scale-95 translate-y-1"
-                                class="absolute z-10 mt-2 max-h-64 w-full origin-top overflow-y-auto rounded-lg border border-gray-200 bg-white p-3 shadow-lg dark:border-gray-700 dark:bg-gray-800">
+                                class="absolute z-10 mt-2 max-h-64 w-full origin-top overflow-y-auto rounded-lg border border-gray-200 bg-white p-3 shadow-lg dark:border-gray-700 dark:bg-gray-800 custom-scrollbar">
 
-                                <div
-                                    class="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-6">
+                                <div class="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 ">
                                     <?php $__currentLoopData = ['Round', 'Pear', 'Princess', 'Marquise', 'Emerald', 'Cushion Brilliant', 'Cushion Modified', 'Asscher', 'Sq. Emerald', 'Oval', 'Radiant', 'Heart', 'European Cut', 'Old Miner', 'Baguette', 'Briolette', 'Bullets', 'Calf', 'Half Moon', 'Hexagonal', 'Kite', 'Lozenge', 'Octagonal', 'Pentagonal', 'Rose', 'Shield', 'Square', 'Square Radiant', 'Star', 'Tapered Baguette', 'Tapered Bullet', 'Trapezoid', 'Triangular', 'Trilliant', 'Other']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $shape): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                         <div @click="selectedShape = '<?php echo e($shape); ?>'; openDropdown = null"
-                                            class="cursor-pointer select-none rounded-md border px-3 py-2 text-center text-sm font-medium transition-all duration-200"
+                                            class="flex items-center justify-center cursor-pointer select-none rounded-md border px-3 py-2 text-center text-sm font-medium transition-all duration-200"
                                             :class="selectedShape === '<?php echo e($shape); ?>'
                                                 ?
                                                 'border-purple-600 bg-purple-100 dark:bg-purple-700 text-purple-900 dark:text-white shadow-sm' :
@@ -140,7 +141,8 @@
                             <!-- Dropdown trigger -->
                             <button type="button" @click="open = !open"
                                 class="flex w-full items-center justify-between rounded-md border border-gray-300 px-3 py-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-purple-600 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100">
-                                <span x-text="selectedColor || 'Select diamond color'"></span>
+                                <span x-text="selectedColor || 'Select diamond color'"
+                                    :class="selectedColor ? 'text-gray-900 dark:text-gray-100' : 'text-gray-400'"></span>
                                 <svg xmlns="http://www.w3.org/2000/svg"
                                     class="ml-2 h-4 w-4 transform transition-transform duration-300 dark:text-gray-100"
                                     :class="open ? 'rotate-180' : 'rotate-0'" fill="none" viewBox="0 0 24 24"
@@ -186,7 +188,8 @@
                             <!-- Dropdown trigger -->
                             <button type="button" @click="open = !open"
                                 class="flex w-full cursor-pointer items-center justify-between rounded-md border border-gray-300 px-3 py-2 transition focus:outline-none focus:ring-2 focus:ring-purple-600 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100">
-                                <span x-text="selectedClarity || 'Select diamond clarity'"></span>
+                                <span x-text="selectedClarity || 'Select diamond clarity'"   :class="selectedClarity ? 'text-gray-900 dark:text-gray-100' : 'text-gray-400'"
+></span>
                                 <svg xmlns="http://www.w3.org/2000/svg" :class="{ 'rotate-180': open }"
                                     class="h-5 w-5 transition-transform duration-200" fill="none"
                                     viewBox="0 0 24 24" stroke="currentColor">
@@ -236,7 +239,8 @@
                             <!-- Dropdown Button -->
                             <button type="button" @click="open = !open"
                                 class="flex w-full items-center justify-between rounded-md border border-gray-300 px-3 py-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-purple-600 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100">
-                                <span x-text="selectedCut || 'Select Cut'"></span>
+                                <span x-text="selectedCut || 'Select Cut'"   :class="selectedCut ? 'text-gray-900 dark:text-gray-100' : 'text-gray-400'"
+></span>
                                 <svg xmlns="http://www.w3.org/2000/svg"
                                     class="ml-2 h-4 w-4 transform transition-transform duration-300"
                                     :class="open ? 'rotate-180' : 'rotate-0'" fill="none" viewBox="0 0 24 24"
