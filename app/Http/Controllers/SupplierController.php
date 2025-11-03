@@ -71,12 +71,6 @@ class SupplierController extends Controller
             ->with('success', 'Supplier deleted successfully.');
     }
 
-    public function edit($id)
-    {
-        $supplier = Supplier::findOrFail($id);
-
-        return view('admin.suppliers.edit', compact('supplier'));
-    }
 
     public function update(Request $request, $id)
     {

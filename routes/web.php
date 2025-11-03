@@ -3,7 +3,6 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CardsController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\FormsController;
 use App\Http\Controllers\MerchantController;
 use App\Http\Controllers\MerchantRequestController;
 use App\Http\Controllers\ProductController;
@@ -65,33 +64,30 @@ Route::middleware('auth')->group(function () {
             Route::get('/create', [SupplierController::class, 'create'])->name('create');
             Route::post('/store', [SupplierController::class, 'store'])->name('store');
 
-            Route::get('/{id}/edit', [SupplierController::class, 'edit'])->name('edit');   // Edit form
-            Route::put('/{id}', [SupplierController::class, 'update'])->name('update');    // Update record
-            Route::delete('/{id}', [SupplierController::class, 'destroy'])->name('destroy'); // Delete merchant
+            Route::get('/{id}/edit', [SupplierController::class, 'edit'])->name('edit');
+            Route::put('/{id}', [SupplierController::class, 'update'])->name('update');
+            Route::delete('/{id}', [SupplierController::class, 'destroy'])->name('destroy');
         });
-
-        // Forms management
-        Route::get('/forms', [FormsController::class, 'index'])->name('forms.index');
-        Route::post('/forms', [FormsController::class, 'store'])->name('forms.store');
 
         // Logs and requests
         Route::get('/logs', [DashboardController::class, 'logs'])->name('logs');
         Route::get('/requests', [DashboardController::class, 'requests'])->name('requests');
 
+        // Merchant requests viewing
         Route::get('/merchants/requests', [MerchantRequestController::class, 'index'])->name('merchants.request');
+
         // Merchant management
         Route::middleware('can:view-merchants')->prefix('merchants')->name('merchants.')->group(function () {
-            Route::get('/', [AdminController::class, 'index'])->name('index');       // View merchants
-            Route::get('/create', [AdminController::class, 'create'])->name('create'); // Add merchant
-            Route::post('/store', [AdminController::class, 'store'])->name('store');  // Save merchant
+            Route::get('/', [AdminController::class, 'index'])->name('index');
+            Route::get('/create', [AdminController::class, 'create'])->name('create');
+            Route::post('/store', [AdminController::class, 'store'])->name('store');
 
-            Route::get('/{id}/edit', [AdminController::class, 'edit'])->name('edit');   // Edit form
-            Route::put('/{id}', [AdminController::class, 'update'])->name('update');    // Update record
-            Route::delete('/{id}', [AdminController::class, 'destroy'])->name('destroy'); // Delete merchant
+            Route::get('/{id}/edit', [AdminController::class, 'edit'])->name('edit');
+            Route::put('/{id}', [AdminController::class, 'update'])->name('update');
+            Route::delete('/{id}', [AdminController::class, 'destroy'])->name('destroy');
 
         });
 
-        // Merchant requests viewing
     });
 
     // ================================
@@ -101,9 +97,9 @@ Route::middleware('auth')->group(function () {
 
         // Customers management
         Route::prefix('customers')->name('customers.')->group(function () {
-            Route::get('/', [MerchantController::class, 'customers'])->name('index');         // View customers
-            Route::get('/create', [DashboardController::class, 'createCustomer'])->name('create'); // Add customer
-            Route::post('/', [MerchantController::class, 'storeCustomer'])->name('store');     // Save customer
+            Route::get('/', [MerchantController::class, 'customers'])->name('index');
+            Route::get('/create', [DashboardController::class, 'createCustomer'])->name('create');
+            Route::post('/', [MerchantController::class, 'storeCustomer'])->name('store');
         });
         Route::prefix('cards')->name('cards.')->group(function () {
             // 🟣 View all assigned diamond certificates
@@ -126,8 +122,6 @@ Route::middleware('auth')->group(function () {
         // Requests management
         Route::get('/requests', [DashboardController::class, 'merchantRequests'])->name('merchant.requests');
         Route::post('/requests', [DashboardController::class, 'storeRequest'])->name('merchant.requests.store');
-
-        // 🔴 Handle card unassignment (delete assignment)
         Route::delete('/unassign-card/{id}', [AdminController::class, 'unassignCard'])->name('unassignCard');
 
     });

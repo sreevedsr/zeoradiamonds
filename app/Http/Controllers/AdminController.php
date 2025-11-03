@@ -46,7 +46,7 @@ class AdminController extends Controller
         // Show form to add merchant
         return view('admin.merchants.create');
     }
-    
+
 
     public function store(Request $request)
     {
@@ -73,13 +73,6 @@ class AdminController extends Controller
         ]);
 
         return redirect()->route('admin.merchants.index')->with('success', 'Merchant registered successfully.');
-    }
-
-    public function edit($id)
-    {
-        $merchant = User::findOrFail($id);
-
-        return view('admin.merchants.edit', compact('merchant'));
     }
 
     // Update merchant details
