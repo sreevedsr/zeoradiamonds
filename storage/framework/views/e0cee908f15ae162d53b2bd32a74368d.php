@@ -116,11 +116,11 @@ unset($__defined_vars, $__key, $__value); ?>
     </div>
 
     <!-- Data Table -->
-    <div class="w-full overflow-x-auto">
-        <table class="w-full whitespace-nowrap text-left">
-            <thead>
+    <div id="data-table" class="relative max-h-[70vh] overflow-auto rounded-lg">
+        <table class="min-w-full whitespace-nowrap text-left border-collapse">
+            <thead class="sticky top-0 z-10 bg-gray-50 dark:bg-gray-800">
                 <tr
-                    class="border-b bg-gray-50 text-xs font-semibold uppercase tracking-wide text-gray-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400">
+                    class="border-b text-xs font-semibold uppercase tracking-wide text-gray-500 dark:border-gray-700 dark:text-gray-400">
                     <?php $__currentLoopData = $headers; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $header): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                         <th class="px-4 py-3"><?php echo e($header); ?></th>
                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
@@ -133,6 +133,7 @@ unset($__defined_vars, $__key, $__value); ?>
             </tbody>
         </table>
     </div>
+
 
     <!-- Pagination -->
     <?php echo $__env->make('components.pagination', [

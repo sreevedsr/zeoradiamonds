@@ -38,7 +38,7 @@
                 <?php endif; ?>
 
                 <!-- Form -->
-                <form method="POST" action="<?php echo e(route('admin.cards.store')); ?>" enctype="multipart/form-data">
+                <form method="POST" action="<?php echo e(route('admin.products.store')); ?>" enctype="multipart/form-data">
                     <?php echo csrf_field(); ?>
 
                     <!-- Grid Layout -->
@@ -188,8 +188,8 @@
                             <!-- Dropdown trigger -->
                             <button type="button" @click="open = !open"
                                 class="flex w-full cursor-pointer items-center justify-between rounded-md border border-gray-300 px-3 py-2 transition focus:outline-none focus:ring-2 focus:ring-purple-600 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100">
-                                <span x-text="selectedClarity || 'Select diamond clarity'"   :class="selectedClarity ? 'text-gray-900 dark:text-gray-100' : 'text-gray-400'"
-></span>
+                                <span x-text="selectedClarity || 'Select diamond clarity'"
+                                    :class="selectedClarity ? 'text-gray-900 dark:text-gray-100' : 'text-gray-400'"></span>
                                 <svg xmlns="http://www.w3.org/2000/svg" :class="{ 'rotate-180': open }"
                                     class="h-5 w-5 transition-transform duration-200" fill="none"
                                     viewBox="0 0 24 24" stroke="currentColor">
@@ -239,8 +239,8 @@
                             <!-- Dropdown Button -->
                             <button type="button" @click="open = !open"
                                 class="flex w-full items-center justify-between rounded-md border border-gray-300 px-3 py-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-purple-600 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100">
-                                <span x-text="selectedCut || 'Select Cut'"   :class="selectedCut ? 'text-gray-900 dark:text-gray-100' : 'text-gray-400'"
-></span>
+                                <span x-text="selectedCut || 'Select Cut'"
+                                    :class="selectedCut ? 'text-gray-900 dark:text-gray-100' : 'text-gray-400'"></span>
                                 <svg xmlns="http://www.w3.org/2000/svg"
                                     class="ml-2 h-4 w-4 transform transition-transform duration-300"
                                     :class="open ? 'rotate-180' : 'rotate-0'" fill="none" viewBox="0 0 24 24"

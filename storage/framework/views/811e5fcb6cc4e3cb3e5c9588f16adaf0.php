@@ -24,7 +24,7 @@
                         <span class="ml-2">Dashboard</span>
                     </a>
                 </li>
-                
+
                 <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('view-merchants')): ?>
                     <li class="relative px-6 py-3" x-data="{
                         openMerchants: <?php echo e(request()->routeIs('admin.merchants.*') ? 'true' : 'false'); ?>,
@@ -113,6 +113,7 @@
                         </ul>
                     </li>
                 <?php endif; ?>
+
 
                 <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('view-customers')): ?>
                     <li class="relative px-6 py-3" x-data="{
@@ -206,9 +207,103 @@
                     </li>
                 <?php endif; ?>
 
+                <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('view-suppliers')): ?>
+                    <li class="relative px-6 py-3" x-data="{
+                        openSuppliers: <?php echo e(request()->routeIs('admin.suppliers.*') ? 'true' : 'false'); ?>,
+                        height: 0,
+                        setMeasured() {
+                            this.height = this.$refs.panel ? this.$refs.panel.scrollHeight : 0;
+                        },
+                        toggleSuppliers() {
+                            if (!this.openSuppliers) {
+                                this.setMeasured();
+                                this.openSuppliers = true;
+                            } else {
+                                if (this.$refs.panel) {
+                                    this.height = this.$refs.panel.scrollHeight;
+                                    this.$nextTick(() => {
+                                        this.height = 0;
+                                        this.openSuppliers = false;
+                                    });
+                                } else {
+                                    this.height = 0;
+                                    this.openSuppliers = false;
+                                }
+                            }
+                        }
+                    }" x-init="$nextTick(() => {
+                        if (openSuppliers) setMeasured();
+                        window.addEventListener('resize', () => {
+                            if (openSuppliers) setMeasured();
+                        });
+                    })">
+
+                        <!-- Highlight Bar -->
+                        <span
+                            class="<?php echo e(request()->routeIs('admin.suppliers.*') ? 'absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg' : ''); ?>"
+                            aria-hidden="true"></span>
+
+                        <!-- Main Menu Button -->
+                        <button @click="toggleSuppliers" type="button"
+                            class="flex w-full items-start rounded-md text-sm font-semibold text-gray-500 transition-colors duration-150 hover:text-gray-800 focus:outline-none dark:text-gray-400 dark:hover:text-gray-200"
+                            :aria-expanded="openSuppliers.toString()">
+
+                            <!-- Icon -->
+                            <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20 13V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v6M9 21h6M12 17v4M3 13h18"></path>
+                            </svg>
+
+                            <!-- Label -->
+                            <span
+                                class="<?php echo e(request()->routeIs('admin.suppliers.*')
+                                    ? 'text-gray-800 dark:text-gray-200'
+                                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?> ml-2 flex-1 text-left">
+                                Suppliers
+                            </span>
+
+                            <!-- Arrow -->
+                            <svg class="ml-auto h-4 w-4 transform-gpu transition-transform duration-300 ease-in-out"
+                                :class="openSuppliers ? 'rotate-180' : 'rotate-0'" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M5.293 7.293a1 1 0 0 1 1.414 0L10 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414l-4 4a1 1 0 0 1-1.414 0l-4-4a1 1 0 0 1 0-1.414z"
+                                    clip-rule="evenodd">
+                                </path>
+                            </svg>
+                        </button>
+
+                        <!-- Submenu -->
+                        <ul x-ref="panel" :style="`height: ${height}px`"
+                            @transitionend="if (openSuppliers) height = 'auto'"
+                            class="mt-2 space-y-2 overflow-hidden px-4 transition-all duration-300 ease-in-out">
+
+                            <li>
+                                <a href="<?php echo e(route('admin.suppliers.create')); ?>"
+                                    class="<?php echo e(request()->routeIs('admin.suppliers.create')
+                                        ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
+                                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?> block rounded-md px-2 py-1 text-sm font-medium">
+                                    Register Supplier
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="<?php echo e(route('admin.suppliers.index')); ?>"
+                                    class="<?php echo e(request()->routeIs('admin.suppliers.index')
+                                        ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
+                                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?> block rounded-md px-2 py-1 text-sm font-medium">
+                                    View Suppliers
+                                </a>
+                            </li>
+
+                        </ul>
+                    </li>
+                <?php endif; ?>
+
+
+
                 <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('edit-cards')): ?>
                     <li class="relative px-6 py-3" x-data="{
-                        openCards: <?php echo e(request()->routeIs('admin.cards.*') ? 'true' : 'false'); ?>,
+                        openCards: <?php echo e(request()->routeIs('admin.products.*') ? 'true' : 'false'); ?>,
                         height: 0,
                         setup() {
                             this.setMeasured = () => {
@@ -224,7 +319,7 @@
 
                         <!-- Active indicator -->
                         <span
-                            class="<?php echo e(request()->routeIs('admin.cards.*')
+                            class="<?php echo e(request()->routeIs('admin.products.*')
                                 ? 'absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg'
                                 : ''); ?>"
                             aria-hidden="true">
@@ -250,8 +345,8 @@
                             :aria-expanded="openCards.toString()">
 
                             <!-- Icon -->
-                            <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
-                                stroke-linecap="round" stroke-linejoin="round">
+                            <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2"
+                                viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
                                 <path
                                     d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                             </svg>
@@ -260,15 +355,15 @@
                                 class="<?php echo e(request()->routeIs('admin.cards.*')
                                     ? 'text-gray-800 dark:text-gray-200'
                                     : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?> ml-2 flex-1 text-left">
-                                Cards
+                                Product
                             </span>
 
                             <!-- Rotating arrow -->
                             <svg class="ml-auto h-4 w-4 transform transition-transform duration-300 ease-in-out"
                                 :class="{ 'rotate-180': openCards }" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 0 1 1.414 0L10 10.586l3.293-3.293
-                                   a1 1 0 1 1 1.414 1.414l-4 4a1 1 0 0 1-1.414 0l-4-4
-                                   a1 1 0 0 1 0-1.414z" clip-rule="evenodd"></path>
+                                           a1 1 0 1 1 1.414 1.414l-4 4a1 1 0 0 1-1.414 0l-4-4
+                                           a1 1 0 0 1 0-1.414z" clip-rule="evenodd"></path>
                             </svg>
                         </button>
 
@@ -278,8 +373,16 @@
                             class="mt-2 space-y-2 overflow-hidden px-4 transition-all duration-300 ease-in-out">
 
                             <li>
-                                <a href="<?php echo e(route('admin.cards.create')); ?>"
-                                    class="<?php echo e(request()->routeIs('admin.cards.create')
+                                <a href="<?php echo e(route('admin.products.register')); ?>"
+                                    class="<?php echo e(request()->routeIs('admin.products.register')
+                                        ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
+                                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?> block rounded-md px-2 py-1 text-sm font-medium">
+                                    Register Product
+                                </a>
+                            </li>
+                            <li>
+                                <a href="<?php echo e(route('admin.products.create')); ?>"
+                                    class="<?php echo e(request()->routeIs('admin.products.create')
                                         ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
                                         : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?> block rounded-md px-2 py-1 text-sm font-medium">
                                     Add Card
@@ -287,26 +390,26 @@
                             </li>
 
                             <li>
-                                <a href="<?php echo e(route('admin.cards.index')); ?>"
-                                    class="<?php echo e(request()->routeIs('admin.cards.index')
+                                <a href="<?php echo e(route('admin.products.index')); ?>"
+                                    class="<?php echo e(request()->routeIs('admin.products.index')
                                         ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
                                         : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?> block rounded-md px-2 py-1 text-sm font-medium">
-                                    View Cards
+                                    View products
                                 </a>
                             </li>
 
                             <li>
-                                <a href="<?php echo e(route('admin.cards.assign')); ?>"
-                                    class="<?php echo e(request()->routeIs('admin.cards.assign')
+                                <a href="<?php echo e(route('admin.products.assign')); ?>"
+                                    class="<?php echo e(request()->routeIs('admin.products.assign')
                                         ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
                                         : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?> block rounded-md px-2 py-1 text-sm font-medium">
-                                    Assign Cards
+                                    Assign products
                                 </a>
                             </li>
 
                             <li>
-                                <a href="<?php echo e(route('admin.cards.requests')); ?>"
-                                    class="<?php echo e(request()->routeIs('admin.cards.requests')
+                                <a href="<?php echo e(route('admin.products.requests')); ?>"
+                                    class="<?php echo e(request()->routeIs('admin.products.requests')
                                         ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
                                         : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?> block rounded-md px-2 py-1 text-sm font-medium">
                                     View Card Requests

@@ -38,6 +38,10 @@ class CardsController extends Controller
         return view('admin.cards.index', compact('cards', 'merchants'));
     }
 
+    public function createCard()
+    {
+        return view('admin.cards.create'); // Blade
+    }
 
     public function store(Request $request)
     {

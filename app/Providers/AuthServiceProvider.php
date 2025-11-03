@@ -33,6 +33,9 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('edit-cards', function ($user) {
             return $user->role === 'admin';
         });
+        Gate::define('view-suppliers', function ($user) {
+            return $user->role === 'admin';
+        });
 
         Gate::define('create-account', function ($user) {
             return $user->role === 'admin';

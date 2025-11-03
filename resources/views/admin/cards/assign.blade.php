@@ -22,7 +22,7 @@
                 {{ session('info') }}
             </div>
         @endif
-        <form method="POST" action="{{ route('admin.cards.assign') }}" x-data="{
+        <form method="POST" action="{{ route('admin.products.assign') }}" x-data="{
             merchantSearch: '',
             cardSearch: '',
             selectedMerchant: null,
@@ -212,14 +212,14 @@
             </div>
 
             <style>
-                
+
             </style>
 
             <x-primary-button type="button" x-data
                 x-on:click.prevent="
         if (selectedMerchant && selectedCard) {
             $dispatch('open-modal', 'confirm-assign-modal');
-            document.getElementById('assignMerchantForm').action = '{{ route('admin.cards.assign') }}';
+            document.getElementById('assignMerchantForm').action = '{{ route('admin.products.assign') }}';
         } else {
             alert('Please select both a merchant and a card before assigning.');
         }
@@ -330,7 +330,7 @@
 
     <!-- Diamond Certificates Table -->
     <x-table :headers="['Certificate No', 'Merchant', 'Carat', 'Clarity', 'Color', 'Cut', 'Assigned Date']" :from="$cards->firstItem()" :to="$cards->lastItem()" :total="$cards->total()" :pages="range(1, $cards->lastPage())" :current="$cards->currentPage()"
-        :route="route('admin.cards.assign')" searchPlaceholder="Search certificates...">
+        :route="route('admin.products.assign')" searchPlaceholder="Search certificates...">
 
         @forelse ($cards as $card)
             <tr class="border-b hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-700">

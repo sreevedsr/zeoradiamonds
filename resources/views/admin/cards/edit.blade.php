@@ -28,7 +28,7 @@
                 @endif
 
                 <!-- Form -->
-                <form method="POST" action="{{ route('admin.cards.update', $card->id) }}" enctype="multipart/form-data"
+                <form method="POST" action="{{ route('admin.products.update', $card->id) }}" enctype="multipart/form-data"
                     class="space-y-6">
                     @csrf
                     @method('PUT')
@@ -175,7 +175,7 @@
 
                     <!-- Submit Button -->
                     <div class="flex justify-end items-center mt-4 space-x-3">
-                        <a href="{{ route('admin.cards.index') }}">
+                        <a href="{{ route('admin.products.index') }}">
                             <x-secondary-button>
                                 Cancel
                             </x-secondary-button>

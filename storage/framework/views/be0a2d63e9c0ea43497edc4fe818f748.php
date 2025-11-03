@@ -39,7 +39,7 @@
                 <?php endif; ?>
 
                 <!-- Form -->
-                <form method="POST" action="<?php echo e(route('admin.cards.update', $card->id)); ?>" enctype="multipart/form-data"
+                <form method="POST" action="<?php echo e(route('admin.products.update', $card->id)); ?>" enctype="multipart/form-data"
                     class="space-y-6">
                     <?php echo csrf_field(); ?>
                     <?php echo method_field('PUT'); ?>
@@ -187,7 +187,7 @@
 
                     <!-- Submit Button -->
                     <div class="flex justify-end items-center mt-4 space-x-3">
-                        <a href="<?php echo e(route('admin.cards.index')); ?>">
+                        <a href="<?php echo e(route('admin.products.index')); ?>">
                             <?php if (isset($component)) { $__componentOriginal3b0e04e43cf890250cc4d85cff4d94af = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal3b0e04e43cf890250cc4d85cff4d94af = $attributes; } ?>
 <?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.secondary-button','data' => []] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>

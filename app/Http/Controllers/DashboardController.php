@@ -114,10 +114,7 @@ class DashboardController extends Controller
     /**
      * Admin-only: show create card form.
      */
-    public function createCard()
-    {
-        return view('admin.cards.create'); // Blade
-    }
+    
 
     /**
      * Admin-only: store new card.

@@ -46,6 +46,7 @@ class AdminController extends Controller
         // Show form to add merchant
         return view('admin.merchants.create');
     }
+    
 
     public function store(Request $request)
     {

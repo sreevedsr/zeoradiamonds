@@ -1,14 +1,16 @@
 <?php
 
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\CardsController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\FormsController;
 use App\Http\Controllers\MerchantController;
+use App\Http\Controllers\MerchantRequestController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SupplierController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\CardsController;
-use App\Http\Controllers\FormsController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\AdminController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\MerchantRequestController;
 
 // Redirect root URL to login or dashboard
 Route::get('/', function () {
@@ -18,6 +20,7 @@ Route::get('/', function () {
             default => redirect()->route('login'),
         };
     }
+
     return redirect()->route('login');
 });
 
@@ -39,10 +42,13 @@ Route::middleware('auth')->group(function () {
     // ================================
     Route::middleware('role:admin')->prefix('admin')->name('admin.')->group(function () {
 
-        // Cards management
-        Route::prefix('cards')->name('cards.')->group(function () {
+        Route::prefix('products')->name('products.')->group(function () {
+            Route::get('register', [ProductController::class, 'create'])->name('register');
+            Route::post('register', [ProductController::class, 'store'])->name('store');
+
+            // Cards management
             Route::get('/', [CardsController::class, 'index'])->name('index');
-            Route::get('/create', [DashboardController::class, 'createCard'])->name('create');
+            Route::get('/create', [CardsController::class, 'createCard'])->name('create');
             Route::post('/', [CardsController::class, 'store'])->name('store');
             Route::get('/assign', [CardsController::class, 'showAssignPage'])->name('assign');
             Route::post('/assign', [CardsController::class, 'assignCard'])->name('assign');
@@ -52,6 +58,16 @@ Route::middleware('auth')->group(function () {
             Route::get('/{id}/edit', [CardsController::class, 'edit'])->name('edit');
             Route::put('/{id}', [CardsController::class, 'update'])->name('update');
             Route::delete('/{id}', [CardsController::class, 'destroy'])->name('destroy');
+        });
+
+        Route::middleware(['auth', 'can:view-suppliers'])->prefix('suppliers')->name('suppliers.')->group(function () {
+            Route::get('/', [SupplierController::class, 'index'])->name('index');
+            Route::get('/create', [SupplierController::class, 'create'])->name('create');
+            Route::post('/store', [SupplierController::class, 'store'])->name('store');
+
+            Route::get('/{id}/edit', [SupplierController::class, 'edit'])->name('edit');   // Edit form
+            Route::put('/{id}', [SupplierController::class, 'update'])->name('update');    // Update record
+            Route::delete('/{id}', [SupplierController::class, 'destroy'])->name('destroy'); // Delete merchant
         });
 
         // Forms management
@@ -79,8 +95,8 @@ Route::middleware('auth')->group(function () {
     });
 
     // ================================
-// Merchant-only routes (Customer Management)
-// ================================
+    // Merchant-only routes (Customer Management)
+    // ================================
     Route::middleware('role:merchant')->prefix('merchant')->name('merchant.')->group(function () {
 
         // Customers management
@@ -117,4 +133,4 @@ Route::middleware('auth')->group(function () {
     });
 });
 
-require __DIR__ . '/auth.php';
+require __DIR__.'/auth.php';

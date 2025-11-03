@@ -31,7 +31,7 @@
 
             </div>
         <?php endif; ?>
-        <form method="POST" action="<?php echo e(route('admin.cards.assign')); ?>" x-data="{
+        <form method="POST" action="<?php echo e(route('admin.products.assign')); ?>" x-data="{
             merchantSearch: '',
             cardSearch: '',
             selectedMerchant: null,
@@ -228,7 +228,7 @@
             </div>
 
             <style>
-                
+
             </style>
 
             <?php if (isset($component)) { $__componentOriginald411d1792bd6cc877d687758b753742c = $component; } ?>
@@ -236,7 +236,7 @@
 <?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.primary-button','data' => ['type' => 'button','xData' => true,'xOn:click.prevent' => '
         if (selectedMerchant && selectedCard) {
             $dispatch(\'open-modal\', \'confirm-assign-modal\');
-            document.getElementById(\'assignMerchantForm\').action = \''.e(route('admin.cards.assign')).'\';
+            document.getElementById(\'assignMerchantForm\').action = \''.e(route('admin.products.assign')).'\';
         } else {
             alert(\'Please select both a merchant and a card before assigning.\');
         }
@@ -250,7 +250,7 @@
 <?php $component->withAttributes(['type' => 'button','x-data' => true,'x-on:click.prevent' => '
         if (selectedMerchant && selectedCard) {
             $dispatch(\'open-modal\', \'confirm-assign-modal\');
-            document.getElementById(\'assignMerchantForm\').action = \''.e(route('admin.cards.assign')).'\';
+            document.getElementById(\'assignMerchantForm\').action = \''.e(route('admin.products.assign')).'\';
         } else {
             alert(\'Please select both a merchant and a card before assigning.\');
         }
@@ -438,7 +438,7 @@
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\App\View\Components\Table::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['headers' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(['Certificate No', 'Merchant', 'Carat', 'Clarity', 'Color', 'Cut', 'Assigned Date']),'from' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($cards->firstItem()),'to' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($cards->lastItem()),'total' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($cards->total()),'pages' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(range(1, $cards->lastPage())),'current' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($cards->currentPage()),'route' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(route('admin.cards.assign')),'searchPlaceholder' => 'Search certificates...']); ?>
+<?php $component->withAttributes(['headers' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(['Certificate No', 'Merchant', 'Carat', 'Clarity', 'Color', 'Cut', 'Assigned Date']),'from' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($cards->firstItem()),'to' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($cards->lastItem()),'total' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($cards->total()),'pages' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(range(1, $cards->lastPage())),'current' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($cards->currentPage()),'route' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(route('admin.products.assign')),'searchPlaceholder' => 'Search certificates...']); ?>
 
         <?php $__empty_1 = true; $__currentLoopData = $cards; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $card): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
             <tr class="border-b hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-700">

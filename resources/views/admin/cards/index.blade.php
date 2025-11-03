@@ -18,7 +18,7 @@
 
             <!-- Certificates Table -->
             <x-table :headers="['#', 'Certificate ID', 'Diamond Shape', 'Carat Weight', 'Clarity', 'Color', 'Cut', 'Actions']" :from="1" :to="$cards->count()" :total="$cards->count()" :pages="[1]"
-                :current="1" :route="route('admin.cards.index')" :searchQuery="request('search', '')" >
+                :current="1" :route="route('admin.products.index')" :searchQuery="request('search', '')" >
             @forelse ($cards as $index => $card)
                 <tr class="text-gray-700 dark:text-gray-400">
                     <td class="px-4 py-3 text-sm">{{ $index + 1 }}</td>
@@ -30,13 +30,13 @@
                     <td class="px-4 py-3 text-sm">{{ $card->cut }}</td>
                     <td class="px-4 py-3 text-sm">
                         <div class="flex items-center space-x-3">
-                            <a href="{{ route('admin.cards.edit', $card->id) }}">
-                                <a href="{{ route('admin.cards.edit', $card->id) }}">
+                            <a href="{{ route('admin.products.edit', $card->id) }}">
+                                <a href="{{ route('admin.products.edit', $card->id) }}">
                                     <x-secondary-button type="button">
                                         {{ __('Edit') }}
                                     </x-secondary-button>
                                 </a>
-                                <form action="{{ route('admin.cards.destroy', $card->id) }}" method="POST"
+                                <form action="{{ route('admin.products.destroy', $card->id) }}" method="POST"
                                     class="inline">
                                     @csrf
                                     @method('DELETE')

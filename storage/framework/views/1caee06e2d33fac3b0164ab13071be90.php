@@ -36,7 +36,7 @@
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\App\View\Components\Table::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['headers' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(['#', 'Certificate ID', 'Diamond Shape', 'Carat Weight', 'Clarity', 'Color', 'Cut', 'Actions']),'from' => 1,'to' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($cards->count()),'total' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($cards->count()),'pages' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute([1]),'current' => 1,'route' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(route('admin.cards.index')),'searchQuery' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(request('search', ''))]); ?>
+<?php $component->withAttributes(['headers' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(['#', 'Certificate ID', 'Diamond Shape', 'Carat Weight', 'Clarity', 'Color', 'Cut', 'Actions']),'from' => 1,'to' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($cards->count()),'total' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($cards->count()),'pages' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute([1]),'current' => 1,'route' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(route('admin.products.index')),'searchQuery' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(request('search', ''))]); ?>
             <?php $__empty_1 = true; $__currentLoopData = $cards; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $card): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                 <tr class="text-gray-700 dark:text-gray-400">
                     <td class="px-4 py-3 text-sm"><?php echo e($index + 1); ?></td>
@@ -48,8 +48,8 @@
                     <td class="px-4 py-3 text-sm"><?php echo e($card->cut); ?></td>
                     <td class="px-4 py-3 text-sm">
                         <div class="flex items-center space-x-3">
-                            <a href="<?php echo e(route('admin.cards.edit', $card->id)); ?>">
-                                <a href="<?php echo e(route('admin.cards.edit', $card->id)); ?>">
+                            <a href="<?php echo e(route('admin.products.edit', $card->id)); ?>">
+                                <a href="<?php echo e(route('admin.products.edit', $card->id)); ?>">
                                     <?php if (isset($component)) { $__componentOriginal3b0e04e43cf890250cc4d85cff4d94af = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal3b0e04e43cf890250cc4d85cff4d94af = $attributes; } ?>
 <?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.secondary-button','data' => ['type' => 'button']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
@@ -73,7 +73,7 @@
 <?php unset($__componentOriginal3b0e04e43cf890250cc4d85cff4d94af); ?>
 <?php endif; ?>
                                 </a>
-                                <form action="<?php echo e(route('admin.cards.destroy', $card->id)); ?>" method="POST"
+                                <form action="<?php echo e(route('admin.products.destroy', $card->id)); ?>" method="POST"
                                     class="inline">
                                     <?php echo csrf_field(); ?>
                                     <?php echo method_field('DELETE'); ?>
