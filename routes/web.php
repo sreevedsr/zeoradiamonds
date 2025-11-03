@@ -1,15 +1,16 @@
 <?php
 
-use App\Http\Controllers\AdminController;
-use App\Http\Controllers\CardsController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\MerchantController;
-use App\Http\Controllers\MerchantRequestController;
-use App\Http\Controllers\ProductController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\SupplierController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\CardsController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\GoldRateController;
+use App\Http\Controllers\MerchantController;
+use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\MerchantRequestController;
 
 // Redirect root URL to login or dashboard
 Route::get('/', function () {
@@ -68,6 +69,18 @@ Route::middleware('auth')->group(function () {
             Route::put('/{id}', [SupplierController::class, 'update'])->name('update');
             Route::delete('/{id}', [SupplierController::class, 'destroy'])->name('destroy');
         });
+
+        Route::middleware(['auth', 'can:view-goldrates'])->prefix('goldrates')->name('goldrates.')->group(function () {
+            Route::get('/', [GoldRateController::class, 'index'])->name('index');
+            Route::get('/create', [GoldRateController::class, 'create'])->name('create');
+            Route::get('/diamond', [GoldRateController::class, 'diamond'])->name('diamond');
+            Route::post('/store', [GoldRateController::class, 'store'])->name('store');
+
+            Route::get('/{id}/edit', [GoldRateController::class, 'edit'])->name('edit');
+            Route::put('/{id}', [GoldRateController::class, 'update'])->name('update');
+            Route::delete('/{id}', [GoldRateController::class, 'destroy'])->name('destroy');
+        });
+
 
         // Logs and requests
         Route::get('/logs', [DashboardController::class, 'logs'])->name('logs');

@@ -7,47 +7,43 @@ use Illuminate\Support\Facades\Gate;
 
 class AuthServiceProvider extends ServiceProvider
 {
-    /**
-     * The policy mappings for the application.
-     *
-     * @var array
-     */
     protected $policies = [
         // 'App\Models\Model' => 'App\Policies\ModelPolicy',
     ];
 
-    /**
-     * Register any authentication / authorization services.
-     *
-     * @return void
-     */
-    public function boot()
+    public function boot(): void
     {
         $this->registerPolicies();
 
-        // Define Gates
-        Gate::define('view-merchants', function ($user) {
-            return in_array($user->role, ['admin']);
-        });
+        /*
+        |--------------------------------------------------------------------------
+        | Role-based Gate Definitions
+        |--------------------------------------------------------------------------
+        | Define all gates and the roles that are allowed to access them.
+        | You only need to modify this array to add/remove permissions.
+        |--------------------------------------------------------------------------
+        */
+        $permissions = [
+            // Admin-only permissions
+            'view-merchants' => ['admin'],
+            'edit-cards' => ['admin'],
+            'view-goldrates' => ['admin'],
+            'view-suppliers' => ['admin'],
+            'create-account' => ['admin'],
 
-        Gate::define('edit-cards', function ($user) {
-            return $user->role === 'admin';
-        });
-        Gate::define('view-suppliers', function ($user) {
-            return $user->role === 'admin';
-        });
+            // Merchant-only permissions
+            'view-customers' => ['merchant'],
+            'view-cards' => ['merchant'],
+            'view-market' => ['merchant'],
+        ];
 
-        Gate::define('create-account', function ($user) {
-            return $user->role === 'admin';
-        });
-        Gate::define('view-customers', function ($user) {
-            return in_array($user->role, ['merchant']);
-        });
-        Gate::define('view-cards', function ($user) {
-            return $user->role === 'merchant';
-        });
-        Gate::define('view-market', function ($user) {
-            return $user->role === 'merchant';
-        });
+        /*
+        |--------------------------------------------------------------------------
+        | Register all Gates dynamically
+        |--------------------------------------------------------------------------
+        */
+        foreach ($permissions as $ability => $roles) {
+            Gate::define($ability, fn($user) => in_array($user->role, $roles));
+        }
     }
 }
