@@ -1,5 +1,5 @@
 <x-app-layout>
-    @slot('title', 'Zeeyame - Add Merchant')
+    @slot('title', 'Add Merchant')
 
     <h2 class="mb-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
         Add Merchant

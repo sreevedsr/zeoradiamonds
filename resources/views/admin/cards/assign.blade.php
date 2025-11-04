@@ -1,5 +1,5 @@
 <x-app-layout>
-    @slot('title', 'Zeeyame - Diamond Certificates')
+    @slot('title', 'Diamond Certificates')
 
     <h2 class="mb-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
         Manage Diamond Certificates
@@ -64,8 +64,7 @@
                         <div class="custom-scrollbar max-h-64 space-y-3 overflow-y-auto p-2">
                             @foreach ($merchants as $merchant)
                                 <template
-                                    x-if="'{{ strtolower($merchant->name . ' ' . $merchant->business_name) }}'.includes(merchantSearch.toLowerCase())
-">
+                                    x-if="'{{ strtolower($merchant->name . ' ' . $merchant->business_name) }}'.includes(merchantSearch.toLowerCase())">
                                     <div @click="selectedMerchant === {{ $merchant->id }} ? selectedMerchant = null : selectedMerchant = {{ $merchant->id }}"
                                         :class="selectedMerchant === {{ $merchant->id }} ?
                                             'border-purple-500 bg-purple-50 dark:bg-purple-900/30' :

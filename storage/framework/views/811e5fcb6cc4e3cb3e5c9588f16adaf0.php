@@ -4,7 +4,7 @@
         <div>
             <!-- Logo -->
             <a class="ml-6 text-lg font-bold text-gray-800 dark:text-gray-200" href="#">
-                Zeeyame
+                Zeora Diamonds
             </a>
 
             <!-- Navigation -->
@@ -729,7 +729,7 @@
                     <!-- Chevron Icon -->
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none"
                         viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"
-                        :class="{ 'rotate-180': open, 'rotate-0': !open }"
+                        :class="{ 'rotate-0': open, 'rotate-180': !open }"
                         class="ml-auto transform text-gray-700 transition-transform duration-200 dark:text-gray-300">
                         <path d="m7 10 5 5 5-5" />
                     </svg>
@@ -775,7 +775,7 @@
     <div>
         <!-- Logo -->
         <a class="ml-6 text-lg font-bold text-gray-800 dark:text-gray-200" href="#">
-            Zeeyame
+            Zeora Diamonds
         </a>
 
         <!-- Navigation -->
@@ -884,7 +884,7 @@
                 <!-- Chevron Icon -->
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none"
                     viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"
-                    :class="{ 'rotate-180': open, 'rotate-0': !open }"
+                    :class="{ 'rotate-0': open, 'rotate-180': !open }"
                     class="ml-auto transform text-gray-700 transition-transform duration-200 dark:text-gray-300">
                     <path d="m7 10 5 5 5-5" />
                 </svg>

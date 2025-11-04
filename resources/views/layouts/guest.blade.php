@@ -1,4 +1,4 @@
-@props(['title' => 'Zeeyame'])
+@props(['title' => 'Zeora Diamonds'])
 
 <!DOCTYPE html>
 <html :class="{ 'dark': dark }" x-data="data()" lang="en">

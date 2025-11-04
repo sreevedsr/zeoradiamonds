@@ -25,8 +25,7 @@ class User extends Authenticatable
         'state_code',
         'state',
         'gst_no',
-        'password',
-        'role',
+        'password'
     ];
 
     /**
