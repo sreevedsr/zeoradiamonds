@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Supplier;
+use App\Models\StateCode;
 use Illuminate\Http\Request;
 
 class SupplierController extends Controller
@@ -39,7 +40,9 @@ class SupplierController extends Controller
 
     public function create()
     {
-        return view('admin.suppliers.create');
+        $stateCodes = StateCode::all(['state_code', 'state_name', 'gstin_code']);
+
+        return view('admin.suppliers.create', compact('stateCodes'));
     }
 
     public function store(Request $request)
@@ -47,11 +50,11 @@ class SupplierController extends Controller
         $request->validate([
             'supplier_code' => 'required|string|max:50|unique:suppliers,supplier_code',
             'name' => 'required|string|max:255',
-            'address' => 'nullable|string',
-            'phone' => 'nullable|string|max:20',
-            'state_code' => 'nullable|string|max:10',
-            'state' => 'nullable|string|max:100',
-            'gst_no' => 'nullable|string|max:20',
+            'address' => 'required|string',
+            'phone' => 'required|string|max:20',
+            'state_code' => 'required|string|max:10',
+            'state' => 'required|string|max:100',
+            'gst_no' => 'required|string|max:20',
         ]);
 
         Supplier::create($request->only([
@@ -70,7 +73,6 @@ class SupplierController extends Controller
         return redirect()->route('admin.suppliers.index')
             ->with('success', 'Supplier deleted successfully.');
     }
-
 
     public function update(Request $request, $id)
     {

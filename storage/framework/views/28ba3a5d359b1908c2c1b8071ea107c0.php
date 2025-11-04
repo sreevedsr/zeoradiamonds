@@ -21,7 +21,7 @@
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
         <!-- Gold Rate Section -->
         <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
-            <h3 class="text-xl font-semibold mb-4 text-yellow-600">Gold Rate</h3>
+            <h3 class="text-xl font-semibold mb-4 text-yellow-600">Gold Rate🪙</h3>
             <p class="mb-2 text-gray-600 dark:text-gray-300">
                 Current:
                 <span class="font-bold"><?php echo e($latestGold->rate ?? 'Not Set'); ?> ₹</span>
@@ -47,7 +47,7 @@
 
         <!-- Diamond Rate Section -->
         <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
-            <h3 class="text-xl font-semibold mb-4 text-blue-600">Diamond Rate</h3>
+            <h3 class="text-xl font-semibold mb-4 text-blue-600">Diamond Rate💎</h3>
             <p class="mb-2 text-gray-600 dark:text-gray-300">
                 Current:
                 <span class="font-bold"><?php echo e($latestDiamond->rate ?? 'Not Set'); ?> ₹</span>

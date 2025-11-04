@@ -8,7 +8,7 @@
 <?php $attributes = $attributes->except(\App\View\Components\AppLayout::ignoredParameterNames()); ?>
 <?php endif; ?>
 <?php $component->withAttributes([]); ?>
-    <?php $__env->slot('title', 'Zeeyame - Diamond Certificates'); ?>
+    <?php $__env->slot('title', 'Diamond Certificates'); ?>
 
     <h2 class="mb-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
         Manage Diamond Certificates
@@ -73,8 +73,7 @@
                         <div class="custom-scrollbar max-h-64 space-y-3 overflow-y-auto p-2">
                             <?php $__currentLoopData = $merchants; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $merchant): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                 <template
-                                    x-if="'<?php echo e(strtolower($merchant->name . ' ' . $merchant->business_name)); ?>'.includes(merchantSearch.toLowerCase())
-">
+                                    x-if="'<?php echo e(strtolower($merchant->name . ' ' . $merchant->business_name)); ?>'.includes(merchantSearch.toLowerCase())">
                                     <div @click="selectedMerchant === <?php echo e($merchant->id); ?> ? selectedMerchant = null : selectedMerchant = <?php echo e($merchant->id); ?>"
                                         :class="selectedMerchant === <?php echo e($merchant->id); ?> ?
                                             'border-purple-500 bg-purple-50 dark:bg-purple-900/30' :

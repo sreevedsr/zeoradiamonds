@@ -114,7 +114,6 @@
                     </li>
                 @endcan
 
-
                 @can('view-customers')
                     <li class="relative px-6 py-3" x-data="{
                         openCustomers: {{ request()->routeIs('merchant.customers.*') ? 'true' : 'false' }},

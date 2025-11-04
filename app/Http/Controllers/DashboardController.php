@@ -112,20 +112,6 @@ class DashboardController extends Controller
     }
 
     /**
-     * Admin-only: show create card form.
-     */
-    
-
-    /**
-     * Admin-only: store new card.
-     */
-    public function storeCard(Request $request)
-    {
-        // Your card storing logic
-        return redirect()->route('admin.cards');
-    }
-
-    /**
      * Admin-only: view logs.
      */
     public function logs()

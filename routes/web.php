@@ -13,6 +13,11 @@ use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MerchantRequestController;
 
+Route::get('/forbidden-test', function () {
+    abort(403);
+});
+
+
 // Redirect root URL to login or dashboard
 Route::get('/', function () {
     if (Auth::check()) {
@@ -78,9 +83,9 @@ Route::middleware('auth')->group(function () {
 
         });
 
-        // Logs and requests
-        Route::get('/logs', [DashboardController::class, 'logs'])->name('logs');
-        Route::get('/requests', [DashboardController::class, 'requests'])->name('requests');
+        // // Logs and requests
+        // Route::get('/logs', [DashboardController::class, 'logs'])->name('logs');
+        // Route::get('/requests', [DashboardController::class, 'requests'])->name('requests');
 
         // Merchant requests viewing
         Route::get('/merchants/requests', [MerchantRequestController::class, 'index'])->name('merchants.request');

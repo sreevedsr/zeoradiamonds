@@ -26,42 +26,7 @@
             <form action="{{ route('admin.merchants.store') }}" method="POST">
                 @csrf
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6" x-data="{
-                    states: {{ Js::from($stateCodes) }},
-                    selectedCode: '{{ old('state_code') }}',
-                    selectedState: '{{ old('state') }}', // ✅ make it real & editable
-                    searchQuery: '',
-                    openDropdown: false,
-                    manualEdit: false,
-
-                    init() {
-                        if (this.selectedCode) {
-                            const found = this.states.find(s => s.state_code === this.selectedCode);
-                            if (found) {
-                                this.searchQuery = found.state_code + ' - ' + found.state_name;
-                                this.selectedState = found.state_name; // ✅ initialize correctly
-                            }
-                        }
-                    },
-
-                    get filteredStates() {
-                        if (!this.searchQuery) return this.states;
-                        const q = this.searchQuery.toLowerCase();
-                        return this.states.filter(s =>
-                            s.state_code.toLowerCase().includes(q) ||
-                            s.state_name.toLowerCase().includes(q) ||
-                            (s.gstin_code && s.gstin_code.toLowerCase().includes(q))
-                        );
-                    },
-
-                    selectState(state) {
-                        this.selectedCode = state.state_code;
-                        this.selectedState = state.state_name; // ✅ directly assign
-                        this.searchQuery = state.state_code + ' - ' + state.state_name;
-                        this.openDropdown = false;
-                        this.manualEdit = false;
-                    }
-                }">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6" x-data="merchantForm({{ Js::from($stateCodes) }}, '{{ old('state_code') }}', '{{ old('state') }}')">
 
                     <!-- Merchant Code -->
                     <div>
@@ -195,24 +160,6 @@
                   dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-600
                   hover:border-purple-400 transition duration-150">
                     </div>
-
-
-
-
-
-
-                    {{-- <!-- State (Auto-filled) -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                            State
-                        </label>
-                        <input type="text" name="state" :value="selectedState" readonly required
-                            placeholder="State will appear automatically"
-                            class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md
-        dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-600
-        hover:border-purple-400 transition duration-150">
-                    </div> --}}
-
 
                     <!-- GST No -->
                     <div>

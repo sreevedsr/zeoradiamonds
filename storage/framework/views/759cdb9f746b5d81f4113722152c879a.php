@@ -40,16 +40,18 @@
             <form method="POST" action="<?php echo e(route('admin.suppliers.store')); ?>">
                 <?php echo csrf_field(); ?>
 
-                <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+                <div class="grid grid-cols-1 gap-6 md:grid-cols-2" x-data="merchantForm(<?php echo e(Js::from($stateCodes)); ?>, '<?php echo e(old('state_code')); ?>', '<?php echo e(old('state')); ?>')">
+
                     <!-- Supplier Code -->
                     <div>
                         <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-200">
                             Supplier Code <span class="text-red-500">*</span>
                         </label>
-                        <input type="text" name="supplier_code" placeholder="Enter supplier code" required
+                        <input type="text" name="supplier_code" placeholder="Enter supplier code"
+                            value="<?php echo e(old('supplier_code')); ?>" required
                             class="w-full rounded-md border border-gray-300 px-3 py-2
-                                   focus:outline-none focus:ring-2 focus:ring-purple-600
-                                   dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100">
+                          focus:outline-none focus:ring-2 focus:ring-purple-600
+                          dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100">
                     </div>
 
                     <!-- Supplier Name -->
@@ -57,10 +59,11 @@
                         <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-200">
                             Supplier Name <span class="text-red-500">*</span>
                         </label>
-                        <input type="text" name="name" placeholder="Enter supplier name" required
+                        <input type="text" name="name" placeholder="Enter supplier name"
+                            value="<?php echo e(old('name')); ?>" required
                             class="w-full rounded-md border border-gray-300 px-3 py-2
-                                   focus:outline-none focus:ring-2 focus:ring-purple-600
-                                   dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100">
+                          focus:outline-none focus:ring-2 focus:ring-purple-600
+                          dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100">
                     </div>
 
                     <!-- Address -->
@@ -70,8 +73,8 @@
                         </label>
                         <textarea name="address" rows="3" placeholder="Enter full address"
                             class="w-full rounded-md border border-gray-300 px-3 py-2
-                                   focus:outline-none focus:ring-2 focus:ring-purple-600
-                                   dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100"></textarea>
+                             focus:outline-none focus:ring-2 focus:ring-purple-600
+                             dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100"><?php echo e(old('address')); ?></textarea>
                     </div>
 
                     <!-- Phone No -->
@@ -79,32 +82,81 @@
                         <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-200">
                             Phone No. <span class="text-red-500">*</span>
                         </label>
-                        <input type="text" name="phone" placeholder="Enter phone number" required
+                        <input type="text" name="phone" placeholder="Enter phone number"
+                            value="<?php echo e(old('phone')); ?>" required
                             class="w-full rounded-md border border-gray-300 px-3 py-2
-                                   focus:outline-none focus:ring-2 focus:ring-purple-600
-                                   dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100">
+                          focus:outline-none focus:ring-2 focus:ring-purple-600
+                          dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100">
                     </div>
 
-                    <!-- State Code -->
-                    <div>
+                    <!-- State Code Dropdown -->
+                    <div class="relative" x-cloak @click.outside="openDropdown = false">
                         <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-200">
-                            State Code
+                            State Code <span class="text-red-500">*</span>
                         </label>
-                        <input type="text" name="state_code" placeholder="Enter state code"
-                            class="w-full rounded-md border border-gray-300 px-3 py-2
-                                   focus:outline-none focus:ring-2 focus:ring-purple-600
-                                   dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100">
+
+                        <div class="relative">
+                            <input type="text" placeholder="Search or select state code" x-model="searchQuery"
+                                @focus="openDropdown = true" @input="openDropdown = true"
+                                @keydown.escape.window="openDropdown = false"
+                                @keydown.enter.prevent="if(filteredStates.length>0) selectState(filteredStates[0])"
+                                class="block w-full rounded-md border border-gray-300 px-3 py-2 dark:border-gray-600
+                              dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-600
+                              hover:border-purple-400 transition duration-150">
+
+                            <button type="button" @click="openDropdown = !openDropdown"
+                                class="absolute right-2 top-2.5 text-gray-500 dark:text-gray-300">
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                    class="h-5 w-5 transition-transform duration-300"
+                                    :class="openDropdown ? 'rotate-180' : 'rotate-0'" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </button>
+                        </div>
+
+                        <div x-show="openDropdown" x-transition
+                            class="absolute z-10 mt-2 max-h-60 w-full overflow-y-auto rounded-lg border border-gray-200
+                        bg-white shadow-lg dark:border-gray-700 dark:bg-gray-800 custom-scrollbar">
+                            <template x-if="filteredStates.length > 0">
+                                <ul>
+                                    <template x-for="state in filteredStates" :key="state.state_code">
+                                        <li @click="selectState(state)"
+                                            class="cursor-pointer px-3 py-2 text-sm hover:bg-purple-100 dark:hover:bg-purple-700/40
+                                       dark:text-gray-100 border-b border-gray-100 dark:border-gray-700 last:border-0"
+                                            :class="selectedCode === state.state_code ?
+                                                'bg-purple-100 dark:bg-purple-700/40 font-medium' : ''">
+                                            <div class="flex flex-col">
+                                                <span class="text-base font-semibold text-gray-900 dark:text-gray-100"
+                                                    x-text="'GST: ' + (state.gstin_code || '-')"></span>
+                                                <span class="text-xs text-gray-500 dark:text-gray-400 mt-0.5"
+                                                    x-text="state.state_code + ' - ' + state.state_name"></span>
+                                            </div>
+                                        </li>
+                                    </template>
+                                </ul>
+                            </template>
+
+                            <template x-if="filteredStates.length === 0">
+                                <div class="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">
+                                    No results found
+                                </div>
+                            </template>
+                        </div>
+
+                        <!-- Hidden input for form -->
+                        <input type="hidden" name="state_code" x-model="selectedCode" required>
                     </div>
 
-                    <!-- State -->
+                    <!-- Editable auto-filled state name -->
                     <div>
-                        <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-200">
-                            State
-                        </label>
-                        <input type="text" name="state" placeholder="Enter state name"
-                            class="w-full rounded-md border border-gray-300 px-3 py-2
-                                   focus:outline-none focus:ring-2 focus:ring-purple-600
-                                   dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">State</label>
+                        <input type="text" name="state" x-model="selectedState" @input="manualEdit = true"
+                            placeholder="Enter or select a state" value="<?php echo e(old('state')); ?>"
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md
+                          dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-600
+                          hover:border-purple-400 transition duration-150">
                     </div>
 
                     <!-- GST No -->
@@ -112,10 +164,10 @@
                         <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-200">
                             GST No.
                         </label>
-                        <input type="text" name="gst_no" placeholder="Enter GST number"
+                        <input type="text" name="gst_no" placeholder="Enter GST number" value="<?php echo e(old('gst_no')); ?>"
                             class="w-full rounded-md border border-gray-300 px-3 py-2
-                                   focus:outline-none focus:ring-2 focus:ring-purple-600
-                                   dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100">
+                          focus:outline-none focus:ring-2 focus:ring-purple-600
+                          dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100">
                     </div>
                 </div>
 
@@ -123,11 +175,12 @@
                 <div class="mt-6 text-right">
                     <button type="submit"
                         class="rounded-md bg-purple-600 px-5 py-2 font-medium text-white
-                               hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500">
+                       hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500">
                         Save
                     </button>
                 </div>
             </form>
+
         </div>
     </div>
  <?php echo $__env->renderComponent(); ?>

@@ -1,20 +1,9 @@
-<!-- Desktop Sidebar -->
-<div class="hidden w-64 flex-shrink-0 overflow-y-auto bg-white dark:bg-gray-800 md:block">
-    <div class="flex h-full flex-col justify-between bg-white py-4 text-gray-500 dark:bg-gray-800 dark:text-gray-400">
-        <div>
-            <!-- Logo -->
-            <a class="ml-6 text-lg font-bold text-gray-800 dark:text-gray-200" href="#">
-                Zeora Diamonds
-            </a>
-
-            <!-- Navigation -->
-            <ul class="mt-6">
-                <li class="relative px-6 py-3">
+<li class="relative px-6 py-3">
                     <span
-                        class="<?php echo e(request()->routeIs('dashboard') ? 'absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg' : ''); ?>"
+                        class="{{ request()->routeIs('dashboard') ? 'absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg' : '' }}"
                         aria-hidden="true"></span>
-                    <a href="<?php echo e(route('dashboard')); ?>"
-                        class="<?php echo e(request()->routeIs('dashboard') ? 'text-gray-800 dark:text-gray-200' : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?> inline-flex w-full items-start text-sm font-semibold transition-colors duration-150">
+                    <a href="{{ route('dashboard') }}"
+                        class="{{ request()->routeIs('dashboard') ? 'text-gray-800 dark:text-gray-200' : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }} inline-flex w-full items-start text-sm font-semibold transition-colors duration-150">
                         <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
                             stroke-linecap="round" stroke-linejoin="round">
                             <path
@@ -25,9 +14,9 @@
                     </a>
                 </li>
 
-                <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('view-merchants')): ?>
+                @can('view-merchants')
                     <li class="relative px-6 py-3" x-data="{
-                        openMerchants: <?php echo e(request()->routeIs('admin.merchants.*') ? 'true' : 'false'); ?>,
+                        openMerchants: {{ request()->routeIs('admin.merchants.*') ? 'true' : 'false' }},
                         height: 0,
                         setMeasured() {
                             this.height = this.$refs.panel ? this.$refs.panel.scrollHeight : 0;
@@ -62,7 +51,7 @@
                             class="flex w-full items-start rounded-md text-sm font-semibold text-gray-500 transition-colors duration-150 hover:text-gray-800 focus:outline-none dark:text-gray-400 dark:hover:text-gray-200"
                             :aria-expanded="openMerchants.toString()">
                             <span
-                                class="<?php echo e(request()->routeIs('admin.merchants.*') ? 'absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg' : ''); ?>"
+                                class="{{ request()->routeIs('admin.merchants.*') ? 'absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg' : '' }}"
                                 aria-hidden="true"></span>
 
                             <!-- Icon -->
@@ -75,9 +64,9 @@
 
                             <!-- Label -->
                             <span
-                                class="<?php echo e(request()->routeIs('admin.merchants.*')
+                                class="{{ request()->routeIs('admin.merchants.*')
                                     ? 'text-gray-800 dark:text-gray-200'
-                                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?> ml-2 flex-1 text-left">
+                                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }} ml-2 flex-1 text-left">
                                 Merchants
                             </span>
 
@@ -95,28 +84,28 @@
                             @transitionend="if (openMerchants) height = 'auto'"
                             class="mt-2 space-y-2 overflow-hidden px-4 transition-all duration-300 ease-in-out">
                             <li>
-                                <a href="<?php echo e(route('admin.merchants.create')); ?>"
-                                    class="<?php echo e(request()->routeIs('admin.merchants.create')
+                                <a href="{{ route('admin.merchants.create') }}"
+                                    class="{{ request()->routeIs('admin.merchants.create')
                                         ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
-                                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?> block rounded-md px-2 py-1 text-sm font-medium">
+                                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }} block rounded-md px-2 py-1 text-sm font-medium">
                                     Add Merchant
                                 </a>
                             </li>
                             <li>
-                                <a href="<?php echo e(route('admin.merchants.index')); ?>"
-                                    class="<?php echo e(request()->routeIs('admin.merchants.index')
+                                <a href="{{ route('admin.merchants.index') }}"
+                                    class="{{ request()->routeIs('admin.merchants.index')
                                         ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
-                                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?> block rounded-md px-2 py-1 text-sm font-medium">
+                                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }} block rounded-md px-2 py-1 text-sm font-medium">
                                     View Merchants
                                 </a>
                             </li>
                         </ul>
                     </li>
-                <?php endif; ?>
+                @endcan
 
-                <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('view-customers')): ?>
+                @can('view-customers')
                     <li class="relative px-6 py-3" x-data="{
-                        openCustomers: <?php echo e(request()->routeIs('merchant.customers.*') ? 'true' : 'false'); ?>,
+                        openCustomers: {{ request()->routeIs('merchant.customers.*') ? 'true' : 'false' }},
                         height: 0,
                         setMeasured() {
                             this.height = this.$refs.panel ? this.$refs.panel.scrollHeight : 0;
@@ -147,7 +136,7 @@
                         });
                     })">
                         <span
-                            class="<?php echo e(request()->routeIs('merchant.customers.*') ? 'absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg' : ''); ?>"
+                            class="{{ request()->routeIs('merchant.customers.*') ? 'absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg' : '' }}"
                             aria-hidden="true">
                         </span>
 
@@ -165,9 +154,9 @@
 
                             <!-- Label -->
                             <span
-                                class="<?php echo e(request()->routeIs('merchant.customers.*')
+                                class="{{ request()->routeIs('merchant.customers.*')
                                     ? 'text-gray-800 dark:text-gray-200'
-                                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?> ml-2 flex-1 text-left">
+                                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }} ml-2 flex-1 text-left">
                                 Customers
                             </span>
 
@@ -186,29 +175,29 @@
                             @transitionend="if (openCustomers) height = 'auto'"
                             class="mt-2 space-y-2 overflow-hidden px-4 transition-all duration-300 ease-in-out">
                             <li>
-                                <a href="<?php echo e(route('merchant.customers.create')); ?>"
-                                    class="<?php echo e(request()->routeIs('merchant.customers.create')
+                                <a href="{{ route('merchant.customers.create') }}"
+                                    class="{{ request()->routeIs('merchant.customers.create')
                                         ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
-                                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?> block rounded-md px-2 py-1 text-sm font-medium">
+                                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }} block rounded-md px-2 py-1 text-sm font-medium">
                                     Add Customer
                                 </a>
                             </li>
 
                             <li>
-                                <a href="<?php echo e(route('merchant.customers.index')); ?>"
-                                    class="<?php echo e(request()->routeIs('merchant.customers.index')
+                                <a href="{{ route('merchant.customers.index') }}"
+                                    class="{{ request()->routeIs('merchant.customers.index')
                                         ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
-                                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?> block rounded-md px-2 py-1 text-sm font-medium">
+                                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }} block rounded-md px-2 py-1 text-sm font-medium">
                                     View Customers
                                 </a>
                             </li>
                         </ul>
                     </li>
-                <?php endif; ?>
+                @endcan
 
-                <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('view-suppliers')): ?>
+                @can('view-suppliers')
                     <li class="relative px-6 py-3" x-data="{
-                        openSuppliers: <?php echo e(request()->routeIs('admin.suppliers.*') ? 'true' : 'false'); ?>,
+                        openSuppliers: {{ request()->routeIs('admin.suppliers.*') ? 'true' : 'false' }},
                         height: 0,
                         setMeasured() {
                             this.height = this.$refs.panel ? this.$refs.panel.scrollHeight : 0;
@@ -239,7 +228,7 @@
 
                         <!-- Highlight Bar -->
                         <span
-                            class="<?php echo e(request()->routeIs('admin.suppliers.*') ? 'absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg' : ''); ?>"
+                            class="{{ request()->routeIs('admin.suppliers.*') ? 'absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg' : '' }}"
                             aria-hidden="true"></span>
 
                         <!-- Main Menu Button -->
@@ -255,9 +244,9 @@
 
                             <!-- Label -->
                             <span
-                                class="<?php echo e(request()->routeIs('admin.suppliers.*')
+                                class="{{ request()->routeIs('admin.suppliers.*')
                                     ? 'text-gray-800 dark:text-gray-200'
-                                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?> ml-2 flex-1 text-left">
+                                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }} ml-2 flex-1 text-left">
                                 Suppliers
                             </span>
 
@@ -277,30 +266,30 @@
                             class="mt-2 space-y-2 overflow-hidden px-4 transition-all duration-300 ease-in-out">
 
                             <li>
-                                <a href="<?php echo e(route('admin.suppliers.create')); ?>"
-                                    class="<?php echo e(request()->routeIs('admin.suppliers.create')
+                                <a href="{{ route('admin.suppliers.create') }}"
+                                    class="{{ request()->routeIs('admin.suppliers.create')
                                         ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
-                                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?> block rounded-md px-2 py-1 text-sm font-medium">
+                                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }} block rounded-md px-2 py-1 text-sm font-medium">
                                     Register Supplier
                                 </a>
                             </li>
 
                             <li>
-                                <a href="<?php echo e(route('admin.suppliers.index')); ?>"
-                                    class="<?php echo e(request()->routeIs('admin.suppliers.index')
+                                <a href="{{ route('admin.suppliers.index') }}"
+                                    class="{{ request()->routeIs('admin.suppliers.index')
                                         ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
-                                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?> block rounded-md px-2 py-1 text-sm font-medium">
+                                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }} block rounded-md px-2 py-1 text-sm font-medium">
                                     View Suppliers
                                 </a>
                             </li>
 
                         </ul>
                     </li>
-                <?php endif; ?>
+                @endcan
 
-                <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('edit-cards')): ?>
+                @can('edit-cards')
                     <li class="relative px-6 py-3" x-data="{
-                        openCards: <?php echo e(request()->routeIs('admin.products.*') ? 'true' : 'false'); ?>,
+                        openCards: {{ request()->routeIs('admin.products.*') ? 'true' : 'false' }},
                         height: 0,
                         setup() {
                             this.setMeasured = () => {
@@ -316,9 +305,9 @@
 
                         <!-- Active indicator -->
                         <span
-                            class="<?php echo e(request()->routeIs('admin.products.*')
+                            class="{{ request()->routeIs('admin.products.*')
                                 ? 'absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg'
-                                : ''); ?>"
+                                : '' }}"
                             aria-hidden="true">
                         </span>
 
@@ -349,9 +338,9 @@
                             </svg>
 
                             <span
-                                class="<?php echo e(request()->routeIs('admin.products.*')
+                                class="{{ request()->routeIs('admin.products.*')
                                     ? 'text-gray-800 dark:text-gray-200'
-                                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?> ml-2 flex-1 text-left">
+                                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }} ml-2 flex-1 text-left">
                                 Products
                             </span>
 
@@ -370,66 +359,66 @@
                             class="mt-2 space-y-2 overflow-hidden px-4 transition-all duration-300 ease-in-out">
 
                             <li>
-                                <a href="<?php echo e(route('admin.products.register')); ?>"
-                                    class="<?php echo e(request()->routeIs('admin.products.register')
+                                <a href="{{ route('admin.products.register') }}"
+                                    class="{{ request()->routeIs('admin.products.register')
                                         ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
-                                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?> block rounded-md px-2 py-1 text-sm font-medium">
+                                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }} block rounded-md px-2 py-1 text-sm font-medium">
                                     Register Product
                                 </a>
                             </li>
                             <li>
-                                <a href="<?php echo e(route('admin.products.create')); ?>"
-                                    class="<?php echo e(request()->routeIs('admin.products.create')
+                                <a href="{{ route('admin.products.create') }}"
+                                    class="{{ request()->routeIs('admin.products.create')
                                         ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
-                                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?> block rounded-md px-2 py-1 text-sm font-medium">
+                                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }} block rounded-md px-2 py-1 text-sm font-medium">
                                     Add Card
                                 </a>
                             </li>
 
                             <li>
-                                <a href="<?php echo e(route('admin.products.index')); ?>"
-                                    class="<?php echo e(request()->routeIs('admin.products.index')
+                                <a href="{{ route('admin.products.index') }}"
+                                    class="{{ request()->routeIs('admin.products.index')
                                         ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
-                                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?> block rounded-md px-2 py-1 text-sm font-medium">
+                                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }} block rounded-md px-2 py-1 text-sm font-medium">
                                     View products
                                 </a>
                             </li>
 
                             <li>
-                                <a href="<?php echo e(route('admin.products.assign')); ?>"
-                                    class="<?php echo e(request()->routeIs('admin.products.assign')
+                                <a href="{{ route('admin.products.assign') }}"
+                                    class="{{ request()->routeIs('admin.products.assign')
                                         ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
-                                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?> block rounded-md px-2 py-1 text-sm font-medium">
+                                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }} block rounded-md px-2 py-1 text-sm font-medium">
                                     Assign products
                                 </a>
                             </li>
 
                             <li>
-                                <a href="<?php echo e(route('admin.products.requests')); ?>"
-                                    class="<?php echo e(request()->routeIs('admin.products.requests')
+                                <a href="{{ route('admin.products.requests') }}"
+                                    class="{{ request()->routeIs('admin.products.requests')
                                         ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
-                                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?> block rounded-md px-2 py-1 text-sm font-medium">
+                                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }} block rounded-md px-2 py-1 text-sm font-medium">
                                     View Card Requests
                                 </a>
                             </li>
                         </ul>
                     </li>
-                <?php endif; ?>
+                @endcan
 
-                <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('view-rates')): ?>
+                @can('view-rates')
                     <li class="relative px-6 py-3">
                         <!-- Highlight Bar -->
                         <span
-                            class="<?php echo e(request()->routeIs('admin.rates.*') ? 'absolute inset-y-0 left-0 w-1 bg-yellow-500 rounded-tr-lg rounded-br-lg' : ''); ?>"
+                            class="{{ request()->routeIs('admin.rates.*') ? 'absolute inset-y-0 left-0 w-1 bg-yellow-500 rounded-tr-lg rounded-br-lg' : '' }}"
                             aria-hidden="true">
                         </span>
 
                         <!-- Single Menu Button -->
-                        <a href="<?php echo e(route('admin.rates.index')); ?>"
+                        <a href="{{ route('admin.rates.index') }}"
                             class="flex items-center text-sm font-semibold transition-colors duration-150
-        <?php echo e(request()->routeIs('admin.rates.*')
+        {{ request()->routeIs('admin.rates.*')
             ? 'text-gray-800 dark:text-gray-200'
-            : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>">
+            : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }}">
 
                             <!-- Icon -->
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
@@ -447,11 +436,11 @@
                             <span class="ml-3">Gold & Diamond Rates</span>
                         </a>
                     </li>
-                <?php endif; ?>
+                @endcan
 
-                <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('view-cards')): ?>
+                @can('view-cards')
                     <li class="relative px-6 py-3" x-data="{
-                        openCards: <?php echo e(request()->routeIs('merchant.cards.*') ? 'true' : 'false'); ?>,
+                        openCards: {{ request()->routeIs('merchant.cards.*') ? 'true' : 'false' }},
                         height: 0,
                         toggleCards() {
                             if (!this.openCards) {
@@ -483,7 +472,7 @@
 
                         <!-- Active Highlight -->
                         <span
-                            class="<?php echo e(request()->routeIs('merchant.cards.*') ? 'absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg' : ''); ?>"
+                            class="{{ request()->routeIs('merchant.cards.*') ? 'absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg' : '' }}"
                             aria-hidden="true"></span>
 
                         <!-- Main Menu Button -->
@@ -500,9 +489,9 @@
                             </svg>
 
                             <span
-                                class="<?php echo e(request()->routeIs('merchant.cards.*')
+                                class="{{ request()->routeIs('merchant.cards.*')
                                     ? 'text-gray-800 dark:text-gray-200'
-                                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?> ml-2 flex-1 text-left">
+                                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }} ml-2 flex-1 text-left">
                                 Cards
                             </span>
 
@@ -521,30 +510,30 @@
                             class="mt-2 space-y-2 overflow-hidden px-4 transition-all duration-300 ease-in-out">
 
                             <li>
-                                <a href="<?php echo e(route('merchant.cards.assign')); ?>"
-                                    class="<?php echo e(request()->routeIs('merchant.cards.assign')
+                                <a href="{{ route('merchant.cards.assign') }}"
+                                    class="{{ request()->routeIs('merchant.cards.assign')
                                         ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
-                                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?> block rounded-md px-2 py-1 text-sm font-medium">
+                                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }} block rounded-md px-2 py-1 text-sm font-medium">
                                     Assign Cards
                                 </a>
                             </li>
 
                             <li>
-                                <a href="<?php echo e(route('merchant.cards.index')); ?>"
-                                    class="<?php echo e(request()->routeIs('merchant.cards.index')
+                                <a href="{{ route('merchant.cards.index') }}"
+                                    class="{{ request()->routeIs('merchant.cards.index')
                                         ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
-                                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?> block rounded-md px-2 py-1 text-sm font-medium">
+                                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }} block rounded-md px-2 py-1 text-sm font-medium">
                                     View Cards
                                 </a>
                             </li>
 
                         </ul>
                     </li>
-                <?php endif; ?>
+                @endcan
 
-                <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('view-market')): ?>
+                @can('view-market')
                     <li class="relative px-6 py-3" x-data="{
-                        openCards: <?php echo e(request()->routeIs('merchant.marketplace.*') ? 'true' : 'false'); ?>,
+                        openCards: {{ request()->routeIs('merchant.marketplace.*') ? 'true' : 'false' }},
                         height: 0,
                         setup() {
                             this.setMeasured = () => { this.height = this.$refs.cardsPanel ? this.$refs.cardsPanel.scrollHeight : 0 }
@@ -556,7 +545,7 @@
                     })"
                         x-on:destroy.window="window.removeEventListener('resize', () => {})">
                         <span
-                            class="<?php echo e(request()->routeIs('merchant.marketplace.*') ? 'absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg' : ''); ?>"
+                            class="{{ request()->routeIs('merchant.marketplace.*') ? 'absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg' : '' }}"
                             aria-hidden="true"></span>
 
                         <!-- Main Menu Button -->
@@ -589,9 +578,9 @@
                             </svg>
 
                             <span
-                                class="<?php echo e(request()->routeIs('merchant.marketplace.*')
+                                class="{{ request()->routeIs('merchant.marketplace.*')
                                     ? 'text-gray-800 dark:text-gray-200'
-                                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?> ml-2 flex-1 text-left">MarketPlace</span>
+                                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }} ml-2 flex-1 text-left">MarketPlace</span>
 
                             <!-- Rotating Arrow -->
                             <svg class="ml-auto h-4 w-4 rotate-0 transform transition-transform duration-300 ease-in-out"
@@ -607,249 +596,36 @@
                             @transitionend="if (openCards) { height = 'auto' }"
                             class="mt-2 space-y-2 overflow-hidden px-4 transition-all duration-300 ease-in-out">
 
-                            
+                            {{-- Uncomment this if you add a route later
+            <li>
+                <a href="{{ route('cards.create') }}"
+                    class="block px-2 py-1 text-sm font-medium rounded-md
+                    {{ request()->routeIs('cards.create')
+                        ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
+                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }}">
+                    Assign Card
+                </a>
+            </li>
+            --}}
 
                             <li>
-                                <a href="<?php echo e(route('merchant.marketplace.request')); ?>"
-                                    class="<?php echo e(request()->routeIs('merchant.marketplace.request')
+                                <a href="{{ route('merchant.marketplace.request') }}"
+                                    class="{{ request()->routeIs('merchant.marketplace.request')
                                         ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
-                                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?> block rounded-md px-2 py-1 text-sm font-medium">
+                                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }} block rounded-md px-2 py-1 text-sm font-medium">
                                     Request Cards
                                 </a>
                             </li>
 
                             <li>
-                                <a href="<?php echo e(route('merchant.marketplace.view')); ?>"
-                                    class="<?php echo e(request()->routeIs('merchant.marketplace.view')
+                                <a href="{{ route('merchant.marketplace.view') }}"
+                                    class="{{ request()->routeIs('merchant.marketplace.view')
                                         ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
-                                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?> block rounded-md px-2 py-1 text-sm font-medium">
+                                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }} block rounded-md px-2 py-1 text-sm font-medium">
                                     View Requests
                                 </a>
                             </li>
 
                         </ul>
                     </li>
-                <?php endif; ?>
-
-            </ul>
-
-
-        </div>
-
-        <!-- Profile & Settings at bottom -->
-        <?php if(auth()->guard()->check()): ?>
-            <div x-data="{ open: false }" class="relative p-4 pb-0">
-                <!-- Profile Button -->
-                <button @click="open = !open"
-                    class="mt-6 inline-flex w-full items-center justify-between gap-x-3 rounded-md px-4 py-2 text-sm font-semibold text-gray-800 transition hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-white/10 dark:text-white dark:hover:bg-white/20">
-                    <!-- Profile Info -->
-                    <div class="flex items-start align-middle">
-                        <img class="h-8 w-8 rounded-full border border-gray-300 object-cover dark:border-gray-600"
-                            src="<?php echo e(Auth::user()->profile_photo_url ?? '/default-profile.png'); ?>"
-                            alt="<?php echo e(Auth::user()->name); ?>">
-                        <div class="ml-2 flex flex-col text-left">
-                            <span class="text-sm font-semibold text-gray-900 dark:text-white">
-                                <?php echo e(Auth::user()->name); ?>
-
-                            </span>
-                            <span class="text-xs text-gray-600 dark:text-gray-300">
-                                <?php echo e(Auth::user()->role); ?>
-
-                            </span>
-                        </div>
-                    </div>
-
-                    <!-- Chevron Icon -->
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none"
-                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"
-                        :class="{ 'rotate-0': open, 'rotate-180': !open }"
-                        class="ml-auto transform text-gray-700 transition-transform duration-200 dark:text-gray-300">
-                        <path d="m7 10 5 5 5-5" />
-                    </svg>
-                </button>
-
-                <!-- Dropdown -->
-                <div x-show="open" @click.outside="open = false" x-transition:enter="transition ease-out duration-150"
-                    x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0"
-                    x-transition:leave="transition ease-in duration-100"
-                    x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 translate-y-2"
-                    class="absolute bottom-16 left-4 right-4 z-50 w-auto rounded-md border border-gray-200 bg-white shadow-md dark:border-gray-700 dark:bg-gray-800">
-                    <div class="p-3 border-b border-gray-100 dark:border-gray-700">
-                        <p class="text-sm font-semibold text-gray-800 dark:text-white"><?php echo e(Auth::user()->name); ?></p>
-                        <p class="text-xs text-gray-500 dark:text-gray-400"><?php echo e(Auth::user()->merchant_code); ?></p>
-                    </div>
-                    <div class="p-2">
-                        <a href="<?php echo e(route('profile.edit')); ?>"
-                            class="block rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700">
-                            Edit Profile
-                        </a>
-                        <form method="POST" action="<?php echo e(route('logout')); ?>">
-                            <?php echo csrf_field(); ?>
-                            <button type="submit"
-                                class="w-full text-left rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700">
-                                Logout
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        <?php endif; ?>
-    </div>
-</div>
-
-<!-- Mobile Sidebar -->
-
-<div class="fixed inset-y-0 z-20 mt-16 flex w-64 flex-col justify-between overflow-y-auto bg-white py-4 text-gray-500 dark:bg-gray-800 dark:text-gray-400 md:hidden"
-    x-show="isSideMenuOpen" x-transition:enter="transition ease-in-out duration-150"
-    x-transition:enter-start="opacity-0 transform -translate-x-20" x-transition:enter-end="opacity-100"
-    x-transition:leave="transition ease-in-out duration-150" x-transition:leave-start="opacity-100"
-    x-transition:leave-end="opacity-0 transform -translate-x-20" @click.away="closeSideMenu"
-    @keydown.escape="closeSideMenu">
-    <div>
-        <!-- Logo -->
-        <a class="ml-6 text-lg font-bold text-gray-800 dark:text-gray-200" href="#">
-            Zeora Diamonds
-        </a>
-
-        <!-- Navigation -->
-        <ul class="mt-6">
-            <li class="relative px-6 py-3">
-                <a href="<?php echo e(route('dashboard')); ?>"
-                    class="<?php echo e(request()->routeIs('dashboard') ? 'text-gray-800 dark:text-gray-200' : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?> inline-flex w-full items-center text-sm font-semibold transition-colors duration-150">
-                    Dashboard
-                </a>
-            </li>
-        </ul>
-
-        <!-- Merchants -->
-        <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('view-merchants')): ?>
-            <li class="relative px-6 py-3" x-data="{ openMerchants: <?php echo e(request()->routeIs('merchant.*') ? 'true' : 'false'); ?> }">
-                <button @click="openMerchants = !openMerchants"
-                    class="<?php echo e(request()->routeIs('merchant.*') ? 'text-gray-800 dark:text-gray-200' : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?> inline-flex w-full items-center justify-between text-sm font-semibold transition-colors duration-150">
-                    <span>Merchants</span>
-                    <svg class="ml-2 h-4 w-4 transform transition-transform duration-300"
-                        :class="{ 'rotate-180': openMerchants }" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd"
-                            d="M5.293 7.293a1 1 0 0 1 1.414 0L10 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414l-4 4a1 1 0 0 1-1.414 0l-4-4a1 1 0 0 1 0-1.414z"
-                            clip-rule="evenodd"></path>
-                    </svg>
-                </button>
-                <ul x-show="openMerchants" x-transition class="mt-2 space-y-2 pl-4">
-                    <li>
-                        <a href="<?php echo e(route('admin.merchants.index')); ?>"
-                            class="<?php echo e(request()->routeIs('admin.merchants.index') ? 'text-gray-800 dark:text-gray-200' : 'text-gray-500 hover:text-gray-800 dark:hover:text-gray-200'); ?> block text-sm font-medium">
-                            All Merchants
-                        </a>
-                    </li>
-                    <li>
-                        <a href="<?php echo e(route('admin.merchants.create')); ?>"
-                            class="<?php echo e(request()->routeIs('admin.merchants.create') ? 'text-gray-800 dark:text-gray-200' : 'text-gray-500 hover:text-gray-800 dark:hover:text-gray-200'); ?> block text-sm font-medium">
-                            Add Merchant
-                        </a>
-                    </li>
-                </ul>
-            </li>
-        <?php endif; ?>
-
-        <!-- Customers -->
-        <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('view-customers')): ?>
-            <li class="relative px-6 py-3" x-data="{ openCustomers: <?php echo e(request()->routeIs('customer.*') ? 'true' : 'false'); ?> }">
-                <button @click="openCustomers = !openCustomers"
-                    class="<?php echo e(request()->routeIs('customer.*') ? 'text-gray-800 dark:text-gray-200' : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?> inline-flex w-full items-center justify-between text-sm font-semibold transition-colors duration-150">
-                    <span>Customers</span>
-                    <svg class="ml-2 h-4 w-4 transform transition-transform duration-300"
-                        :class="{ 'rotate-180': openCustomers }" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd"
-                            d="M5.293 7.293a1 1 0 0 1 1.414 0L10 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414l-4 4a1 1 0 0 1-1.414 0l-4-4a1 1 0 0 1 0-1.414z"
-                            clip-rule="evenodd"></path>
-                    </svg>
-                </button>
-                <ul x-show="openCustomers" x-transition class="mt-2 space-y-2 pl-4">
-                    <li>
-                        <a href="<?php echo e(route('merchant.customers.index')); ?>"
-                            class="<?php echo e(request()->routeIs('merchant.customers.index') ? 'text-gray-800 dark:text-gray-200' : 'text-gray-500 hover:text-gray-800 dark:hover:text-gray-200'); ?> block text-sm font-medium">
-                            All Customers
-                        </a>
-                    </li>
-                    <li>
-                        <a href="<?php echo e(route('merchant.customers.create')); ?>"
-                            class="<?php echo e(request()->routeIs('merchant.customers.create') ? 'text-gray-800 dark:text-gray-200' : 'text-gray-500 hover:text-gray-800 dark:hover:text-gray-200'); ?> block text-sm font-medium">
-                            Add Customer
-                        </a>
-                    </li>
-                </ul>
-            </li>
-        <?php endif; ?>
-
-        <!-- Cards -->
-        <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('view-cards')): ?>
-            <li class="relative px-6 py-3">
-                <a href="<?php echo e(route('admin.cards.index')); ?>"
-                    class="<?php echo e(request()->routeIs('cards.*') ? 'text-gray-800 dark:text-gray-200' : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?> inline-flex w-full items-center text-sm font-semibold transition-colors duration-150">
-                    Cards
-                </a>
-            </li>
-        <?php endif; ?>
-    </div>
-
-    <?php if(auth()->guard()->check()): ?>
-        <div x-data="{ open: false }" class="relative p-4 pb-0">
-            <!-- Profile Button -->
-            <button @click="open = !open"
-                class="mt-6 inline-flex w-full items-center justify-between gap-x-3 rounded-md px-4 py-2 text-sm font-semibold text-gray-800 transition hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-white/10 dark:text-white dark:hover:bg-white/20">
-                <!-- Profile Info -->
-                <div class="flex items-start align-middle">
-                    <img class="h-8 w-8 rounded-full border border-gray-300 object-cover dark:border-gray-600"
-                        src="<?php echo e(Auth::user()->profile_photo_url ?? '/default-profile.png'); ?>"
-                        alt="<?php echo e(Auth::user()->name); ?>">
-                    <div class="ml-2 flex flex-col text-left">
-                        <span class="text-sm font-semibold text-gray-900 dark:text-white">
-                            <?php echo e(Auth::user()->name); ?>
-
-                        </span>
-                        <span class="text-xs text-gray-600 dark:text-gray-300">
-                            <?php echo e(Auth::user()->role); ?>
-
-                        </span>
-                    </div>
-                </div>
-
-                <!-- Chevron Icon -->
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none"
-                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"
-                    :class="{ 'rotate-0': open, 'rotate-180': !open }"
-                    class="ml-auto transform text-gray-700 transition-transform duration-200 dark:text-gray-300">
-                    <path d="m7 10 5 5 5-5" />
-                </svg>
-            </button>
-
-            <!-- Dropdown -->
-            <div x-show="open" @click.outside="open = false" x-transition:enter="transition ease-out duration-150"
-                x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0"
-                x-transition:leave="transition ease-in duration-100" x-transition:leave-start="opacity-100 translate-y-0"
-                x-transition:leave-end="opacity-0 translate-y-2"
-                class="absolute bottom-16 left-4 right-4 z-50 w-auto rounded-md border border-gray-200 bg-white shadow-md dark:border-gray-700 dark:bg-gray-800">
-                <div class="p-3 border-b border-gray-100 dark:border-gray-700">
-                    <p class="text-sm font-semibold text-gray-800 dark:text-white"><?php echo e(Auth::user()->name); ?></p>
-                    <p class="text-xs text-gray-500 dark:text-gray-400"><?php echo e(Auth::user()->role); ?></p>
-                </div>
-                <div class="p-2">
-                    <a href="<?php echo e(route('profile.edit')); ?>"
-                        class="block rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700">
-                        Edit Profile
-                    </a>
-                    <form method="POST" action="<?php echo e(route('logout')); ?>">
-                        <?php echo csrf_field(); ?>
-                        <button type="submit"
-                            class="w-full text-left rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700">
-                            Logout
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    <?php endif; ?>
-
-</div>
-
-<?php /**PATH C:\xampp\htdocs\Zeeyame\resources\views/layouts/sidebar.blade.php ENDPATH**/ ?>
+                @endcan
