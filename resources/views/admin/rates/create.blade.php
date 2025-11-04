@@ -39,7 +39,7 @@
                             hover:border-yellow-400 transition duration-150">
                     </div>
 
-                    <!-- Date -->
+                    {{-- <!-- Date -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
                             Date
@@ -48,7 +48,7 @@
                             class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md
                             dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-yellow-500
                             hover:border-yellow-400 transition duration-150">
-                    </div>
+                    </div> --}}
                 </div>
 
                 <!-- Submit -->

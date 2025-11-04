@@ -360,8 +360,8 @@
                             <svg class="ml-auto h-4 w-4 transform transition-transform duration-300 ease-in-out"
                                 :class="{ 'rotate-180': openCards }" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 0 1 1.414 0L10 10.586l3.293-3.293
-                                                   a1 1 0 1 1 1.414 1.414l-4 4a1 1 0 0 1-1.414 0l-4-4
-                                                   a1 1 0 0 1 0-1.414z" clip-rule="evenodd"></path>
+                                                           a1 1 0 1 1 1.414 1.414l-4 4a1 1 0 0 1-1.414 0l-4-4
+                                                           a1 1 0 0 1 0-1.414z" clip-rule="evenodd"></path>
                             </svg>
                         </button>
 
@@ -417,52 +417,25 @@
                     </li>
                 <?php endif; ?>
 
-                <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('view-goldrates')): ?>
-                    <li class="relative px-6 py-3" x-data="{
-                        openGoldRates: <?php echo e(request()->routeIs('admin.goldrates.*') ? 'true' : 'false'); ?>,
-                        height: 0,
-                        setMeasured() {
-                            this.height = this.$refs.panel ? this.$refs.panel.scrollHeight : 0;
-                        },
-                        toggleGoldRates() {
-                            if (!this.openGoldRates) {
-                                this.setMeasured();
-                                this.openGoldRates = true;
-                            } else {
-                                if (this.$refs.panel) {
-                                    this.height = this.$refs.panel.scrollHeight;
-                                    this.$nextTick(() => {
-                                        this.height = 0;
-                                        this.openGoldRates = false;
-                                    });
-                                } else {
-                                    this.height = 0;
-                                    this.openGoldRates = false;
-                                }
-                            }
-                        }
-                    }" x-init="$nextTick(() => {
-                        if (openGoldRates) setMeasured();
-                        window.addEventListener('resize', () => {
-                            if (openGoldRates) setMeasured();
-                        });
-                    })">
-
+                <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('view-rates')): ?>
+                    <li class="relative px-6 py-3">
                         <!-- Highlight Bar -->
                         <span
-                            class="<?php echo e(request()->routeIs('admin.goldrates.*') ? 'absolute inset-y-0 left-0 w-1 bg-yellow-500 rounded-tr-lg rounded-br-lg' : ''); ?>"
-                            aria-hidden="true"></span>
+                            class="<?php echo e(request()->routeIs('admin.rates.*') ? 'absolute inset-y-0 left-0 w-1 bg-yellow-500 rounded-tr-lg rounded-br-lg' : ''); ?>"
+                            aria-hidden="true">
+                        </span>
 
-                        <!-- Main Menu Button -->
-                        <button @click="toggleGoldRates" type="button"
-                            class="flex w-full items-start rounded-md text-sm font-semibold text-gray-500 transition-colors duration-150 hover:text-gray-800 focus:outline-none dark:text-gray-400 dark:hover:text-gray-200"
-                            :aria-expanded="openGoldRates.toString()">
+                        <!-- Single Menu Button -->
+                        <a href="<?php echo e(route('admin.rates.index')); ?>"
+                            class="flex items-center text-sm font-semibold transition-colors duration-150
+        <?php echo e(request()->routeIs('admin.rates.*')
+            ? 'text-gray-800 dark:text-gray-200'
+            : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>">
 
                             <!-- Icon -->
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round"
-                                class="lucide lucide-chart-no-axes-combined-icon lucide-chart-no-axes-combined">
+                                stroke-linejoin="round" class="lucide lucide-chart-no-axes-combined">
                                 <path d="M12 16v5" />
                                 <path d="M16 14v7" />
                                 <path d="M20 10v11" />
@@ -472,47 +445,8 @@
                             </svg>
 
                             <!-- Label -->
-                            <span
-                                class="<?php echo e(request()->routeIs('admin.goldrates.*')
-                                    ? 'text-gray-800 dark:text-gray-200'
-                                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?> ml-2 flex-1 text-left">
-                                Gold Rate
-                            </span>
-
-                            <!-- Arrow -->
-                            <svg class="ml-auto h-4 w-4 transform-gpu transition-transform duration-300 ease-in-out"
-                                :class="openGoldRates ? 'rotate-180' : 'rotate-0'" fill="currentColor"
-                                viewBox="0 0 20 20">
-                                <path fill-rule="evenodd"
-                                    d="M5.293 7.293a1 1 0 0 1 1.414 0L10 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414l-4 4a1 1 0 0 1-1.414 0l-4-4a1 1 0 0 1 0-1.414z"
-                                    clip-rule="evenodd"></path>
-                            </svg>
-                        </button>
-
-                        <!-- Submenu -->
-                        <ul x-ref="panel" :style="`height: ${height}px`"
-                            @transitionend="if (openGoldRates) height = 'auto'"
-                            class="mt-2 space-y-2 overflow-hidden px-4 transition-all duration-300 ease-in-out">
-
-                            <li>
-                                <a href="<?php echo e(route('admin.goldrates.create')); ?>"
-                                    class="<?php echo e(request()->routeIs('admin.goldrates.create')
-                                        ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
-                                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?> block rounded-md px-2 py-1 text-sm font-medium">
-                                    Add Gold Rate
-                                </a>
-                            </li>
-
-                            <li>
-                                <a href="<?php echo e(route('admin.goldrates.diamond')); ?>"
-                                    class="<?php echo e(request()->routeIs('admin.goldrates.index')
-                                        ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
-                                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?> block rounded-md px-2 py-1 text-sm font-medium">
-                                    Add Diamond Rates
-                                </a>
-                            </li>
-
-                        </ul>
+                            <span class="ml-3">Gold & Diamond Rates</span>
+                        </a>
                     </li>
                 <?php endif; ?>
 

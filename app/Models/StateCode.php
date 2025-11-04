@@ -5,10 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class GoldRate extends Model
+class StateCode extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['rate'];
+    protected $fillable = [
+        'state_name',
+        'gstin_code',
+        'state_code',
+    ];
 }
-
+    

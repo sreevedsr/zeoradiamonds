@@ -6,7 +6,6 @@
     </h2>
 
     <div class="bg-white p-6 shadow dark:bg-gray-800 sm:rounded-lg sm:p-8">
-        <div class="mx-auto max-w-7xl text-gray-900 dark:text-gray-100">
 
             <!-- Success Message -->
             @if (session('success'))
@@ -16,20 +15,32 @@
             @endif
 
             <!-- Merchants Table -->
-            <x-table :headers="['#', 'Owner Name', 'Business Name', 'Created At', 'Actions']" :from="$pagination['from'] ?? 1" :to="$pagination['to'] ?? 10" :total="$pagination['total'] ?? count($merchants)" :pages="$pagination['pages'] ?? [1]"
+            <x-table :headers="[
+                '#',
+                'Merchant Code',
+                'Name',
+                'Email',
+                'Phone',
+                'State Code',
+                'GST No',
+                'Created At',
+                'Actions',
+            ]" :from="$pagination['from'] ?? 1" :to="$pagination['to'] ?? 10" :total="$pagination['total'] ?? count($merchants)" :pages="$pagination['pages'] ?? [1]"
                 :current="$pagination['current'] ?? 1">
+
                 @foreach ($merchants as $index => $merchant)
                     <tr
                         class="text-gray-700 transition-colors hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-700">
                         <td class="px-4 py-3 text-sm">{{ $index + 1 }}</td>
-
+                        <td class="px-4 py-3 text-sm font-medium">{{ $merchant->merchant_code ?? '—' }}</td>
                         <td class="px-4 py-3 text-sm">
                             <p>{{ $merchant->name }}</p>
-                            <p class="text-xs text-gray-600 dark:text-gray-400">{{ $merchant->email }}</p>
                         </td>
-
-                        <td class="px-4 py-3 text-sm">{{ $merchant->business_name }}</td>
-                        <td class="px-4 py-3 text-sm">{{ $merchant->created_at->format('d M Y') }}</td>
+                        <td class="px-4 py-3 text-sm">{{ $merchant->email }}</td>
+                        <td class="px-4 py-3 text-sm">{{ $merchant->phone ?? '—' }}</td>
+                        <td class="px-4 py-3 text-sm">{{ $merchant->state_code ?? '—' }}</td>
+                        <td class="px-4 py-3 text-sm">{{ $merchant->gst_no ?? '—' }}</td>
+                        <td class="px-4 py-3 text-sm">{{ $merchant->created_at?->format('d M Y') ?? '—' }}</td>
 
                         <td class="px-4 py-3 text-sm">
                             <div class="flex items-center space-x-3">
@@ -37,16 +48,17 @@
                                 <a href="{{ route('admin.merchants.edit', $merchant->id) }}">
                                     <x-secondary-button type="button" x-data
                                         x-on:click.prevent="
-                                            $dispatch('open-modal', 'edit-merchant-modal');
-                                            setTimeout(() => {
-                                                document.getElementById('edit_name').value = '{{ $merchant->name }}';
-                                                document.getElementById('edit_business_name').value = '{{ $merchant->business_name }}';
-                                                document.getElementById('edit_email').value = '{{ $merchant->email }}';
-                                                document.getElementById('edit_phone').value = '{{ $merchant->phone }}';
-                                                document.getElementById('edit_address').value = '{{ $merchant->address }}';
-                                                document.getElementById('editMerchantForm').action = '{{ route('admin.merchants.update', $merchant->id) }}';
-                                            }, 100);
-                                        ">
+                                $dispatch('open-modal', 'edit-merchant-modal');
+                                setTimeout(() => {
+                                    document.getElementById('edit_name').value = '{{ $merchant->name }}';
+                                    document.getElementById('edit_email').value = '{{ $merchant->email }}';
+                                    document.getElementById('edit_phone').value = '{{ $merchant->phone }}';
+                                    document.getElementById('edit_address').value = '{{ $merchant->address }}';
+                                    document.getElementById('edit_state_code').value = '{{ $merchant->state_code }}';
+                                    document.getElementById('edit_gst_no').value = '{{ $merchant->gst_no }}';
+                                    document.getElementById('editMerchantForm').action = '{{ route('admin.merchants.update', $merchant->id) }}';
+                                }, 100);
+                            ">
                                         {{ __('Edit') }}
                                     </x-secondary-button>
                                 </a>
@@ -56,15 +68,13 @@
                                     class="inline">
                                     @csrf
                                     @method('DELETE')
-                                    <!-- Delete Button -->
                                     <x-danger-button type="button" x-data
                                         x-on:click.prevent="
-        $dispatch('open-modal', 'confirm-delete-modal');
-        document.getElementById('deleteMerchantForm').action = '{{ route('admin.merchants.destroy', $merchant->id) }}';
-    ">
+                                $dispatch('open-modal', 'confirm-delete-modal');
+                                document.getElementById('deleteMerchantForm').action = '{{ route('admin.merchants.destroy', $merchant->id) }}';
+                            ">
                                         {{ __('Delete') }}
                                     </x-danger-button>
-
                                 </form>
                             </div>
                         </td>
@@ -94,12 +104,6 @@
                         </div>
 
                         <div>
-                            <x-input-label for="edit_business_name" value="{{ __('Business Name') }}" />
-                            <x-text-input id="edit_business_name" name="business_name" type="text"
-                                class="mt-1 block w-full" placeholder="{{ __('Enter business name') }}" required />
-                        </div>
-
-                        <div>
                             <x-input-label for="edit_email" value="{{ __('Email') }}" />
                             <x-text-input id="edit_email" name="email" type="email" class="mt-1 block w-full"
                                 placeholder="{{ __('example@email.com') }}" required />
@@ -108,13 +112,25 @@
                         <div>
                             <x-input-label for="edit_phone" value="{{ __('Phone') }}" />
                             <x-text-input id="edit_phone" name="phone" type="text" class="mt-1 block w-full"
-                                placeholder="{{ __('Enter phone number') }}" required />
+                                placeholder="{{ __('Enter phone number') }}" />
                         </div>
 
-                        <div class="sm:col-span-2">
+                        <div>
                             <x-input-label for="edit_address" value="{{ __('Address') }}" />
                             <x-textarea id="edit_address" name="address" rows="3" class="mt-1 block w-full"
                                 placeholder="{{ __('Enter address') }}"></x-textarea>
+                        </div>
+
+                        <div>
+                            <x-input-label for="edit_state_code" value="{{ __('State Code') }}" />
+                            <x-text-input id="edit_state_code" name="state_code" type="text"
+                                class="mt-1 block w-full" placeholder="{{ __('Enter state code') }}" />
+                        </div>
+
+                        <div>
+                            <x-input-label for="edit_gst_no" value="{{ __('GST Number') }}" />
+                            <x-text-input id="edit_gst_no" name="gst_no" type="text" class="mt-1 block w-full"
+                                placeholder="{{ __('Enter GST number') }}" />
                         </div>
                     </div>
 
@@ -129,6 +145,7 @@
                     </div>
                 </form>
             </x-modal>
+
 
             <!-- Delete Confirmation Modal -->
             <x-modal name="confirm-delete-modal" focusable>
@@ -155,7 +172,5 @@
                     </div>
                 </form>
             </x-modal>
-
-        </div>
     </div>
 </x-app-layout>

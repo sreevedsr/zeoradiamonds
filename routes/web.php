@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\RateController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CardsController;
 use App\Http\Controllers\ProductController;
@@ -70,17 +71,12 @@ Route::middleware('auth')->group(function () {
             Route::delete('/{id}', [SupplierController::class, 'destroy'])->name('destroy');
         });
 
-        Route::middleware(['auth', 'can:view-goldrates'])->prefix('goldrates')->name('goldrates.')->group(function () {
-            Route::get('/', [GoldRateController::class, 'index'])->name('index');
-            Route::get('/create', [GoldRateController::class, 'create'])->name('create');
-            Route::get('/diamond', [GoldRateController::class, 'diamond'])->name('diamond');
-            Route::post('/store', [GoldRateController::class, 'store'])->name('store');
+        Route::middleware(['auth', 'can:view-rates'])->prefix('rates')->name('rates.')->group(function () {
+            Route::get('/', [RateController::class, 'index'])->name('index');
+            Route::post('/gold', [RateController::class, 'storeGold'])->name('gold.store');
+            Route::post('/diamond', [RateController::class, 'storeDiamond'])->name('diamond.store');
 
-            Route::get('/{id}/edit', [GoldRateController::class, 'edit'])->name('edit');
-            Route::put('/{id}', [GoldRateController::class, 'update'])->name('update');
-            Route::delete('/{id}', [GoldRateController::class, 'destroy'])->name('destroy');
         });
-
 
         // Logs and requests
         Route::get('/logs', [DashboardController::class, 'logs'])->name('logs');

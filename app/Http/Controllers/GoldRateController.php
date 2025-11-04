@@ -13,7 +13,7 @@ class GoldRateController extends Controller
     public function index()
     {
         $goldRates = GoldRate::latest()->paginate(10);
-        return view('admin.goldrates.index', compact('goldRates'));
+        return view('admin.goldrates.create', compact('goldRates'));
     }
 
     /**
@@ -35,7 +35,7 @@ class GoldRateController extends Controller
     {
         $request->validate([
             'rate' => 'required|numeric',
-            'date' => 'required|date',
+            // 'date' => 'required|date',
         ]);
 
         GoldRate::create($request->only('rate', 'date'));

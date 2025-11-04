@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\StateCode;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -43,10 +44,10 @@ class AdminController extends Controller
 
     public function create()
     {
-        // Show form to add merchant
-        return view('admin.merchants.create');
-    }
+        $stateCodes = StateCode::all(['state_code', 'state_name', 'gstin_code']);
 
+        return view('admin.merchants.create', compact('stateCodes'));
+    }
 
     public function store(Request $request)
     {
@@ -54,6 +55,7 @@ class AdminController extends Controller
             'merchant_code' => 'required|string|max:50|unique:users,merchant_code',
             'merchant_name' => 'required|string|max:255',
             'address' => 'required|string|max:500',
+            'email' => 'required|email',
             'phone' => 'required|string|max:20',
             'state_code' => 'required|string|max:10',
             'state' => 'required|string|max:100',
@@ -63,6 +65,7 @@ class AdminController extends Controller
         User::create([
             'merchant_code' => $request->merchant_code,
             'name' => $request->merchant_name,
+            'email' => $request ->email,
             'address' => $request->address,
             'phone' => $request->phone,
             'state_code' => $request->state_code,
