@@ -13,10 +13,6 @@ use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MerchantRequestController;
 
-Route::get('/forbidden-test', function () {
-    abort(403);
-});
-
 
 // Redirect root URL to login or dashboard
 Route::get('/', function () {
@@ -48,7 +44,7 @@ Route::middleware('auth')->group(function () {
     // ================================
     Route::middleware('role:admin')->prefix('admin')->name('admin.')->group(function () {
 
-        Route::prefix('products')->name('products.')->group(function () {
+        Route::middleware(['auth', 'can:edit-cards'])->prefix('products')->name('products.')->group(function () {
             Route::get('register', [ProductController::class, 'create'])->name('register');
             Route::post('register', [ProductController::class, 'store'])->name('store');
 

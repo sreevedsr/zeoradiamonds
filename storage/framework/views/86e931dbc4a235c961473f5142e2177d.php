@@ -27,7 +27,7 @@
     class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 transition-colors duration-300 w-screen overflow-x-hidden">
     <div class="flex min-h-screen max-w-full overflow-hidden" :class="{ 'overflow-hidden': isSideMenuOpen }">
 
-        <?php echo $__env->make('layouts.sidebar', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+        <?php echo $__env->make('layouts.sidebar.main', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
         <div class="flex flex-col flex-1 min-w-0">
 

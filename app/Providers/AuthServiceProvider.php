@@ -27,7 +27,6 @@ class AuthServiceProvider extends ServiceProvider
             // Admin-only permissions
             'view-merchants' => ['admin'],
             'edit-cards' => ['admin'],
-            'view-goldrates' => ['admin'],
             'view-rates' => ['admin'],
             'view-suppliers' => ['admin'],
             'create-account' => ['admin'],

@@ -27,7 +27,7 @@
     class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 transition-colors duration-300 w-screen overflow-x-hidden">
     <div class="flex min-h-screen max-w-full overflow-hidden" :class="{ 'overflow-hidden': isSideMenuOpen }">
 
-        @include('layouts.sidebar')
+        @include('layouts.sidebar.main')
 
         <div class="flex flex-col flex-1 min-w-0">
 
