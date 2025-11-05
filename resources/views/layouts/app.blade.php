@@ -25,22 +25,22 @@
     <script src="{{ asset('assets/js/charts-lines.js') }}" defer></script>
     <script src="{{ asset('assets/js/charts-pie.js') }}" defer></script>
 </head>
-
 <body
     class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 transition-colors duration-300 w-screen overflow-x-hidden">
-    <div class="flex min-h-screen max-w-full overflow-hidden" :class="{ 'overflow-hidden': isSideMenuOpen }">
 
-        @include('layouts.sidebar.main')
+    <div class="flex min-h-screen w-full">
 
-        <div class="flex flex-col flex-1 min-w-0">
+        <!-- Fixed Sidebar -->
+            @include('layouts.sidebar.main')
 
+        <!-- Main Content -->
+        <div class="flex flex-col flex-1 md:ml-64 min-w-0">
             @include('layouts.navigation')
 
-            <main class="flex-1 overflow-y-auto px-6 py-6 transition-colors duration-300">
+            <main class="flex-1 overflow-y-auto px-6 py-6 transition-colors duration-300 h-screen">
                 {{ $slot }}
             </main>
         </div>
     </div>
 </body>
-
 </html>

@@ -25,24 +25,24 @@
     <script src="<?php echo e(asset('assets/js/charts-lines.js')); ?>" defer></script>
     <script src="<?php echo e(asset('assets/js/charts-pie.js')); ?>" defer></script>
 </head>
-
 <body
     class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 transition-colors duration-300 w-screen overflow-x-hidden">
-    <div class="flex min-h-screen max-w-full overflow-hidden" :class="{ 'overflow-hidden': isSideMenuOpen }">
 
-        <?php echo $__env->make('layouts.sidebar.main', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+    <div class="flex min-h-screen w-full">
 
-        <div class="flex flex-col flex-1 min-w-0">
+        <!-- Fixed Sidebar -->
+            <?php echo $__env->make('layouts.sidebar.main', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
+        <!-- Main Content -->
+        <div class="flex flex-col flex-1 md:ml-64 min-w-0">
             <?php echo $__env->make('layouts.navigation', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
-            <main class="flex-1 overflow-y-auto px-6 py-6 transition-colors duration-300">
+            <main class="flex-1 overflow-y-auto px-6 py-6 transition-colors duration-300 h-screen">
                 <?php echo e($slot); ?>
 
             </main>
         </div>
     </div>
 </body>
-
 </html>
 <?php /**PATH C:\xampp\htdocs\Zeeyame\resources\views/layouts/app.blade.php ENDPATH**/ ?>
