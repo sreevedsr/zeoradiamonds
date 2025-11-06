@@ -116,7 +116,7 @@ unset($__defined_vars, $__key, $__value); ?>
     </div>
 
     <!-- Data Table -->
-    <div id="data-table" class="relative max-h-[70vh] overflow-auto rounded-lg">
+    <div id="data-table" class="relative max-h-[70vh] overflow-auto rounded-lg custom-scrollbar">
         <table class="min-w-full whitespace-nowrap text-left border-collapse">
             <thead class="sticky top-0 z-10 bg-gray-50 dark:bg-gray-800">
                 <tr

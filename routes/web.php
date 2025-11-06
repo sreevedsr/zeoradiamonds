@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RateController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CardsController;
+use App\Http\Controllers\StaffController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\GoldRateController;
@@ -78,6 +79,8 @@ Route::middleware('auth')->group(function () {
             Route::post('/diamond', [RateController::class, 'storeDiamond'])->name('diamond.store');
 
         });
+        Route::resource('staff', StaffController::class);
+
 
         // // Logs and requests
         // Route::get('/logs', [DashboardController::class, 'logs'])->name('logs');

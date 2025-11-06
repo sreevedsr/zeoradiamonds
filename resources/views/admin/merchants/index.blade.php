@@ -6,6 +6,7 @@
     </h2>
 
     <div class="bg-white p-6 shadow dark:bg-gray-800 sm:rounded-lg sm:p-8">
+        <div class="mx-auto  text-gray-900 dark:text-gray-100">
 
             <!-- Success Message -->
             @if (session('success'))
@@ -47,18 +48,17 @@
                                 <!-- Edit Button -->
                                 <a href="{{ route('admin.merchants.edit', $merchant->id) }}">
                                     <x-secondary-button type="button" x-data
-                                        x-on:click.prevent="
-                                $dispatch('open-modal', 'edit-merchant-modal');
-                                setTimeout(() => {
+                                        x-on:click.prevent="$dispatch('open-modal', 'edit-merchant-modal');
+                                    setTimeout(() => {
+                                    document.getElementById('edit_merchant_code').value = '{{ $merchant->merchant_code }}';
                                     document.getElementById('edit_name').value = '{{ $merchant->name }}';
                                     document.getElementById('edit_email').value = '{{ $merchant->email }}';
                                     document.getElementById('edit_phone').value = '{{ $merchant->phone }}';
                                     document.getElementById('edit_address').value = '{{ $merchant->address }}';
                                     document.getElementById('edit_state_code').value = '{{ $merchant->state_code }}';
+                                    document.getElementById('edit_state').value = '{{ $merchant->state }}';
                                     document.getElementById('edit_gst_no').value = '{{ $merchant->gst_no }}';
-                                    document.getElementById('editMerchantForm').action = '{{ route('admin.merchants.update', $merchant->id) }}';
-                                }, 100);
-                            ">
+                                    document.getElementById('editMerchantForm').action = '{{ route('admin.merchants.update', $merchant->id) }}';}, 100);">
                                         {{ __('Edit') }}
                                     </x-secondary-button>
                                 </a>
@@ -93,12 +93,19 @@
                     </h2>
 
                     <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                        {{ __('Update the merchant details below. Please make sure all fields are filled correctly before saving changes.') }}
+                        {{ __('Update the merchant details below and click "Save Changes".') }}
                     </p>
 
                     <div class="mt-4 space-y-4">
+
                         <div>
-                            <x-input-label for="edit_name" value="{{ __('Name') }}" />
+                            <x-input-label for="edit_merchant_code" value="{{ __('Merchant Code') }}" />
+                            <x-text-input id="edit_merchant_code" name="merchant_code" type="text"
+                                class="mt-1 block w-full" placeholder="{{ __('Enter merchant code') }}" required />
+                        </div>
+
+                        <div>
+                            <x-input-label for="edit_name" value="{{ __('Merchant Name') }}" />
                             <x-text-input id="edit_name" name="name" type="text" class="mt-1 block w-full"
                                 placeholder="{{ __('Enter merchant name') }}" required />
                         </div>
@@ -106,29 +113,38 @@
                         <div>
                             <x-input-label for="edit_email" value="{{ __('Email') }}" />
                             <x-text-input id="edit_email" name="email" type="email" class="mt-1 block w-full"
-                                placeholder="{{ __('example@email.com') }}" required />
+                                placeholder="{{ __('Enter email address') }}" required />
                         </div>
 
                         <div>
-                            <x-input-label for="edit_phone" value="{{ __('Phone') }}" />
+                            <x-input-label for="edit_phone" value="{{ __('Phone No.') }}" />
                             <x-text-input id="edit_phone" name="phone" type="text" class="mt-1 block w-full"
-                                placeholder="{{ __('Enter phone number') }}" />
+                                placeholder="{{ __('Enter phone number') }}" required />
                         </div>
 
                         <div>
                             <x-input-label for="edit_address" value="{{ __('Address') }}" />
-                            <x-textarea id="edit_address" name="address" rows="3" class="mt-1 block w-full"
-                                placeholder="{{ __('Enter address') }}"></x-textarea>
+                            <x-textarea id="edit_address" name="address" rows="2" class="mt-1 block w-full"
+                                placeholder="{{ __('Enter full address') }}" required></x-textarea>
+                        </div>
+
+                        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                            <div>
+                                <x-input-label for="edit_state_code" value="{{ __('State Code') }}" />
+                                <x-text-input id="edit_state_code" name="state_code" type="text"
+                                    class="mt-1 block w-full" placeholder="{{ __('Enter or select state code') }}"
+                                    required />
+                            </div>
+
+                            <div>
+                                <x-input-label for="edit_state" value="{{ __('State') }}" />
+                                <x-text-input id="edit_state" name="state" type="text" class="mt-1 block w-full"
+                                    placeholder="{{ __('Enter or select state') }}" required />
+                            </div>
                         </div>
 
                         <div>
-                            <x-input-label for="edit_state_code" value="{{ __('State Code') }}" />
-                            <x-text-input id="edit_state_code" name="state_code" type="text"
-                                class="mt-1 block w-full" placeholder="{{ __('Enter state code') }}" />
-                        </div>
-
-                        <div>
-                            <x-input-label for="edit_gst_no" value="{{ __('GST Number') }}" />
+                            <x-input-label for="edit_gst_no" value="{{ __('GST No.') }}" />
                             <x-text-input id="edit_gst_no" name="gst_no" type="text" class="mt-1 block w-full"
                                 placeholder="{{ __('Enter GST number') }}" />
                         </div>
@@ -145,6 +161,7 @@
                     </div>
                 </form>
             </x-modal>
+
 
 
             <!-- Delete Confirmation Modal -->
@@ -172,5 +189,6 @@
                     </div>
                 </form>
             </x-modal>
+        </div>
     </div>
 </x-app-layout>

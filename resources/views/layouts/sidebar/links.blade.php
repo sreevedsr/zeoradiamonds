@@ -20,23 +20,21 @@
     @can('view-merchants')
         <li class="relative px-6 py-3" x-data="collapsibleMenu({{ request()->routeIs('admin.merchants.*') ? 'true' : 'false' }})">
 
-            <!-- Active highlight -->
             <span
                 class="{{ request()->routeIs('admin.merchants.*')
                     ? 'absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg'
                     : '' }}"
                 aria-hidden="true"></span>
 
-            <!-- Main Button -->
             <button @click="toggle" type="button"
                 class="flex w-full items-start rounded-md text-sm font-semibold text-gray-500 transition-colors duration-150 hover:text-gray-800 focus:outline-none dark:text-gray-400 dark:hover:text-gray-200"
                 :aria-expanded="open.toString()">
 
                 <!-- Icon -->
-                <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+                <svg class="h-5 w-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
                     stroke-linecap="round" stroke-linejoin="round">
                     <path
-                        d="M12 15.5H7.5C6.10444 15.5 5.40665 15.5 4.83886 15.6722C3.56045 16.06 2.56004 17.0605 2.17224 18.3389C2 18.9067 2 19.6044 2 21M19 21V15M16 18H22M14.5 7.5C14.5 9.98528 12.4853 12 10 12C7.51472 12 5.5 9.98528 5.5 7.5C5.5 5.01472 7.51472 3 10 3C12.4853 3 14.5 5.01472 14.5 7.5Z">
+                        d="M12 15.5H7.5C6.1 15.5 5.4 15.5 4.84 15.67C3.56 16.06 2.56 17.06 2.17 18.34C2 18.9 2 19.6 2 21M19 21V15M16 18H22M14.5 7.5C14.5 9.98 12.48 12 10 12C7.51 12 5.5 9.98 5.5 7.5C5.5 5.01 7.51 3 10 3C12.48 3 14.5 5.01 14.5 7.5Z">
                     </path>
                 </svg>
 
@@ -50,9 +48,12 @@
                     Merchants
                 </span>
 
-                <!-- Dropdown Arrow -->
-                <svg class="ml-auto h-4 w-4 transform transition-transform duration-300 ease-in-out"
-                    :class="open ? 'rotate-180' : 'rotate-0'" fill="currentColor" viewBox="0 0 20 20">
+                <!-- Dropdown Arrow (hidden when sidebar collapsed) -->
+                <svg class="ml-auto h-4 w-4 transform transition-all duration-300 ease-in-out"
+                    :class="[open ? 'rotate-180' : 'rotate-0', isSidebarCollapsed ? 'opacity-0 w-0 overflow-hidden' :
+                        'opacity-100 w-auto'
+                    ]"
+                    fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd"
                         d="M5.293 7.293a1 1 0 0 1 1.414 0L10 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414l-4 4a1 1 0 0 1-1.414 0l-4-4a1 1 0 0 1 0-1.414z"
                         clip-rule="evenodd"></path>
@@ -61,13 +62,14 @@
 
             <!-- Submenu -->
             <ul x-ref="panel" :style="`height: ${height}px`" @transitionend="if (open) height = 'auto'"
-                class="mt-2 space-y-2 overflow-hidden px-4 transition-all duration-300 ease-in-out">
+                class="mt-2 space-y-2 overflow-hidden px-4 transition-all duration-300 ease-in-out"
+                :class="isSidebarCollapsed ? 'hidden' : 'block'">
                 <li>
                     <a href="{{ route('admin.merchants.create') }}"
                         class="{{ request()->routeIs('admin.merchants.create')
                             ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
                             : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }}
-                    block rounded-md px-2 py-1 text-sm font-medium">
+            block rounded-md px-2 py-1 text-sm font-medium">
                         Add Merchant
                     </a>
                 </li>
@@ -76,57 +78,32 @@
                         class="{{ request()->routeIs('admin.merchants.index')
                             ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
                             : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }}
-                    block rounded-md px-2 py-1 text-sm font-medium">
+            block rounded-md px-2 py-1 text-sm font-medium">
                         View Merchants
                     </a>
                 </li>
             </ul>
+
         </li>
     @endcan
 
     @can('view-customers')
-        <li class="relative px-6 py-3" x-data="{
-            openCustomers: {{ request()->routeIs('merchant.customers.*') ? 'true' : 'false' }},
-            height: 0,
-            setMeasured() {
-                this.height = this.$refs.panel ? this.$refs.panel.scrollHeight : 0;
-            },
-            toggleCustomers() {
-                if (!this.openCustomers) {
-                    // Opening
-                    this.setMeasured();
-                    this.openCustomers = true;
-                } else {
-                    // Closing
-                    if (this.$refs.panel) {
-                        this.height = this.$refs.panel.scrollHeight;
-                        this.$nextTick(() => {
-                            this.height = 0;
-                            this.openCustomers = false;
-                        });
-                    } else {
-                        this.height = 0;
-                        this.openCustomers = false;
-                    }
-                }
-            }
-        }" x-init="$nextTick(() => {
-            if (openCustomers) setMeasured();
-            window.addEventListener('resize', () => {
-                if (openCustomers) setMeasured();
-            });
-        })">
+        <li class="relative px-6 py-3" x-data="collapsibleMenu({{ request()->routeIs('merchant.customers.*') ? 'true' : 'false' }})">
+
+            <!-- Highlight bar -->
             <span
-                class="{{ request()->routeIs('merchant.customers.*') ? 'absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg' : '' }}"
-                aria-hidden="true">
-            </span>
+                class="{{ request()->routeIs('merchant.customers.*')
+                    ? 'absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg'
+                    : '' }}"
+                aria-hidden="true"></span>
 
             <!-- Main Menu Button -->
-            <button @click="toggleCustomers" type="button"
+            <button @click="toggle" type="button"
                 class="flex w-full items-start rounded-md text-sm font-semibold text-gray-500 transition-colors duration-150 hover:text-gray-800 focus:outline-none dark:text-gray-400 dark:hover:text-gray-200"
-                :aria-expanded="openCustomers.toString()">
+                :aria-expanded="open.toString()">
+
                 <!-- Icon -->
-                <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+                <svg class="h-5 w-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
                     stroke-linecap="round" stroke-linejoin="round">
                     <path
                         d="M12 15.5H7.5C6.10444 15.5 5.40665 15.5 4.83886 15.6722C3.56045 16.06 2.56004 17.0605 2.17224 18.3389C2 18.9067 2 19.6044 2 21M19 21V15M16 18H22M14.5 7.5C14.5 9.98528 12.4853 12 10 12C7.51472 12 5.5 9.98528 5.5 7.5C5.5 5.01472 7.51472 3 10 3C12.4853 3 14.5 5.01472 14.5 7.5Z">
@@ -137,28 +114,35 @@
                 <span
                     class="{{ request()->routeIs('merchant.customers.*')
                         ? 'text-gray-800 dark:text-gray-200'
-                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }} ml-2 flex-1 text-left">
+                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }}
+                ml-2 flex-1 text-left transition-all duration-200 origin-left"
+                    :class="isSidebarCollapsed ? 'opacity-0 w-0 overflow-hidden' : 'opacity-100 w-auto'">
                     Customers
                 </span>
 
-                <!-- Arrow -->
-                <svg class="ml-auto h-4 w-4 transform-gpu transition-transform duration-300 ease-in-out"
-                    :class="openCustomers ? 'rotate-180' : 'rotate-0'" fill="currentColor" viewBox="0 0 20 20">
+                <!-- Dropdown Arrow (hidden when sidebar collapsed) -->
+                <svg class="ml-auto h-4 w-4 transform transition-all duration-300 ease-in-out"
+                    :class="[open ? 'rotate-180' : 'rotate-0',
+                        isSidebarCollapsed ? 'opacity-0 w-0 overflow-hidden' : 'opacity-100 w-auto'
+                    ]"
+                    fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd"
                         d="M5.293 7.293a1 1 0 0 1 1.414 0L10 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414l-4 4a1 1 0 0 1-1.414 0l-4-4a1 1 0 0 1 0-1.414z"
-                        clip-rule="evenodd">
-                    </path>
+                        clip-rule="evenodd"></path>
                 </svg>
             </button>
 
-            <!-- Submenu -->
-            <ul x-ref="panel" :style="`height: ${height}px`" @transitionend="if (openCustomers) height = 'auto'"
-                class="mt-2 space-y-2 overflow-hidden px-4 transition-all duration-300 ease-in-out">
+            <!-- Submenu (hidden when sidebar collapsed) -->
+            <ul x-ref="panel" :style="`height: ${height}px`" @transitionend="if (open) height = 'auto'"
+                class="mt-2 space-y-2 overflow-hidden px-4 transition-all duration-300 ease-in-out"
+                :class="isSidebarCollapsed ? 'hidden' : 'block'">
+
                 <li>
                     <a href="{{ route('merchant.customers.create') }}"
                         class="{{ request()->routeIs('merchant.customers.create')
                             ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
-                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }} block rounded-md px-2 py-1 text-sm font-medium">
+                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }}
+                    block rounded-md px-2 py-1 text-sm font-medium">
                         Add Customer
                     </a>
                 </li>
@@ -167,7 +151,8 @@
                     <a href="{{ route('merchant.customers.index') }}"
                         class="{{ request()->routeIs('merchant.customers.index')
                             ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
-                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }} block rounded-md px-2 py-1 text-sm font-medium">
+                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }}
+                    block rounded-md px-2 py-1 text-sm font-medium">
                         View Customers
                     </a>
                 </li>
@@ -191,7 +176,7 @@
                 :aria-expanded="open.toString()">
 
                 <!-- Icon -->
-                <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+                <svg class="h-5 w-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
                     stroke-linecap="round" stroke-linejoin="round">
                     <path d="M20 13V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v6M9 21h6M12 17v4M3 13h18"></path>
                 </svg>
@@ -201,14 +186,17 @@
                     class="{{ request()->routeIs('admin.suppliers.*')
                         ? 'text-gray-800 dark:text-gray-200'
                         : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }}
-                ml-2 flex-1 text-left transition-all duration-200 origin-left"
+            ml-2 flex-1 text-left transition-all duration-200 origin-left"
                     :class="isSidebarCollapsed ? 'opacity-0 w-0 overflow-hidden' : 'opacity-100 w-auto'">
                     Suppliers
                 </span>
 
-                <!-- Dropdown Arrow -->
-                <svg class="ml-auto h-4 w-4 transform-gpu transition-transform duration-300 ease-in-out"
-                    :class="open ? 'rotate-180' : 'rotate-0'" fill="currentColor" viewBox="0 0 20 20">
+                <!-- Dropdown Arrow (hidden when sidebar collapsed) -->
+                <svg class="ml-auto h-4 w-4 transform transition-all duration-300 ease-in-out"
+                    :class="[open ? 'rotate-180' : 'rotate-0',
+                        isSidebarCollapsed ? 'opacity-0 w-0 overflow-hidden' : 'opacity-100 w-auto'
+                    ]"
+                    fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd"
                         d="M5.293 7.293a1 1 0 0 1 1.414 0L10 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414l-4 4a1 1 0 0 1-1.414 0l-4-4a1 1 0 0 1 0-1.414z"
                         clip-rule="evenodd"></path>
@@ -217,13 +205,15 @@
 
             <!-- Submenu -->
             <ul x-ref="panel" :style="`height: ${height}px`" @transitionend="if (open) height = 'auto'"
-                class="mt-2 space-y-2 overflow-hidden px-4 transition-all duration-300 ease-in-out">
+                class="mt-2 space-y-2 overflow-hidden px-4 transition-all duration-300 ease-in-out"
+                :class="isSidebarCollapsed ? 'hidden' : 'block'">
+
                 <li>
                     <a href="{{ route('admin.suppliers.create') }}"
                         class="{{ request()->routeIs('admin.suppliers.create')
                             ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
                             : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }}
-                    block rounded-md px-2 py-1 text-sm font-medium">
+                block rounded-md px-2 py-1 text-sm font-medium">
                         Register Supplier
                     </a>
                 </li>
@@ -233,7 +223,7 @@
                         class="{{ request()->routeIs('admin.suppliers.index')
                             ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
                             : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }}
-                    block rounded-md px-2 py-1 text-sm font-medium">
+                block rounded-md px-2 py-1 text-sm font-medium">
                         View Suppliers
                     </a>
                 </li>
@@ -244,7 +234,7 @@
     @can('edit-cards')
         <li class="relative px-6 py-3" x-data="collapsibleMenu({{ request()->routeIs('admin.products.*') ? 'true' : 'false' }})">
 
-            <!-- Active bar -->
+            <!-- Active Bar -->
             <span
                 class="{{ request()->routeIs('admin.products.*')
                     ? 'absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg'
@@ -257,7 +247,7 @@
                 :aria-expanded="open.toString()">
 
                 <!-- Icon -->
-                <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+                <svg class="h-5 w-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
                     stroke-linecap="round" stroke-linejoin="round">
                     <path
                         d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
@@ -268,14 +258,17 @@
                     class="{{ request()->routeIs('admin.products.*')
                         ? 'text-gray-800 dark:text-gray-200'
                         : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }}
-                ml-2 flex-1 text-left transition-all duration-200 origin-left"
+            ml-2 flex-1 text-left transition-all duration-200 origin-left"
                     :class="isSidebarCollapsed ? 'opacity-0 w-0 overflow-hidden' : 'opacity-100 w-auto'">
                     Products
                 </span>
 
                 <!-- Dropdown Arrow -->
-                <svg class="ml-auto h-4 w-4 transform-gpu transition-transform duration-300 ease-in-out"
-                    :class="open ? 'rotate-180' : 'rotate-0'" fill="currentColor" viewBox="0 0 20 20">
+                <svg class="ml-auto h-4 w-4 transform transition-all duration-300 ease-in-out"
+                    :class="[open ? 'rotate-180' : 'rotate-0',
+                        isSidebarCollapsed ? 'opacity-0 w-0 overflow-hidden' : 'opacity-100 w-auto'
+                    ]"
+                    fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd"
                         d="M5.293 7.293a1 1 0 0 1 1.414 0L10 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414l-4 4a1 1 0 0 1-1.414 0l-4-4a1 1 0 0 1 0-1.414z"
                         clip-rule="evenodd"></path>
@@ -284,13 +277,15 @@
 
             <!-- Submenu -->
             <ul x-ref="panel" :style="`height: ${height}px`" @transitionend="if (open) height = 'auto'"
-                class="mt-2 space-y-2 overflow-hidden px-4 transition-all duration-300 ease-in-out">
+                class="mt-2 space-y-2 overflow-hidden px-4 transition-all duration-300 ease-in-out"
+                :class="isSidebarCollapsed ? 'hidden' : 'block'">
+
                 <li>
                     <a href="{{ route('admin.products.register') }}"
                         class="{{ request()->routeIs('admin.products.register')
                             ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
                             : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }}
-                    block rounded-md px-2 py-1 text-sm font-medium">
+                block rounded-md px-2 py-1 text-sm font-medium">
                         Register Product
                     </a>
                 </li>
@@ -299,7 +294,7 @@
                         class="{{ request()->routeIs('admin.products.create')
                             ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
                             : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }}
-                    block rounded-md px-2 py-1 text-sm font-medium">
+                block rounded-md px-2 py-1 text-sm font-medium">
                         Add Card
                     </a>
                 </li>
@@ -308,7 +303,7 @@
                         class="{{ request()->routeIs('admin.products.index')
                             ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
                             : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }}
-                    block rounded-md px-2 py-1 text-sm font-medium">
+                block rounded-md px-2 py-1 text-sm font-medium">
                         View Products
                     </a>
                 </li>
@@ -317,7 +312,7 @@
                         class="{{ request()->routeIs('admin.products.assign')
                             ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
                             : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }}
-                    block rounded-md px-2 py-1 text-sm font-medium">
+                block rounded-md px-2 py-1 text-sm font-medium">
                         Assign Products
                     </a>
                 </li>
@@ -326,7 +321,7 @@
                         class="{{ request()->routeIs('admin.products.requests')
                             ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
                             : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }}
-                    block rounded-md px-2 py-1 text-sm font-medium">
+                block rounded-md px-2 py-1 text-sm font-medium">
                         View Card Requests
                     </a>
                 </li>
@@ -341,20 +336,18 @@
                 class="{{ request()->routeIs('admin.rates.*')
                     ? 'absolute inset-y-0 left-0 w-1 bg-yellow-500 rounded-tr-lg rounded-br-lg'
                     : '' }}"
-                aria-hidden="true">
-            </span>
+                aria-hidden="true"></span>
 
-            <!-- Single Menu Button -->
+            <!-- Single Menu Link -->
             <a href="{{ route('admin.rates.index') }}"
-                class="flex items-center text-sm font-semibold transition-colors duration-150
-        {{ request()->routeIs('admin.rates.*')
-            ? 'text-gray-800 dark:text-gray-200'
-            : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }}">
+                class="{{ request()->routeIs('admin.rates.*')
+                    ? 'text-gray-800 dark:text-gray-200'
+                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }}
+            inline-flex w-full items-start text-sm font-semibold transition-colors duration-150">
 
                 <!-- Icon -->
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                    stroke-linejoin="round" class="lucide lucide-chart-no-axes-combined">
+                <svg class="h-5 w-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+                    stroke-linecap="round" stroke-linejoin="round">
                     <path d="M12 16v5" />
                     <path d="M16 14v7" />
                     <path d="M20 10v11" />
@@ -363,8 +356,86 @@
                     <path d="M8 14v7" />
                 </svg>
 
-                <span class="ml-3">Gold & Diamond Rates</span>
+                <!-- Label (Hidden when collapsed) -->
+                <span class="ml-2" :class="isSidebarCollapsed ? 'hidden' : 'block'">
+                    Gold & Diamond Rates
+                </span>
             </a>
+        </li>
+    @endcan
+
+    @can('manage-staff')
+        <li class="relative px-6 py-3" x-data="collapsibleMenu({{ request()->routeIs('admin.staff.*') ? 'true' : 'false' }})">
+
+            <!-- Active Bar -->
+            <span
+                class="{{ request()->routeIs('admin.staff.*')
+                    ? 'absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg'
+                    : '' }}"
+                aria-hidden="true"></span>
+
+            <!-- Menu Button -->
+            <button @click="toggle" type="button"
+                class="flex w-full items-start rounded-md text-sm font-semibold text-gray-500 transition-colors duration-150 hover:text-gray-800 focus:outline-none dark:text-gray-400 dark:hover:text-gray-200"
+                :aria-expanded="open.toString()">
+
+                <!-- Icon -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="lucide lucide-id-card-lanyard-icon lucide-id-card-lanyard h-5 w-5 shrink-0">
+                    <path d="M13.5 8h-3" />
+                    <path d="m15 2-1 2h3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h3" />
+                    <path d="M16.899 22A5 5 0 0 0 7.1 22" />
+                    <path d="m9 2 3 6" />
+                    <circle cx="12" cy="15" r="3" />
+                </svg>
+
+                <!-- Label (completely hidden when sidebar collapsed) -->
+                <span
+                    class="{{ request()->routeIs('admin.staff.*')
+                        ? 'text-gray-800 dark:text-gray-200'
+                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }}
+                ml-2 flex-1 text-left transition-all duration-200 origin-left"
+                    :class="isSidebarCollapsed ? 'hidden' : 'block'">
+                    Staff
+                </span>
+
+                <!-- Dropdown Arrow (hidden when sidebar collapsed) -->
+                <svg class="ml-auto h-4 w-4 transform transition-transform duration-300 ease-in-out"
+                    :class="[open ? 'rotate-180' : 'rotate-0', isSidebarCollapsed ? 'hidden' : 'block']"
+                    fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd"
+                        d="M5.293 7.293a1 1 0 0 1 1.414 0L10 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414l-4 4a1 1 0 0 1-1.414 0l-4-4a1 1 0 0 1 0-1.414z"
+                        clip-rule="evenodd"></path>
+                </svg>
+            </button>
+
+            <!-- Submenu -->
+            <ul x-ref="panel" :style="`height: ${height}px`" @transitionend="if (open) height = 'auto'"
+                class="mt-2 space-y-2 overflow-hidden px-4 transition-all duration-300 ease-in-out"
+                :class="isSidebarCollapsed ? 'hidden' : 'block'">
+
+                <li>
+                    <a href="{{ route('admin.staff.create') }}"
+                        class="{{ request()->routeIs('admin.staff.create')
+                            ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
+                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }}
+                    block rounded-md px-2 py-1 text-sm font-medium">
+                        Register Staff
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ route('admin.staff.index') }}"
+                        class="{{ request()->routeIs('admin.staff.index')
+                            ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
+                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }}
+                    block rounded-md px-2 py-1 text-sm font-medium">
+                        View Staff
+                    </a>
+                </li>
+            </ul>
         </li>
     @endcan
 
@@ -384,7 +455,7 @@
                 :aria-expanded="open.toString()">
 
                 <!-- Icon -->
-                <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+                <svg class="h-5 w-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
                     stroke-linecap="round" stroke-linejoin="round">
                     <path
                         d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
@@ -396,14 +467,17 @@
                     class="{{ request()->routeIs('merchant.cards.*')
                         ? 'text-gray-800 dark:text-gray-200'
                         : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }}
-                ml-2 flex-1 text-left transition-all duration-200 origin-left"
+            ml-2 flex-1 text-left transition-all duration-200 origin-left"
                     :class="isSidebarCollapsed ? 'opacity-0 w-0 overflow-hidden' : 'opacity-100 w-auto'">
                     Cards
                 </span>
 
-                <!-- Rotating Arrow -->
-                <svg class="ml-auto h-4 w-4 transform transition-transform duration-300 ease-in-out"
-                    :class="open ? 'rotate-180' : 'rotate-0'" fill="currentColor" viewBox="0 0 20 20">
+                <!-- Arrow -->
+                <svg class="ml-auto h-4 w-4 transform transition-all duration-300 ease-in-out"
+                    :class="[open ? 'rotate-180' : 'rotate-0',
+                        isSidebarCollapsed ? 'opacity-0 w-0 overflow-hidden' : 'opacity-100 w-auto'
+                    ]"
+                    fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd"
                         d="M5.293 7.293a1 1 0 0 1 1.414 0L10 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414l-4 4a1 1 0 0 1-1.414 0l-4-4a1 1 0 0 1 0-1.414z"
                         clip-rule="evenodd"></path>
@@ -412,14 +486,15 @@
 
             <!-- Submenu -->
             <ul x-ref="panel" :style="`height: ${height}px`" @transitionend="if (open) height = 'auto'"
-                class="mt-2 space-y-2 overflow-hidden px-4 transition-all duration-300 ease-in-out">
+                class="mt-2 space-y-2 overflow-hidden px-4 transition-all duration-300 ease-in-out"
+                :class="isSidebarCollapsed ? 'hidden' : 'block'">
 
                 <li>
                     <a href="{{ route('merchant.cards.assign') }}"
                         class="{{ request()->routeIs('merchant.cards.assign')
                             ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
                             : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }}
-                    block rounded-md px-2 py-1 text-sm font-medium">
+                block rounded-md px-2 py-1 text-sm font-medium">
                         Assign Cards
                     </a>
                 </li>
@@ -429,7 +504,7 @@
                         class="{{ request()->routeIs('merchant.cards.index')
                             ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
                             : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }}
-                    block rounded-md px-2 py-1 text-sm font-medium">
+                block rounded-md px-2 py-1 text-sm font-medium">
                         View Cards
                     </a>
                 </li>
@@ -467,14 +542,17 @@
                     class="{{ request()->routeIs('merchant.marketplace.*')
                         ? 'text-gray-800 dark:text-gray-200'
                         : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }}
-                ml-2 flex-1 text-left transition-all duration-200 origin-left"
+            ml-2 flex-1 text-left transition-all duration-200 origin-left"
                     :class="isSidebarCollapsed ? 'opacity-0 w-0 overflow-hidden' : 'opacity-100 w-auto'">
                     Marketplace
                 </span>
 
-                <!-- Rotating Arrow -->
-                <svg class="ml-auto h-4 w-4 transform transition-transform duration-300 ease-in-out"
-                    :class="open ? 'rotate-180' : 'rotate-0'" fill="currentColor" viewBox="0 0 20 20">
+                <!-- Arrow -->
+                <svg class="ml-auto h-4 w-4 transform transition-all duration-300 ease-in-out"
+                    :class="[open ? 'rotate-180' : 'rotate-0',
+                        isSidebarCollapsed ? 'opacity-0 w-0 overflow-hidden' : 'opacity-100 w-auto'
+                    ]"
+                    fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd"
                         d="M5.293 7.293a1 1 0 0 1 1.414 0L10 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414l-4 4a1 1 0 0 1-1.414 0l-4-4a1 1 0 0 1 0-1.414z"
                         clip-rule="evenodd"></path>
@@ -483,13 +561,15 @@
 
             <!-- Submenu -->
             <ul x-ref="panel" :style="`height: ${height}px`" @transitionend="if (open) height = 'auto'"
-                class="mt-2 space-y-2 overflow-hidden px-4 transition-all duration-300 ease-in-out">
+                class="mt-2 space-y-2 overflow-hidden px-4 transition-all duration-300 ease-in-out"
+                :class="isSidebarCollapsed ? 'hidden' : 'block'">
+
                 <li>
                     <a href="{{ route('merchant.marketplace.request') }}"
                         class="{{ request()->routeIs('merchant.marketplace.request')
                             ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
                             : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }}
-                    block rounded-md px-2 py-1 text-sm font-medium">
+                block rounded-md px-2 py-1 text-sm font-medium">
                         Request Cards
                     </a>
                 </li>
@@ -498,7 +578,7 @@
                         class="{{ request()->routeIs('merchant.marketplace.view')
                             ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
                             : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }}
-                    block rounded-md px-2 py-1 text-sm font-medium">
+                block rounded-md px-2 py-1 text-sm font-medium">
                         View Requests
                     </a>
                 </li>

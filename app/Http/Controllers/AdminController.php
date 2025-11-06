@@ -65,7 +65,7 @@ class AdminController extends Controller
         User::create([
             'merchant_code' => $request->merchant_code,
             'name' => $request->merchant_name,
-            'email' => $request ->email,
+            'email' => $request->email,
             'address' => $request->address,
             'phone' => $request->phone,
             'state_code' => $request->state_code,
@@ -84,17 +84,30 @@ class AdminController extends Controller
         $merchant = User::findOrFail($id);
 
         $request->validate([
+            'merchant_code' => 'required|string|max:100',
             'name' => 'required|string|max:255',
-            'business_name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,'.$merchant->id,
+            'email' => 'required|email|unique:users,email,' . $merchant->id,
             'phone' => 'required|string|max:20',
             'address' => 'required|string|max:500',
+            'state_code' => 'required|string|max:10',
+            'state' => 'required|string|max:100',
+            'gst_no' => 'nullable|string|max:30',
         ]);
 
-        $merchant->update($request->only(['name', 'business_name', 'email', 'phone', 'address']));
+        $merchant->update($request->only([
+            'merchant_code',
+            'name',
+            'email',
+            'phone',
+            'address',
+            'state_code',
+            'state',
+            'gst_no',
+        ]));
 
         return redirect()->route('admin.merchants.index')->with('success', 'Merchant updated successfully.');
     }
+
 
     public function destroy($id)
     {

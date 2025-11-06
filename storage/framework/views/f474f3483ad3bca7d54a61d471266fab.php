@@ -1,23 +1,44 @@
-<header class="z-10 py-4 bg-white shadow-md dark:bg-gray-800">
-    <div class="container flex items-center justify-between h-full px-6 text-purple-600 dark:text-purple-300">
-        <!-- Sidebar toggle button (works for both mobile and desktop) -->
-        <button class="p-2 rounded-md focus:outline-none focus:shadow-outline-purple" @click="toggleSidebar"
-            aria-label="Toggle sidebar">
-            <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd"
-                    d="M3 5h14a1 1 0 010 2H3a1 1 0 010-2zm0 5h14a1 1 0 010 2H3a1 1 0 010-2zm0 5h14a1 1 0 010 2H3a1 1 0 010-2z"
-                    clip-rule="evenodd"></path>
-            </svg>
-        </button>
+<header
+    class="sticky top-0 z-20 py-4 backdrop-blur-md bg-transparent transition-all duration-300">
+    <div class="flex items-center justify-between h-full px-6 text-purple-600 dark:text-purple-300">
 
-        <!-- Page title -->
-        <h1 class="text-xl font-semibold text-gray-700 dark:text-gray-200 ml-4 truncate">
-            Dashboard
-        </h1>
+        <!-- Left Section: Sidebar Toggle + Page Title -->
+        <div class="flex items-center space-x-3">
+            <!-- Desktop Sidebar Toggle Button -->
+            <button
+                class="hidden md:block p-2 rounded-md focus:outline-none transition-transform duration-300"
+                @click="toggleSidebar" aria-label="Toggle desktop sidebar">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="lucide lucide-panel-right rotate-180">
+                    <rect width="18" height="18" x="3" y="3" rx="2" />
+                    <path d="M15 3v18" />
+                </svg>
+            </button>
 
-        <!-- Optional right section -->
+            <!-- Mobile Sidebar Toggle Button -->
+            <button
+                class="md:hidden p-2 rounded-md focus:outline-none transition-transform duration-300"
+                @click="toggleMobileSidebar" aria-label="Toggle mobile sidebar">
+                <svg class="w-6 h-6" aria-hidden="true" fill="currentColor"
+                    viewBox="0 0 20 20">
+                    <path fill-rule="evenodd"
+                        d="M3 5h14a1 1 0 010 2H3a1 1 0 010-2zm0 5h14a1 1 0 010 2H3a1 1 0 010-2zm0 5h14a1 1 0 010 2H3a1 1 0 010-2z"
+                        clip-rule="evenodd"></path>
+                </svg>
+            </button>
+
+            <!-- Dynamic Page Title -->
+            <h1 class="text-lg font-semibold text-gray-800 dark:text-gray-100 truncate">
+                <?php echo e($title ?? 'Dashboard'); ?>
+
+            </h1>
+        </div>
+
+        <!-- Right Section -->
         <div class="flex items-center space-x-6">
-            <!-- Search bar (optional) -->
+            <!-- Search (hidden on mobile) -->
             <div class="hidden md:flex justify-center flex-1">
                 <div class="relative w-full max-w-xs focus-within:text-purple-500">
                     <div class="absolute inset-y-0 flex items-center pl-2">
@@ -28,13 +49,13 @@
                         </svg>
                     </div>
                     <input
-                        class="w-full pl-8 pr-2 text-sm text-gray-700 placeholder-gray-600 bg-gray-100 border-0 rounded-md dark:placeholder-gray-500 dark:focus:shadow-outline-gray dark:bg-gray-700 dark:text-gray-200 focus:bg-white focus:outline-none focus:shadow-outline-purple form-input"
+                        class="w-full pl-8 pr-2 text-sm text-gray-700 placeholder-gray-600 bg-transparent border-0 rounded-md dark:placeholder-gray-500 dark:text-gray-200 focus:outline-none focus:ring-0"
                         type="text" placeholder="Search" aria-label="Search" />
                 </div>
             </div>
 
             <!-- Notifications -->
-            <button class="relative align-middle rounded-md focus:outline-none focus:shadow-outline-purple"
+            <button class="relative align-middle rounded-md focus:outline-none"
                 @click="toggleNotificationsMenu">
                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                     <path

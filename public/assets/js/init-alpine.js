@@ -24,9 +24,10 @@ function data() {
             this.isMobile = window.innerWidth < 768;
         },
 
+        // Desktop sidebar toggle
         toggleSidebar() {
             if (this.isMobile) {
-                this.isSideMenuOpen = !this.isSideMenuOpen;
+                this.toggleMobileSidebar();
             } else {
                 this.isSidebarCollapsed = !this.isSidebarCollapsed;
                 document.body.classList.toggle(
@@ -36,13 +37,18 @@ function data() {
             }
         },
 
-        // Side menu
+        // Mobile sidebar logic
         isSideMenuOpen: false,
-        toggleSideMenu() {
+        isMobileMenuButtonActive: false,
+
+        toggleMobileSidebar() {
             this.isSideMenuOpen = !this.isSideMenuOpen;
+            this.isMobileMenuButtonActive = !this.isMobileMenuButtonActive;
         },
+
         closeSideMenu() {
             this.isSideMenuOpen = false;
+            this.isMobileMenuButtonActive = false;
         },
 
         // Notifications

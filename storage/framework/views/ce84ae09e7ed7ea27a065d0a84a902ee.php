@@ -1,8 +1,4 @@
 <div class="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4">
-    <template
-        x-for="field in ['product_code','item_code','item_name','quantity','gold_rate','gross_weight','stone_weight','diamond_weight']"
-        hidden></template>
-
     <div>
         <label class="text-sm font-medium">Product Code</label>
         <input type="text" name="product_code" x-model="product_code" value="<?php echo e(old('product_code')); ?>"
