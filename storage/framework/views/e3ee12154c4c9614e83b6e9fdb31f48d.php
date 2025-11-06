@@ -33,7 +33,10 @@
                 </div>
             <?php endif; ?>
 
-            <form action="<?php echo e(route('admin.merchants.store')); ?>" method="POST">
+            <form action="<?php echo e(route('admin.merchants.store')); ?>" method="POST" x-data="purchaseForm()"
+                x-init="init();
+                enableSequentialInput();
+                $nextTick(() => focusFirstInput());">
                 <?php echo csrf_field(); ?>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6" x-data="merchantForm(<?php echo e(Js::from($stateCodes)); ?>, '<?php echo e(old('state_code')); ?>', '<?php echo e(old('state')); ?>')">
@@ -41,61 +44,142 @@
                     <!-- Merchant Code -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                            Merchant Code
+                            Merchant Code <span class="text-red-500">*</span>
                         </label>
-                        <input type="text" name="merchant_code" value="<?php echo e(old('merchant_code')); ?>" required
-                            placeholder="Enter merchant code"
-                            class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md
-                dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-600
-                hover:border-purple-400 transition duration-150">
+                        <?php if (isset($component)) { $__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8 = $attributes; } ?>
+<?php $component = App\View\Components\Input\Text::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('input.text'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\App\View\Components\Input\Text::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['name' => 'merchant_code','placeholder' => 'Enter merchant code','required' => true,'class' => 'mt-1 block hover:border-purple-400 transition duration-150']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8)): ?>
+<?php $attributes = $__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8; ?>
+<?php unset($__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8)): ?>
+<?php $component = $__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8; ?>
+<?php unset($__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8); ?>
+<?php endif; ?>
+
                     </div>
 
                     <!-- Merchant Name -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                            Merchant Name
+                            Merchant Name <span class="text-red-500">*</span>
                         </label>
-                        <input type="text" name="merchant_name" value="<?php echo e(old('merchant_name')); ?>" required
-                            placeholder="Enter merchant name"
-                            class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md
-                dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-600
-                hover:border-purple-400 transition duration-150">
+                        <?php if (isset($component)) { $__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8 = $attributes; } ?>
+<?php $component = App\View\Components\Input\Text::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('input.text'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\App\View\Components\Input\Text::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['name' => 'merchant_name','placeholder' => 'Enter merchant name','required' => true,'class' => 'mt-1 block hover:border-purple-400 transition duration-150']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8)): ?>
+<?php $attributes = $__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8; ?>
+<?php unset($__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8)): ?>
+<?php $component = $__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8; ?>
+<?php unset($__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8); ?>
+<?php endif; ?>
+
                     </div>
 
                     <!-- Email -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                            Email
+                        <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                            Email <span class="text-red-500">*</span>
                         </label>
-                        <input type="email" name="email" value="<?php echo e(old('email')); ?>" required
-                            placeholder="Enter email address"
-                            class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md
-                dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-600
-                hover:border-purple-400 transition duration-150">
+                        <?php if (isset($component)) { $__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8 = $attributes; } ?>
+<?php $component = App\View\Components\Input\Text::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('input.text'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\App\View\Components\Input\Text::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['type' => 'email','name' => 'email','placeholder' => 'Enter email address','required' => true,'class' => 'mt-1 block hover:border-purple-400 transition duration-150']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8)): ?>
+<?php $attributes = $__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8; ?>
+<?php unset($__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8)): ?>
+<?php $component = $__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8; ?>
+<?php unset($__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8); ?>
+<?php endif; ?>
                     </div>
+
 
                     <!-- Phone No -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                            Phone No.
+                        <label for="phone" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                            Phone No. <span class="text-red-500">*</span>
                         </label>
-                        <input type="text" name="phone" value="<?php echo e(old('phone')); ?>" required
-                            placeholder="Enter phone number"
-                            class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md
-                dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-600
-                hover:border-purple-400 transition duration-150">
+                        <?php if (isset($component)) { $__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8 = $attributes; } ?>
+<?php $component = App\View\Components\Input\Text::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('input.text'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\App\View\Components\Input\Text::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['name' => 'phone','placeholder' => 'Enter phone number','required' => true,'class' => 'mt-1 block hover:border-purple-400 transition duration-150']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8)): ?>
+<?php $attributes = $__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8; ?>
+<?php unset($__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8)): ?>
+<?php $component = $__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8; ?>
+<?php unset($__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8); ?>
+<?php endif; ?>
                     </div>
+
 
                     <!-- Address (Full Width) -->
                     <div class="md:col-span-2">
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                            Address
+                        <label for="address" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                            Address <span class="text-red-500">*</span
                         </label>
-                        <textarea name="address" rows="3" required placeholder="Enter full address"
-                            class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md
-                dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-600
-                hover:border-purple-400 transition duration-150"><?php echo e(old('address')); ?></textarea>
+                        <?php if (isset($component)) { $__componentOriginalb6d9f6b7453177a93fa45e3d5011f00a = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalb6d9f6b7453177a93fa45e3d5011f00a = $attributes; } ?>
+<?php $component = App\View\Components\Input\Textarea::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('input.textarea'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\App\View\Components\Input\Textarea::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['name' => 'address','rows' => '3','placeholder' => 'Enter full address','required' => true,'class' => 'mt-1 block hover:border-purple-400 transition duration-150']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalb6d9f6b7453177a93fa45e3d5011f00a)): ?>
+<?php $attributes = $__attributesOriginalb6d9f6b7453177a93fa45e3d5011f00a; ?>
+<?php unset($__attributesOriginalb6d9f6b7453177a93fa45e3d5011f00a); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalb6d9f6b7453177a93fa45e3d5011f00a)): ?>
+<?php $component = $__componentOriginalb6d9f6b7453177a93fa45e3d5011f00a; ?>
+<?php unset($__componentOriginalb6d9f6b7453177a93fa45e3d5011f00a); ?>
+<?php endif; ?>
                     </div>
+
 
                     <!-- State Code Dropdown -->
                     <div class="relative" x-cloak @click.outside="openDropdown = false">
@@ -108,7 +192,7 @@
                                 @focus="openDropdown = true" @input="openDropdown = true"
                                 @keydown.escape.window="openDropdown = false"
                                 @keydown.enter.prevent="if(filteredStates.length>0) selectState(filteredStates[0])"
-                                class="block w-full rounded-md border border-gray-300 px-3 py-2 dark:border-gray-600
+                                class="block input-field w-full rounded-md border border-gray-300 px-3 py-2 dark:border-gray-600
                dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-600
                hover:border-purple-400 transition duration-150">
 
@@ -163,39 +247,53 @@
 
                     <!-- Editable auto-filled state name -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">State</label>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">State <span class="text-red-500">*</span></label>
                         <input type="text" name="state" x-model="selectedState" @input="manualEdit = true"
                             placeholder="Enter or select a state"
-                            class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md
+                            class="mt-1 input-field block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md
                   dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-600
                   hover:border-purple-400 transition duration-150">
                     </div>
 
                     <!-- GST No -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                            GST No.
+                        <label for="gst_no" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                            GST No. <span class="text-red-500">*</span>
                         </label>
-                        <input type="text" name="gst_no" value="<?php echo e(old('gst_no')); ?>" required
-                            placeholder="Enter GST number"
-                            class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md
-                dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-600
-                hover:border-purple-400 transition duration-150">
+
+                        <?php if (isset($component)) { $__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8 = $attributes; } ?>
+<?php $component = App\View\Components\Input\Text::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('input.text'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\App\View\Components\Input\Text::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['name' => 'gst_no','placeholder' => 'Enter GST number','required' => true,'class' => 'mt-1 block hover:border-purple-400 transition duration-150']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8)): ?>
+<?php $attributes = $__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8; ?>
+<?php unset($__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8)): ?>
+<?php $component = $__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8; ?>
+<?php unset($__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8); ?>
+<?php endif; ?>
                     </div>
+
                 </div>
 
                 <!-- Submit -->
                 <div class="flex justify-start pt-4">
-                    <button type="submit"
+                    <button x-ref="submitBtn" type="submit"
                         class="mt-4 px-6 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700
             focus:outline-none focus:ring-2 focus:ring-purple-500 transition duration-150">
                         Register Merchant
                     </button>
                 </div>
             </form>
-
-
-
         </div>
     </div>
  <?php echo $__env->renderComponent(); ?>

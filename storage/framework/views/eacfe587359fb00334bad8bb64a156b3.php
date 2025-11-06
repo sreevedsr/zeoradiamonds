@@ -3,8 +3,7 @@
 $__newAttributes = [];
 $__propNames = \Illuminate\View\ComponentAttributeBag::extractPropNames(([
     'name',
-    'type' => 'text',
-    'model' => null,
+    'rows' => 3,
     'value' => null,
 ]));
 
@@ -23,8 +22,7 @@ unset($__newAttributes);
 
 foreach (array_filter(([
     'name',
-    'type' => 'text',
-    'model' => null,
+    'rows' => 3,
     'value' => null,
 ]), 'is_string', ARRAY_FILTER_USE_KEY) as $__key => $__value) {
     $$__key = $$__key ?? $__value;
@@ -39,17 +37,15 @@ foreach ($attributes->all() as $__key => $__value) {
 unset($__defined_vars, $__key, $__value); ?>
 
 <?php
-    $value = $value ?? ($errors->any() ? old($name) : '');
+    $value = $value ?? old($name);
 ?>
 
-<input
-    type="<?php echo e($type); ?>"
+<textarea
     name="<?php echo e($name); ?>"
-    <?php if($model): ?> x-model="<?php echo e($model); ?>" <?php endif; ?>
-    value="<?php echo e($value); ?>"
+    rows="<?php echo e($rows); ?>"
     <?php echo e($attributes->merge([
         'class' => 'input-field w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-600 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100'
     ])); ?>
 
-/>
-<?php /**PATH C:\xampp\htdocs\Zeeyame\resources\views/components/input/text.blade.php ENDPATH**/ ?>
+><?php echo e($value); ?></textarea>
+<?php /**PATH C:\xampp\htdocs\Zeeyame\resources\views/components/input/textarea.blade.php ENDPATH**/ ?>

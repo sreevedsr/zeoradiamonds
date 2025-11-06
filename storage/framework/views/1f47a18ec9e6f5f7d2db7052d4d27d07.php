@@ -14,8 +14,8 @@
         View Suppliers
     </h2>
 
-    <div class="bg-white p-6 shadow dark:bg-gray-800 sm:rounded-lg sm:p-8">
-        <div class="mx-auto max-w-7xl text-gray-900 dark:text-gray-100">
+    <div class="bg-white p-4 shadow dark:bg-gray-800 sm:rounded-lg sm:px-8">
+        <div class="mx-auto  text-gray-900 dark:text-gray-100">
 
             <!-- Success Message -->
             <?php if(session('success')): ?>

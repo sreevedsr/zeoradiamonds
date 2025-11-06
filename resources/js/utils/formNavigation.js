@@ -5,15 +5,16 @@
  * @param {HTMLElement} container - Optional container to limit scope.
  */
 export function enableSequentialInput(container = document) {
-    const inputs = Array.from(container.querySelectorAll('.input-field'))
-        .filter(el => !el.readOnly && !el.disabled);
+    const inputs = Array.from(container.querySelectorAll(".input-field")).filter(
+        (el) => !el.readOnly && !el.disabled,
+    );
 
     inputs.forEach((input, index) => {
-        input.addEventListener('keydown', e => {
-            if (e.key === 'Enter') {
+        input.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
                 e.preventDefault();
 
-                const isDropdown = input.dataset?.type === 'dropdown';
+                const isDropdown = input.dataset?.type === "dropdown";
                 if (isDropdown) {
                     // Toggle dropdowns instead of skipping them
                     input.click();
@@ -26,8 +27,21 @@ export function enableSequentialInput(container = document) {
                     next = inputs[inputs.indexOf(next) + 1];
                 }
 
-                if (next) next.focus();
-                else document.querySelector('#submitBtn')?.focus();
+                if (next) {
+                    next.focus();
+                } else {
+                    // 🟣 No next input → trigger form submit
+                    const form = input.closest("form");
+                    if (form) {
+                        const submitBtn = form.querySelector("#submitBtn");
+                        if (submitBtn) {
+                            submitBtn.focus();
+                            submitBtn.click(); // triggers native form submission
+                        } else {
+                            form.requestSubmit(); // modern API (preserves CSRF + validation)
+                        }
+                    }
+                }
             }
         });
     });
@@ -38,7 +52,8 @@ export function enableSequentialInput(container = document) {
  * @param {HTMLElement} container - Optional container to limit scope.
  */
 export function focusFirstInput(container = document) {
-    const firstInput = Array.from(container.querySelectorAll('.input-field'))
-        .find(el => el.offsetParent !== null && !el.readOnly && !el.disabled);
+    const firstInput = Array.from(container.querySelectorAll(".input-field")).find(
+        (el) => el.offsetParent !== null && !el.readOnly && !el.disabled,
+    );
     if (firstInput) firstInput.focus();
 }
