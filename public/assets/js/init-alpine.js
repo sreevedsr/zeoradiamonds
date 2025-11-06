@@ -15,15 +15,28 @@ function data() {
 
     return {
         dark: isDarkModePreferred(),
-        // toggleTheme() {
-        //     this.dark = !this.dark;
-        //     setThemeToLocalStorage(this.dark);
-        //     if (this.dark) {
-        //         document.documentElement.classList.add("theme-dark");
-        //     } else {
-        //         document.documentElement.classList.remove("theme-dark");
-        //     }
-        // },
+
+        // Responsive + sidebar logic
+        isMobile: window.innerWidth < 768,
+        isSidebarCollapsed: false,
+
+        updateIsMobile() {
+            this.isMobile = window.innerWidth < 768;
+        },
+
+        toggleSidebar() {
+            if (this.isMobile) {
+                this.isSideMenuOpen = !this.isSideMenuOpen;
+            } else {
+                this.isSidebarCollapsed = !this.isSidebarCollapsed;
+                document.body.classList.toggle(
+                    "sidebar-collapsed",
+                    this.isSidebarCollapsed
+                );
+            }
+        },
+
+        // Side menu
         isSideMenuOpen: false,
         toggleSideMenu() {
             this.isSideMenuOpen = !this.isSideMenuOpen;
@@ -31,6 +44,8 @@ function data() {
         closeSideMenu() {
             this.isSideMenuOpen = false;
         },
+
+        // Notifications
         isNotificationsMenuOpen: false,
         toggleNotificationsMenu() {
             this.isNotificationsMenuOpen = !this.isNotificationsMenuOpen;
@@ -38,6 +53,8 @@ function data() {
         closeNotificationsMenu() {
             this.isNotificationsMenuOpen = false;
         },
+
+        // Profile menu
         isProfileMenuOpen: false,
         toggleProfileMenu() {
             this.isProfileMenuOpen = !this.isProfileMenuOpen;
@@ -45,10 +62,13 @@ function data() {
         closeProfileMenu() {
             this.isProfileMenuOpen = false;
         },
+
+        // Pages menu
         isPagesMenuOpen: false,
         togglePagesMenu() {
             this.isPagesMenuOpen = !this.isPagesMenuOpen;
         },
+
         // Modal
         isModalOpen: false,
         trapCleanup: null,
@@ -58,7 +78,12 @@ function data() {
         },
         closeModal() {
             this.isModalOpen = false;
-            this.trapCleanup();
+            if (this.trapCleanup) this.trapCleanup();
+        },
+
+        // Init
+        init() {
+            window.addEventListener("resize", () => this.updateIsMobile());
         },
     };
 }

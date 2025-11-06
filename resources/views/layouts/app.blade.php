@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html :class="{ 'dark': dark }" x-data="data()" lang="en">
-
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{{ $title ?? 'Zeora Diamonds' }}</title> <!-- keeps dynamic title -->
+    <title>{{ $title ?? 'Zeora Diamonds' }}</title>
 
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -17,7 +16,6 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindplus/elements@1" type="module"></script>
 
     <!-- AlpineJS -->
-    {{-- <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script> --}}
     <script src="{{ asset('assets/js/init-alpine.js') }}"></script>
 
     <!-- Charts -->
@@ -31,13 +29,16 @@
     <div class="flex min-h-screen w-full">
 
         <!-- Fixed Sidebar -->
-            @include('layouts.sidebar.main')
+        @include('layouts.sidebar.main')
 
         <!-- Main Content -->
-        <div class="flex flex-col flex-1 md:ml-64 min-w-0">
+        <div
+            class="flex flex-col flex-1 min-w-0 transition-all duration-300 ease-in-out"
+            :class="isSidebarCollapsed ? 'md:ml-20' : 'md:ml-64'"
+        >
             @include('layouts.navigation')
 
-            <main class="flex-1 overflow-y-auto px-6 py-6 transition-colors duration-300 h-screen">
+            <main class="flex-1 overflow-y-auto px-6 py-6 transition-colors duration-300">
                 {{ $slot }}
             </main>
         </div>

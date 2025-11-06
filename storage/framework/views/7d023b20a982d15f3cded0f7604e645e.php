@@ -11,49 +11,26 @@
                     d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
                 </path>
             </svg>
-            <span class="ml-2">Dashboard</span>
-        </a>
+            <span class="ml-2 transition-all duration-200 origin-left"
+                :class="isSidebarCollapsed ? 'opacity-0 w-0 overflow-hidden' : 'opacity-100 w-auto'">
+                Dashboard
+            </span> </a>
     </li>
 
     <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('view-merchants')): ?>
-        <li class="relative px-6 py-3" x-data="{
-            openMerchants: <?php echo e(request()->routeIs('admin.merchants.*') ? 'true' : 'false'); ?>,
-            height: 0,
-            setMeasured() {
-                this.height = this.$refs.panel ? this.$refs.panel.scrollHeight : 0;
-            },
-            toggleMerchants() {
-                if (!this.openMerchants) {
-                    // Opening animation
-                    this.setMeasured();
-                    this.openMerchants = true;
-                } else {
-                    // Closing animation
-                    if (this.$refs.panel) {
-                        this.height = this.$refs.panel.scrollHeight;
-                        this.$nextTick(() => {
-                            this.height = 0;
-                            this.openMerchants = false;
-                        });
-                    } else {
-                        this.height = 0;
-                        this.openMerchants = false;
-                    }
-                }
-            }
-        }" x-init="$nextTick(() => {
-            if (openMerchants) setMeasured();
-            window.addEventListener('resize', () => {
-                if (openMerchants) setMeasured();
-            });
-        })">
-            <!-- Main Menu Button -->
-            <button @click="toggleMerchants" type="button"
+        <li class="relative px-6 py-3" x-data="collapsibleMenu(<?php echo e(request()->routeIs('admin.merchants.*') ? 'true' : 'false'); ?>)">
+
+            <!-- Active highlight -->
+            <span
+                class="<?php echo e(request()->routeIs('admin.merchants.*')
+                    ? 'absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg'
+                    : ''); ?>"
+                aria-hidden="true"></span>
+
+            <!-- Main Button -->
+            <button @click="toggle" type="button"
                 class="flex w-full items-start rounded-md text-sm font-semibold text-gray-500 transition-colors duration-150 hover:text-gray-800 focus:outline-none dark:text-gray-400 dark:hover:text-gray-200"
-                :aria-expanded="openMerchants.toString()">
-                <span
-                    class="<?php echo e(request()->routeIs('admin.merchants.*') ? 'absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg' : ''); ?>"
-                    aria-hidden="true"></span>
+                :aria-expanded="open.toString()">
 
                 <!-- Icon -->
                 <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
@@ -67,13 +44,16 @@
                 <span
                     class="<?php echo e(request()->routeIs('admin.merchants.*')
                         ? 'text-gray-800 dark:text-gray-200'
-                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?> ml-2 flex-1 text-left">
+                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>
+
+                ml-2 flex-1 text-left transition-all duration-200 origin-left"
+                    :class="isSidebarCollapsed ? 'opacity-0 w-0 overflow-hidden' : 'opacity-100 w-auto'">
                     Merchants
                 </span>
 
                 <!-- Dropdown Arrow -->
-                <svg class="ml-auto h-4 w-4 transform-gpu transition-transform duration-300 ease-in-out"
-                    :class="openMerchants ? 'rotate-180' : 'rotate-0'" fill="currentColor" viewBox="0 0 20 20">
+                <svg class="ml-auto h-4 w-4 transform transition-transform duration-300 ease-in-out"
+                    :class="open ? 'rotate-180' : 'rotate-0'" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd"
                         d="M5.293 7.293a1 1 0 0 1 1.414 0L10 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414l-4 4a1 1 0 0 1-1.414 0l-4-4a1 1 0 0 1 0-1.414z"
                         clip-rule="evenodd"></path>
@@ -81,13 +61,15 @@
             </button>
 
             <!-- Submenu -->
-            <ul x-ref="panel" :style="`height: ${height}px`" @transitionend="if (openMerchants) height = 'auto'"
+            <ul x-ref="panel" :style="`height: ${height}px`" @transitionend="if (open) height = 'auto'"
                 class="mt-2 space-y-2 overflow-hidden px-4 transition-all duration-300 ease-in-out">
                 <li>
                     <a href="<?php echo e(route('admin.merchants.create')); ?>"
                         class="<?php echo e(request()->routeIs('admin.merchants.create')
                             ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
-                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?> block rounded-md px-2 py-1 text-sm font-medium">
+                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>
+
+                    block rounded-md px-2 py-1 text-sm font-medium">
                         Add Merchant
                     </a>
                 </li>
@@ -95,7 +77,9 @@
                     <a href="<?php echo e(route('admin.merchants.index')); ?>"
                         class="<?php echo e(request()->routeIs('admin.merchants.index')
                             ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
-                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?> block rounded-md px-2 py-1 text-sm font-medium">
+                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>
+
+                    block rounded-md px-2 py-1 text-sm font-medium">
                         View Merchants
                     </a>
                 </li>
@@ -195,45 +179,19 @@
     <?php endif; ?>
 
     <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('view-suppliers')): ?>
-        <li class="relative px-6 py-3" x-data="{
-            openSuppliers: <?php echo e(request()->routeIs('admin.suppliers.*') ? 'true' : 'false'); ?>,
-            height: 0,
-            setMeasured() {
-                this.height = this.$refs.panel ? this.$refs.panel.scrollHeight : 0;
-            },
-            toggleSuppliers() {
-                if (!this.openSuppliers) {
-                    this.setMeasured();
-                    this.openSuppliers = true;
-                } else {
-                    if (this.$refs.panel) {
-                        this.height = this.$refs.panel.scrollHeight;
-                        this.$nextTick(() => {
-                            this.height = 0;
-                            this.openSuppliers = false;
-                        });
-                    } else {
-                        this.height = 0;
-                        this.openSuppliers = false;
-                    }
-                }
-            }
-        }" x-init="$nextTick(() => {
-            if (openSuppliers) setMeasured();
-            window.addEventListener('resize', () => {
-                if (openSuppliers) setMeasured();
-            });
-        })">
+        <li class="relative px-6 py-3" x-data="collapsibleMenu(<?php echo e(request()->routeIs('admin.suppliers.*') ? 'true' : 'false'); ?>)">
 
             <!-- Highlight Bar -->
             <span
-                class="<?php echo e(request()->routeIs('admin.suppliers.*') ? 'absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg' : ''); ?>"
+                class="<?php echo e(request()->routeIs('admin.suppliers.*')
+                    ? 'absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg'
+                    : ''); ?>"
                 aria-hidden="true"></span>
 
             <!-- Main Menu Button -->
-            <button @click="toggleSuppliers" type="button"
+            <button @click="toggle" type="button"
                 class="flex w-full items-start rounded-md text-sm font-semibold text-gray-500 transition-colors duration-150 hover:text-gray-800 focus:outline-none dark:text-gray-400 dark:hover:text-gray-200"
-                :aria-expanded="openSuppliers.toString()">
+                :aria-expanded="open.toString()">
 
                 <!-- Icon -->
                 <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
@@ -245,29 +203,32 @@
                 <span
                     class="<?php echo e(request()->routeIs('admin.suppliers.*')
                         ? 'text-gray-800 dark:text-gray-200'
-                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?> ml-2 flex-1 text-left">
+                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>
+
+                ml-2 flex-1 text-left transition-all duration-200 origin-left"
+                    :class="isSidebarCollapsed ? 'opacity-0 w-0 overflow-hidden' : 'opacity-100 w-auto'">
                     Suppliers
                 </span>
 
-                <!-- Arrow -->
+                <!-- Dropdown Arrow -->
                 <svg class="ml-auto h-4 w-4 transform-gpu transition-transform duration-300 ease-in-out"
-                    :class="openSuppliers ? 'rotate-180' : 'rotate-0'" fill="currentColor" viewBox="0 0 20 20">
+                    :class="open ? 'rotate-180' : 'rotate-0'" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd"
                         d="M5.293 7.293a1 1 0 0 1 1.414 0L10 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414l-4 4a1 1 0 0 1-1.414 0l-4-4a1 1 0 0 1 0-1.414z"
-                        clip-rule="evenodd">
-                    </path>
+                        clip-rule="evenodd"></path>
                 </svg>
             </button>
 
             <!-- Submenu -->
-            <ul x-ref="panel" :style="`height: ${height}px`" @transitionend="if (openSuppliers) height = 'auto'"
+            <ul x-ref="panel" :style="`height: ${height}px`" @transitionend="if (open) height = 'auto'"
                 class="mt-2 space-y-2 overflow-hidden px-4 transition-all duration-300 ease-in-out">
-
                 <li>
                     <a href="<?php echo e(route('admin.suppliers.create')); ?>"
                         class="<?php echo e(request()->routeIs('admin.suppliers.create')
                             ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
-                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?> block rounded-md px-2 py-1 text-sm font-medium">
+                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>
+
+                    block rounded-md px-2 py-1 text-sm font-medium">
                         Register Supplier
                     </a>
                 </li>
@@ -276,57 +237,31 @@
                     <a href="<?php echo e(route('admin.suppliers.index')); ?>"
                         class="<?php echo e(request()->routeIs('admin.suppliers.index')
                             ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
-                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?> block rounded-md px-2 py-1 text-sm font-medium">
+                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>
+
+                    block rounded-md px-2 py-1 text-sm font-medium">
                         View Suppliers
                     </a>
                 </li>
-
             </ul>
         </li>
     <?php endif; ?>
 
     <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('edit-cards')): ?>
-        <li class="relative px-6 py-3" x-data="{
-            openProducts: <?php echo e(request()->routeIs('admin.products.*') ? 'true' : 'false'); ?>,
-            height: 0,
-            setMeasured() {
-                this.height = this.$refs.productsPanel ? this.$refs.productsPanel.scrollHeight : 0;
-            },
-            toggleProducts() {
-                if (!this.openProducts) {
-                    // Opening
-                    this.setMeasured();
-                    this.openProducts = true;
-                } else {
-                    // Closing
-                    if (this.$refs.productsPanel) {
-                        this.height = this.$refs.productsPanel.scrollHeight;
-                        this.$nextTick(() => {
-                            this.height = 0;
-                            this.openProducts = false;
-                        });
-                    } else {
-                        this.height = 0;
-                        this.openProducts = false;
-                    }
-                }
-            }
-        }" x-init="$nextTick(() => {
-            if (openProducts) setMeasured();
-            window.addEventListener('resize', () => {
-                if (openProducts) setMeasured();
-            });
-        })">
+        <li class="relative px-6 py-3" x-data="collapsibleMenu(<?php echo e(request()->routeIs('admin.products.*') ? 'true' : 'false'); ?>)">
 
             <!-- Active bar -->
             <span
-                class="<?php echo e(request()->routeIs('admin.products.*') ? 'absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg' : ''); ?>"
+                class="<?php echo e(request()->routeIs('admin.products.*')
+                    ? 'absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg'
+                    : ''); ?>"
                 aria-hidden="true"></span>
 
             <!-- Button -->
-            <button @click="toggleProducts" type="button"
+            <button @click="toggle" type="button"
                 class="flex w-full items-start rounded-md text-sm font-semibold text-gray-500 transition-colors duration-150 hover:text-gray-800 focus:outline-none dark:text-gray-400 dark:hover:text-gray-200"
-                :aria-expanded="openProducts.toString()">
+                :aria-expanded="open.toString()">
+
                 <!-- Icon -->
                 <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
                     stroke-linecap="round" stroke-linejoin="round">
@@ -334,16 +269,20 @@
                         d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                 </svg>
 
+                <!-- Label -->
                 <span
                     class="<?php echo e(request()->routeIs('admin.products.*')
                         ? 'text-gray-800 dark:text-gray-200'
-                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?> ml-2 flex-1 text-left">
+                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>
+
+                ml-2 flex-1 text-left transition-all duration-200 origin-left"
+                    :class="isSidebarCollapsed ? 'opacity-0 w-0 overflow-hidden' : 'opacity-100 w-auto'">
                     Products
                 </span>
 
-                <!-- Arrow -->
+                <!-- Dropdown Arrow -->
                 <svg class="ml-auto h-4 w-4 transform-gpu transition-transform duration-300 ease-in-out"
-                    :class="openProducts ? 'rotate-180' : 'rotate-0'" fill="currentColor" viewBox="0 0 20 20">
+                    :class="open ? 'rotate-180' : 'rotate-0'" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd"
                         d="M5.293 7.293a1 1 0 0 1 1.414 0L10 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414l-4 4a1 1 0 0 1-1.414 0l-4-4a1 1 0 0 1 0-1.414z"
                         clip-rule="evenodd"></path>
@@ -351,13 +290,15 @@
             </button>
 
             <!-- Submenu -->
-            <ul x-ref="productsPanel" :style="`height: ${height}px`" @transitionend="if (openProducts) height = 'auto'"
+            <ul x-ref="panel" :style="`height: ${height}px`" @transitionend="if (open) height = 'auto'"
                 class="mt-2 space-y-2 overflow-hidden px-4 transition-all duration-300 ease-in-out">
                 <li>
                     <a href="<?php echo e(route('admin.products.register')); ?>"
                         class="<?php echo e(request()->routeIs('admin.products.register')
                             ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
-                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?> block rounded-md px-2 py-1 text-sm font-medium">
+                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>
+
+                    block rounded-md px-2 py-1 text-sm font-medium">
                         Register Product
                     </a>
                 </li>
@@ -365,7 +306,9 @@
                     <a href="<?php echo e(route('admin.products.create')); ?>"
                         class="<?php echo e(request()->routeIs('admin.products.create')
                             ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
-                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?> block rounded-md px-2 py-1 text-sm font-medium">
+                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>
+
+                    block rounded-md px-2 py-1 text-sm font-medium">
                         Add Card
                     </a>
                 </li>
@@ -373,7 +316,9 @@
                     <a href="<?php echo e(route('admin.products.index')); ?>"
                         class="<?php echo e(request()->routeIs('admin.products.index')
                             ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
-                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?> block rounded-md px-2 py-1 text-sm font-medium">
+                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>
+
+                    block rounded-md px-2 py-1 text-sm font-medium">
                         View Products
                     </a>
                 </li>
@@ -381,7 +326,9 @@
                     <a href="<?php echo e(route('admin.products.assign')); ?>"
                         class="<?php echo e(request()->routeIs('admin.products.assign')
                             ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
-                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?> block rounded-md px-2 py-1 text-sm font-medium">
+                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>
+
+                    block rounded-md px-2 py-1 text-sm font-medium">
                         Assign Products
                     </a>
                 </li>
@@ -389,7 +336,9 @@
                     <a href="<?php echo e(route('admin.products.requests')); ?>"
                         class="<?php echo e(request()->routeIs('admin.products.requests')
                             ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
-                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?> block rounded-md px-2 py-1 text-sm font-medium">
+                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>
+
+                    block rounded-md px-2 py-1 text-sm font-medium">
                         View Card Requests
                     </a>
                 </li>
@@ -397,12 +346,13 @@
         </li>
     <?php endif; ?>
 
-
     <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('view-rates')): ?>
         <li class="relative px-6 py-3">
             <!-- Highlight Bar -->
             <span
-                class="<?php echo e(request()->routeIs('admin.rates.*') ? 'absolute inset-y-0 left-0 w-1 bg-yellow-500 rounded-tr-lg rounded-br-lg' : ''); ?>"
+                class="<?php echo e(request()->routeIs('admin.rates.*')
+                    ? 'absolute inset-y-0 left-0 w-1 bg-yellow-500 rounded-tr-lg rounded-br-lg'
+                    : ''); ?>"
                 aria-hidden="true">
             </span>
 
@@ -425,53 +375,25 @@
                     <path d="M8 14v7" />
                 </svg>
 
-                <!-- Label -->
                 <span class="ml-3">Gold & Diamond Rates</span>
             </a>
         </li>
     <?php endif; ?>
 
     <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('view-cards')): ?>
-        <li class="relative px-6 py-3" x-data="{
-            openCards: <?php echo e(request()->routeIs('merchant.cards.*') ? 'true' : 'false'); ?>,
-            height: 0,
-            toggleCards() {
-                if (!this.openCards) {
-                    this.height = this.$refs.cardsPanel ? this.$refs.cardsPanel.scrollHeight : 0;
-                    this.openCards = true;
-                } else {
-                    if (this.$refs.cardsPanel) {
-                        this.height = this.$refs.cardsPanel.scrollHeight;
-                        this.$nextTick(() => {
-                            this.height = 0;
-                            this.openCards = false;
-                        });
-                    } else {
-                        this.height = 0;
-                        this.openCards = false;
-                    }
-                }
-            },
-            setMeasured() {
-                this.height = this.$refs.cardsPanel ? this.$refs.cardsPanel.scrollHeight : 0;
-            }
-        }" x-init="$nextTick(() => {
-            if (openCards) setMeasured();
-            window.addEventListener('resize', () => {
-                if (openCards) setMeasured();
-            });
-        })"
-            x-on:destroy.window="window.removeEventListener('resize', () => {})">
+        <li class="relative px-6 py-3" x-data="collapsibleMenu(<?php echo e(request()->routeIs('merchant.cards.*') ? 'true' : 'false'); ?>)">
 
             <!-- Active Highlight -->
             <span
-                class="<?php echo e(request()->routeIs('merchant.cards.*') ? 'absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg' : ''); ?>"
+                class="<?php echo e(request()->routeIs('merchant.cards.*')
+                    ? 'absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg'
+                    : ''); ?>"
                 aria-hidden="true"></span>
 
             <!-- Main Menu Button -->
-            <button @click="toggleCards" type="button"
+            <button @click="toggle" type="button"
                 class="flex w-full items-start rounded-md text-sm font-semibold text-gray-500 transition-colors duration-150 hover:text-gray-800 focus:outline-none dark:text-gray-400 dark:hover:text-gray-200"
-                :aria-expanded="openCards.toString()">
+                :aria-expanded="open.toString()">
 
                 <!-- Icon -->
                 <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
@@ -481,31 +403,37 @@
                     </path>
                 </svg>
 
+                <!-- Label -->
                 <span
                     class="<?php echo e(request()->routeIs('merchant.cards.*')
                         ? 'text-gray-800 dark:text-gray-200'
-                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?> ml-2 flex-1 text-left">
+                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>
+
+                ml-2 flex-1 text-left transition-all duration-200 origin-left"
+                    :class="isSidebarCollapsed ? 'opacity-0 w-0 overflow-hidden' : 'opacity-100 w-auto'">
                     Cards
                 </span>
 
                 <!-- Rotating Arrow -->
-                <svg class="ml-auto h-4 w-4 rotate-0 transform transition-transform duration-300 ease-in-out"
-                    :class="{ 'rotate-180': openCards }" fill="currentColor" viewBox="0 0 20 20">
+                <svg class="ml-auto h-4 w-4 transform transition-transform duration-300 ease-in-out"
+                    :class="open ? 'rotate-180' : 'rotate-0'" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd"
-                        d="M5.293 7.293a1 1 0 0 1 1.414 0L10 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414l-4 4a1 1 0 0 1-1.414 0l-4-4a1 1 0 1 0-1.414z"
+                        d="M5.293 7.293a1 1 0 0 1 1.414 0L10 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414l-4 4a1 1 0 0 1-1.414 0l-4-4a1 1 0 0 1 0-1.414z"
                         clip-rule="evenodd"></path>
                 </svg>
             </button>
 
             <!-- Submenu -->
-            <ul x-ref="cardsPanel" :style="`height: ${height}px`" @transitionend="if (openCards) { height = 'auto' }"
+            <ul x-ref="panel" :style="`height: ${height}px`" @transitionend="if (open) height = 'auto'"
                 class="mt-2 space-y-2 overflow-hidden px-4 transition-all duration-300 ease-in-out">
 
                 <li>
                     <a href="<?php echo e(route('merchant.cards.assign')); ?>"
                         class="<?php echo e(request()->routeIs('merchant.cards.assign')
                             ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
-                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?> block rounded-md px-2 py-1 text-sm font-medium">
+                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>
+
+                    block rounded-md px-2 py-1 text-sm font-medium">
                         Assign Cards
                     </a>
                 </li>
@@ -514,47 +442,19 @@
                     <a href="<?php echo e(route('merchant.cards.index')); ?>"
                         class="<?php echo e(request()->routeIs('merchant.cards.index')
                             ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
-                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?> block rounded-md px-2 py-1 text-sm font-medium">
+                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>
+
+                    block rounded-md px-2 py-1 text-sm font-medium">
                         View Cards
                     </a>
                 </li>
-
             </ul>
         </li>
     <?php endif; ?>
 
     <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('view-market')): ?>
-        <li class="relative px-6 py-3" x-data="{
-            openMarket: <?php echo e(request()->routeIs('merchant.marketplace.*') ? 'true' : 'false'); ?>,
-            height: 0,
-            setMeasured() {
-                this.height = this.$refs.panel ? this.$refs.panel.scrollHeight : 0;
-            },
-            toggleMarket() {
-                if (!this.openMarket) {
-                    // Opening animation
-                    this.setMeasured();
-                    this.openMarket = true;
-                } else {
-                    // Closing animation
-                    if (this.$refs.panel) {
-                        this.height = this.$refs.panel.scrollHeight;
-                        this.$nextTick(() => {
-                            this.height = 0;
-                            this.openMarket = false;
-                        });
-                    } else {
-                        this.height = 0;
-                        this.openMarket = false;
-                    }
-                }
-            }
-        }" x-init="$nextTick(() => {
-            if (openMarket) setMeasured();
-            window.addEventListener('resize', () => {
-                if (openMarket) setMeasured();
-            });
-        })">
+        <li class="relative px-6 py-3" x-data="collapsibleMenu(<?php echo e(request()->routeIs('merchant.marketplace.*') ? 'true' : 'false'); ?>)">
+
             <!-- Active indicator -->
             <span
                 class="<?php echo e(request()->routeIs('merchant.marketplace.*')
@@ -563,9 +463,9 @@
                 aria-hidden="true"></span>
 
             <!-- Main Button -->
-            <button @click="toggleMarket" type="button"
+            <button @click="toggle" type="button"
                 class="flex w-full items-start rounded-md text-sm font-semibold text-gray-500 transition-colors duration-150 hover:text-gray-800 focus:outline-none dark:text-gray-400 dark:hover:text-gray-200"
-                :aria-expanded="openMarket.toString()">
+                :aria-expanded="open.toString()">
 
                 <!-- Icon -->
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
@@ -577,16 +477,20 @@
                         d="M3.4 5.467a2 2 0 0 0-.4 1.2V20a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6.667a2 2 0 0 0-.4-1.2l-2-2.667A2 2 0 0 0 17 2H7a2 2 0 0 0-1.6.8z" />
                 </svg>
 
+                <!-- Label -->
                 <span
                     class="<?php echo e(request()->routeIs('merchant.marketplace.*')
                         ? 'text-gray-800 dark:text-gray-200'
-                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?> ml-2 flex-1 text-left">
+                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>
+
+                ml-2 flex-1 text-left transition-all duration-200 origin-left"
+                    :class="isSidebarCollapsed ? 'opacity-0 w-0 overflow-hidden' : 'opacity-100 w-auto'">
                     Marketplace
                 </span>
 
                 <!-- Rotating Arrow -->
-                <svg class="ml-auto h-4 w-4 transform-gpu transition-transform duration-300 ease-in-out"
-                    :class="openMarket ? 'rotate-180' : 'rotate-0'" fill="currentColor" viewBox="0 0 20 20">
+                <svg class="ml-auto h-4 w-4 transform transition-transform duration-300 ease-in-out"
+                    :class="open ? 'rotate-180' : 'rotate-0'" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd"
                         d="M5.293 7.293a1 1 0 0 1 1.414 0L10 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414l-4 4a1 1 0 0 1-1.414 0l-4-4a1 1 0 0 1 0-1.414z"
                         clip-rule="evenodd"></path>
@@ -594,30 +498,31 @@
             </button>
 
             <!-- Submenu -->
-            <ul x-ref="panel" :style="`height: ${height}px`" @transitionend="if (openMarket) height = 'auto'"
+            <ul x-ref="panel" :style="`height: ${height}px`" @transitionend="if (open) height = 'auto'"
                 class="mt-2 space-y-2 overflow-hidden px-4 transition-all duration-300 ease-in-out">
-
                 <li>
                     <a href="<?php echo e(route('merchant.marketplace.request')); ?>"
                         class="<?php echo e(request()->routeIs('merchant.marketplace.request')
                             ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
-                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?> block rounded-md px-2 py-1 text-sm font-medium">
+                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>
+
+                    block rounded-md px-2 py-1 text-sm font-medium">
                         Request Cards
                     </a>
                 </li>
-
                 <li>
                     <a href="<?php echo e(route('merchant.marketplace.view')); ?>"
                         class="<?php echo e(request()->routeIs('merchant.marketplace.view')
                             ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
-                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?> block rounded-md px-2 py-1 text-sm font-medium">
+                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>
+
+                    block rounded-md px-2 py-1 text-sm font-medium">
                         View Requests
                     </a>
                 </li>
             </ul>
         </li>
     <?php endif; ?>
-
 
 </ul>
 <?php /**PATH C:\xampp\htdocs\Zeeyame\resources\views/layouts/sidebar/links.blade.php ENDPATH**/ ?>
