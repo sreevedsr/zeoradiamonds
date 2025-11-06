@@ -1,10 +1,6 @@
 <x-app-layout>
     @slot('title', 'Edit Diamond Certificate')
 
-    <h2 class="mb-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
-        Edit Diamond Certificate {{ $card->certificate_id }}
-    </h2>
-
     <div class="space-y-6">
         <div class="p-6 sm:p-8 bg-white dark:bg-gray-800 shadow-md rounded-lg">
             <div class="mx-auto text-gray-900 dark:text-gray-100">

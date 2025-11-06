@@ -1,10 +1,6 @@
 <x-app-layout>
     @slot('title', 'Assign Diamond Certificates')
 
-    <h2 class="mb-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
-        Assign Diamond Certificates
-    </h2>
-
         <div class="mx-auto text-gray-900 dark:text-gray-100 bg-white p-6 shadow dark:bg-gray-800 sm:rounded-lg sm:p-8">
 
             <!-- Success / Error Messages -->

@@ -1,7 +1,6 @@
 <x-app-layout>
     @slot('title', 'All Staff')
 
-    <h2 class="mb-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">Staff List</h2>
 
     <x-table :headers="['Code', 'Name', 'Phone No.', 'Address']" :from="$staff->firstItem()" :to="$staff->lastItem()" :total="$staff->total()" :pages="$staff->getUrlRange(1, $staff->lastPage())" :current="$staff->currentPage()"
         :route="route('admin.staff.index')" :filters="[]" searchPlaceholder="Search staff...">

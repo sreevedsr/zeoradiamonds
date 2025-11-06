@@ -1,10 +1,6 @@
 <x-app-layout>
     @slot('title', 'Customers')
 
-    <h2 class="mb-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
-        View Customers
-    </h2>
-
     <div class="p-6 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
         <div class="max-w-7xl mx-auto text-gray-900 dark:text-gray-100">
 

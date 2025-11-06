@@ -1,10 +1,6 @@
 <x-app-layout>
     @slot('title', 'Merchant Marketplace')
 
-    <h2 class="mb-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
-        Marketplace - Diamond Stock
-    </h2>
-
     <!-- Grid of cards -->
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6 " style="
     grid-template-columns: repeat(3, minmax(0, 1fr));

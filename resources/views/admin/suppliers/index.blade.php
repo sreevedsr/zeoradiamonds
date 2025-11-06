@@ -1,9 +1,7 @@
 <x-app-layout>
     @slot('title', 'Suppliers')
 
-    <h2 class="mb-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
-        View Suppliers
-    </h2>
+
 
     <div class="bg-white p-4 shadow dark:bg-gray-800 sm:rounded-lg sm:px-8">
         <div class="mx-auto  text-gray-900 dark:text-gray-100">

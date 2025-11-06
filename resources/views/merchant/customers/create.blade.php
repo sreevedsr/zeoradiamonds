@@ -1,10 +1,6 @@
 <x-app-layout>
     @slot('title', 'Add Customer')
 
-    <h2 class="mb-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
-        Add Customer
-    </h2>
-
     <div class=" mx-auto">
         <div class="p-6 sm:p-8 bg-white dark:bg-gray-800 shadow-md rounded-lg">
             @if (session('success'))

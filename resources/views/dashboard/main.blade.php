@@ -1,10 +1,6 @@
 <x-app-layout>
     @slot('title', 'Dashboard')
 
-    <h2 class="mb-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
-        Dashboard
-    </h2>
-
     @php
         // helpers to format INR
         function money_inr($n)

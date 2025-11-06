@@ -10,11 +10,7 @@
 <?php $component->withAttributes([]); ?>
     <?php $__env->slot('title', 'Merchants'); ?>
 
-    <h2 class="mb-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
-        View Merchants
-    </h2>
-
-    <div class="bg-white p-6 shadow dark:bg-gray-800 sm:rounded-lg sm:p-8">
+    <div class="bg-white px-6 py-2 shadow dark:bg-gray-800 rounded-lg ">
         <div class="mx-auto  text-gray-900 dark:text-gray-100">
 
             <!-- Success Message -->

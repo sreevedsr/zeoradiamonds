@@ -1,10 +1,6 @@
 <x-app-layout>
     @slot('title', 'Staff Registration')
 
-    <h2 class="mb-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
-        Staff Registration
-    </h2>
-
     <div class="rounded-lg bg-white p-6 shadow-md dark:bg-gray-800 sm:p-8">
         <div class="mx-auto text-gray-900 dark:text-gray-100">
 

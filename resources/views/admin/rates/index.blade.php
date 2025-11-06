@@ -1,9 +1,6 @@
 <x-app-layout>
     @slot('title', 'Manage Rates')
 
-    <h2 class="mb-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
-        Gold & Diamond Rates
-    </h2>
 
     @if (session('success'))
         <div class="mb-4 text-green-600 dark:text-green-400">{{ session('success') }}</div>

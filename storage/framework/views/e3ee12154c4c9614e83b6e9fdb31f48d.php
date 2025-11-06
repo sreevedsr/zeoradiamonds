@@ -10,10 +10,6 @@
 <?php $component->withAttributes([]); ?>
     <?php $__env->slot('title', 'Add Merchant'); ?>
 
-    <h2 class="mb-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
-        Add Merchant
-    </h2>
-
     <div class="mx-auto">
         <div class="p-6 sm:p-8 bg-white dark:bg-gray-800 shadow-md rounded-lg">
             <?php if(session('success')): ?>

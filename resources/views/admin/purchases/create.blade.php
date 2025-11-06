@@ -2,10 +2,6 @@
 <x-app-layout>
     @slot('title', 'Upload Product Purchase Details')
 
-    <h2 class="mb-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
-        Upload Product Purchase Details
-    </h2>
-
     {{-- Flash messages --}}
     @if (session('success'))
         <div class="mb-4 rounded-md border border-green-300 bg-green-100 p-3 text-green-700">

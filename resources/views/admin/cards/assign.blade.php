@@ -1,10 +1,6 @@
 <x-app-layout>
     @slot('title', 'Diamond Certificates')
 
-    <h2 class="mb-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
-        Manage Diamond Certificates
-    </h2>
-
     <!-- Assign Certificate Section -->
     <div class="mx-auto mb-8 rounded-lg bg-white p-6 shadow dark:bg-gray-800">
         {{-- <h3 class="mb-6 text-xl font-semibold text-gray-700 dark:text-gray-200">
