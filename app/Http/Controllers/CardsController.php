@@ -40,7 +40,7 @@ class CardsController extends Controller
 
     public function createCard()
     {
-        return view('admin.cards.create'); // Blade
+        return view('admin.purchases.create');
     }
 
     public function store(Request $request)

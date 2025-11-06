@@ -26,7 +26,7 @@
     <script src="{{ asset('assets/js/charts-pie.js') }}" defer></script>
 </head>
 <body
-    class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 transition-colors duration-300 w-screen overflow-x-hidden">
+    class="bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 transition-colors duration-300 w-screen overflow-x-hidden">
 
     <div class="flex min-h-screen w-full">
 

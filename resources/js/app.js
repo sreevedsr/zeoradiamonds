@@ -5,7 +5,12 @@ import merchantForm from './components/merchantForm.js';
 import pageTransition from './components/pageTransition.js';
 import purchaseForm from './components/purchaseForm.js';
 
+import { enableSequentialInput, focusFirstInput } from './utils/formNavigation.js';
+
 window.Alpine = Alpine;
+
+window.enableSequentialInput = enableSequentialInput;
+window.focusFirstInput = focusFirstInput;
 
 Alpine.data('merchantForm', merchantForm);
 Alpine.data('pageTransition', pageTransition);
