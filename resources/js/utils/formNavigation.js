@@ -1,12 +1,13 @@
-// resources/js/utils/formNavigation.js
-
 /**
- * Enable Enter-to-Next keyboard navigation for all .input-field elements.
- * @param {HTMLElement} container - Optional container to limit scope.
+ * Enable Enter-to-Next keyboard navigation for .input-field elements.
+ * Optionally specify a next target (e.g., an "Add Item" button) to focus after the last input.
+ *
+ * @param {HTMLElement} container - Scope (defaults to document).
+ * @param {string|null} nextTargetSelector - Selector for the element to focus after the last field.
  */
-export function enableSequentialInput(container = document) {
+export function enableSequentialInput(container = document, nextTargetSelector = null) {
     const inputs = Array.from(container.querySelectorAll(".input-field")).filter(
-        (el) => !el.readOnly && !el.disabled,
+        (el) => !el.readOnly && !el.disabled
     );
 
     inputs.forEach((input, index) => {
@@ -14,14 +15,14 @@ export function enableSequentialInput(container = document) {
             if (e.key === "Enter") {
                 e.preventDefault();
 
+                // Handle dropdown fields
                 const isDropdown = input.dataset?.type === "dropdown";
                 if (isDropdown) {
-                    // Toggle dropdowns instead of skipping them
                     input.click();
                     return;
                 }
 
-                // Move to next enabled input
+                // Find next visible, enabled input
                 let next = inputs[index + 1];
                 while (next && (next.offsetParent === null || next.readOnly || next.disabled)) {
                     next = inputs[inputs.indexOf(next) + 1];
@@ -29,16 +30,27 @@ export function enableSequentialInput(container = document) {
 
                 if (next) {
                     next.focus();
+                } else if (nextTargetSelector) {
+                    // 🟣 Focus the next target instead of submitting
+                    const nextTarget =
+                        container.querySelector(nextTargetSelector) ||
+                        document.querySelector(nextTargetSelector);
+
+                    if (nextTarget) {
+                        nextTarget.focus();
+                        // Uncomment to auto-open modal:
+                        // nextTarget.click();
+                    }
                 } else {
-                    // 🟣 No next input → trigger form submit
+                    // 🟣 Default: submit form (for other pages)
                     const form = input.closest("form");
                     if (form) {
                         const submitBtn = form.querySelector("#submitBtn");
                         if (submitBtn) {
                             submitBtn.focus();
-                            submitBtn.click(); // triggers native form submission
+                            submitBtn.click();
                         } else {
-                            form.requestSubmit(); // modern API (preserves CSRF + validation)
+                            form.requestSubmit?.();
                         }
                     }
                 }
@@ -48,12 +60,12 @@ export function enableSequentialInput(container = document) {
 }
 
 /**
- * Focus the first visible, enabled input when form loads.
- * @param {HTMLElement} container - Optional container to limit scope.
+ * Focus the first visible, enabled input when the form loads.
+ * @param {HTMLElement} container - Optional container scope.
  */
 export function focusFirstInput(container = document) {
     const firstInput = Array.from(container.querySelectorAll(".input-field")).find(
-        (el) => el.offsetParent !== null && !el.readOnly && !el.disabled,
+        (el) => el.offsetParent !== null && !el.readOnly && !el.disabled
     );
     if (firstInput) firstInput.focus();
 }

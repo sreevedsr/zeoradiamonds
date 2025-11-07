@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Card;
+use App\Models\Staff;
+use App\Models\Invoice;
+use App\Models\Supplier;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\User;
@@ -40,52 +43,76 @@ class CardsController extends Controller
 
     public function createCard()
     {
-        return view('admin.purchases.create');
+        $suppliers = Supplier::orderBy('name')->get();
+        $staff = Staff::orderBy('name')->get();
+
+        $lastInvoice = Invoice::latest('id')->first();
+        $nextInvoiceNo = 'INV-' . str_pad(($lastInvoice?->id ?? 0) + 1, 5, '0', STR_PAD_LEFT);
+
+        return view('admin.purchases.create', compact('suppliers', 'staff', 'nextInvoiceNo'));
     }
 
-    public function store(Request $request)
+    public function storeCard(Request $request)
     {
-        // ✅ Ensure only admins can add cards
+        // ✅ Only admins
         if (!Auth::check() || Auth::user()->role !== 'admin') {
             abort(403, 'Unauthorized access');
         }
 
-        // ✅ Validate incoming data
-        $validatedData = $request->validate([
-            'certificate_id' => 'required|string|max:100|unique:cards,certificate_id',
-            'diamond_purchase_location' => 'required|string|max:255',
-            'category' => 'required|string|max:50',
-            'diamond_shape' => 'required|string|max:100',
-            'carat_weight' => 'required|numeric|min:0',
-            'clarity' => 'required|string|max:50',
-            'color' => 'required|string|size:1',
-            'cut' => 'required|string|max:50',
-            'valuation' => 'required|numeric|min:0', // ✅ New validation rule
-            'diamond_image' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:10240', // 10MB max
+        // ✅ Validate fields
+        $validated = $request->validate([
+            'invoice_no' => 'required|string|max:100|unique:invoices,invoice_no',
+            'invoice_date' => 'required|date',
+            'supplier_id' => 'required|exists:suppliers,id', // ✅ validate by ID
+            'staff_id' => 'required|exists:staff,id',         // ✅ validate by ID
+            'items_json' => 'required|string',                // JSON array
         ]);
 
-        // ✅ Handle image upload (if provided)
-        $imagePath = null;
-        if ($request->hasFile('diamond_image')) {
-            $imagePath = $request->file('diamond_image')->store('diamond_certificates', 'public');
+        // ✅ Fetch related supplier & staff details
+        $supplier = Supplier::find($validated['supplier_id']);
+        $staff = Staff::find($validated['staff_id']);
+
+        // ✅ Create invoice with related info
+        $invoice = Invoice::create([
+            'invoice_no' => $validated['invoice_no'],
+            'invoice_date' => $validated['invoice_date'],
+            'supplier_id' => $supplier->id,
+            'staff_id' => $staff->id,
+        ]);
+
+        // ✅ Decode JSON items
+        $items = json_decode($validated['items_json'], true);
+        if (!is_array($items) || empty($items)) {
+            return back()->withErrors(['items_json' => 'No valid items found.']);
         }
 
-        // ✅ Save card in the database
-        Card::create([
-            'certificate_id' => $validatedData['certificate_id'],
-            'diamond_purchase_location' => $validatedData['diamond_purchase_location'],
-            'category' => $validatedData['category'],
-            'diamond_shape' => $validatedData['diamond_shape'],
-            'carat_weight' => $validatedData['carat_weight'],
-            'clarity' => $validatedData['clarity'],
-            'color' => $validatedData['color'],
-            'cut' => $validatedData['cut'],
-            'valuation' => $validatedData['valuation'], // ✅ Save valuation
-            'diamond_image' => $imagePath,
-        ]);
+        // ✅ Store each item
+        foreach ($items as $item) {
+            $imagePath = null;
+            if (isset($item['diamond_image']) && $item['diamond_image'] instanceof \Illuminate\Http\UploadedFile) {
+                $imagePath = $item['diamond_image']->store('diamond_certificates', 'public');
+            }
 
-        // ✅ Redirect back with success message
-        return redirect()->back()->with('success', 'Diamond certificate added successfully!');
+            Card::create([
+                'invoice_id' => $invoice->id,
+                'certificate_id' => $item['certificate_id'] ?? uniqid('CERT-'),
+                'diamond_purchase_location' => $item['diamond_purchase_location'] ?? 'N/A',
+                'category' => $item['category'] ?? 'General',
+                'diamond_shape' => $item['diamond_shape'] ?? 'Unknown',
+                'carat_weight' => $item['carat_weight'] ?? 0,
+                'clarity' => $item['clarity'] ?? 'N/A',
+                'color' => $item['color'] ?? 'N/A',
+                'cut' => $item['cut'] ?? 'N/A',
+                'valuation' => $item['valuation'] ?? 0,
+                'diamond_image' => $imagePath,
+            ]);
+        }
+
+        return redirect()
+            ->back()
+            ->with('success', "Invoice #{$invoice->invoice_no} and items added successfully!")
+            ->with('clear_items', true);
+
     }
 
 

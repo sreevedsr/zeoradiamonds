@@ -21,7 +21,7 @@
                 $nextTick(() => focusFirstInput());">
                 <?php echo csrf_field(); ?>
 
-                <div class="grid grid-cols-1 gap-6 md:grid-cols-2" x-data="merchantForm(<?php echo e(Js::from($stateCodes)); ?>, '<?php echo e(old('state_code')); ?>', '<?php echo e(old('state')); ?>')">
+                <div class="grid grid-cols-1 gap-6 md:grid-cols-2" x-data="stateCode(<?php echo e(Js::from($stateCodes)); ?>, '<?php echo e(old('state_code')); ?>', '<?php echo e(old('state')); ?>')">
 
                     <!-- Supplier Code -->
                     <div>

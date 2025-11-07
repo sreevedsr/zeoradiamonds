@@ -1,4 +1,4 @@
-export default function merchantForm(
+export default function stateCode(
     stateCodes = [],
     oldCode = "",
     oldState = "",

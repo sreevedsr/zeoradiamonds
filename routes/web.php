@@ -8,6 +8,7 @@ use App\Http\Controllers\CardsController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\DropdownController;
 use App\Http\Controllers\GoldRateController;
 use App\Http\Controllers\MerchantController;
 use App\Http\Controllers\SupplierController;
@@ -47,12 +48,12 @@ Route::middleware('auth')->group(function () {
 
         Route::middleware(['auth', 'can:edit-cards'])->prefix('products')->name('products.')->group(function () {
             Route::get('register', [ProductController::class, 'create'])->name('register');
-            Route::post('register', [ProductController::class, 'store'])->name('store');
+            Route::post('register', [ProductController::class, 'store'])->name('register');
 
             // Cards management
             Route::get('/', [CardsController::class, 'index'])->name('index');
             Route::get('/create', [CardsController::class, 'createCard'])->name('create');
-            Route::post('/', [CardsController::class, 'store'])->name('store');
+            Route::post('/store', [CardsController::class, 'storeCard'])->name('store');
             Route::get('/assign', [CardsController::class, 'showAssignPage'])->name('assign');
             Route::post('/assign', [CardsController::class, 'assignCard'])->name('assign');
             Route::get('/requests', [DashboardController::class, 'customerRequests'])->name('requests');
@@ -138,6 +139,10 @@ Route::middleware('auth')->group(function () {
         Route::delete('/unassign-card/{id}', [AdminController::class, 'unassignCard'])->name('unassignCard');
 
     });
+
+    // routes/web.php
+    Route::get('/api/dropdown/{type}', [DropdownController::class, 'fetch'])->name('dropdown.fetch');
+
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

@@ -12,7 +12,7 @@
                 $nextTick(() => focusFirstInput());">
                 @csrf
 
-                <div class="grid grid-cols-1 gap-6 md:grid-cols-2" x-data="merchantForm({{ Js::from($stateCodes) }}, '{{ old('state_code') }}', '{{ old('state') }}')">
+                <div class="grid grid-cols-1 gap-6 md:grid-cols-2" x-data="stateCode({{ Js::from($stateCodes) }}, '{{ old('state_code') }}', '{{ old('state') }}')">
 
                     <!-- Supplier Code -->
                     <div>

@@ -27,6 +27,10 @@ class Card extends Model
         return $this->belongsTo(User::class, 'merchant_id')
             ->where('role', 'merchant');
     }
+    public function invoice()
+    {
+        return $this->belongsTo(Invoice::class);
+    }
 
 
 }
