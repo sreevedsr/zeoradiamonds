@@ -3,16 +3,6 @@
 
         <div class="mx-auto text-gray-900 dark:text-gray-100 bg-white p-6 shadow dark:bg-gray-800 sm:rounded-lg sm:p-8">
 
-            <!-- Success / Error Messages -->
-            @if (session('success'))
-                <div class="rounded bg-green-200 p-3 text-green-800">
-                    {{ session('success') }}
-                </div>
-            @elseif (session('error'))
-                <div class="rounded bg-red-200 p-3 text-red-800">
-                    {{ session('error') }}
-                </div>
-            @endif
 
             <!-- Assignment Form -->
             <div>

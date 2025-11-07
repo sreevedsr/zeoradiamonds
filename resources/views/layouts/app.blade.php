@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html :class="{ 'dark': dark }" x-data="data()" lang="en">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -23,6 +24,7 @@
     <script src="{{ asset('assets/js/charts-lines.js') }}" defer></script>
     <script src="{{ asset('assets/js/charts-pie.js') }}" defer></script>
 </head>
+
 <body
     class="bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 transition-colors duration-300 w-screen overflow-x-hidden">
 
@@ -32,10 +34,8 @@
         @include('layouts.sidebar.main')
 
         <!-- Main Content -->
-        <div
-            class="flex flex-col flex-1 min-w-0 transition-all duration-300 ease-in-out"
-            :class="isSidebarCollapsed ? 'md:ml-20' : 'md:ml-64'"
-        >
+        <div class="flex flex-col flex-1 min-w-0 transition-all duration-300 ease-in-out"
+            :class="isSidebarCollapsed ? 'md:ml-20' : 'md:ml-64'">
             @include('layouts.navigation')
 
             <main class="flex-1 overflow-y-auto px-6 py-6 transition-colors duration-300">
@@ -43,5 +43,15 @@
             </main>
         </div>
     </div>
+    <!-- Global Toast Messages -->
+    @if (session('success'))
+        <x-alert-toast type="success" :message="session('success')" />
+    @endif
+
+    @if ($errors->any())
+        <x-alert-toast type="error" :message="$errors->first()" />
+    @endif
+    
 </body>
+
 </html>

@@ -4,26 +4,12 @@
     <div class="p-6 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
         <div class="max-w-7xl mx-auto text-gray-900 dark:text-gray-100">
 
-            <!-- Success Message -->
-            @if (session('success'))
-                <div class="mb-4 p-3 bg-green-200 text-green-800 rounded">
-                    {{ session('success') }}
-                </div>
-            @endif
-
             <!-- Customers Table -->
-            <x-table
-                :headers="['#', 'Customer Name', 'Email', 'Phone', 'City', 'State', 'Created At', 'Actions']"
-                :from="$customers->firstItem()"
-                :to="$customers->lastItem()"
-                :total="$customers->total()"
-                :pages="$customers->getUrlRange(1, $customers->lastPage())"
-                :current="$customers->currentPage()"
-                :route="route('merchant.customers.index')"
-                searchPlaceholder="Search customers..."
-            >
+            <x-table :headers="['#', 'Customer Name', 'Email', 'Phone', 'City', 'State', 'Created At', 'Actions']" :from="$customers->firstItem()" :to="$customers->lastItem()" :total="$customers->total()" :pages="$customers->getUrlRange(1, $customers->lastPage())"
+                :current="$customers->currentPage()" :route="route('merchant.customers.index')" searchPlaceholder="Search customers...">
                 @foreach ($customers as $index => $customer)
-                    <tr class="text-gray-700 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                    <tr
+                        class="text-gray-700 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                         <td class="px-4 py-3 text-sm">{{ $customers->firstItem() + $index }}</td>
 
                         <td class="px-4 py-3 text-sm">
@@ -39,9 +25,7 @@
                         <td class="px-4 py-3 text-sm">
                             <div class="flex items-center space-x-3">
                                 <!-- Edit Button -->
-                                <x-secondary-button
-                                    type="button"
-                                    x-data
+                                <x-secondary-button type="button" x-data
                                     x-on:click.prevent="
                                         $dispatch('open-modal', 'edit-customer-modal');
                                         setTimeout(() => {

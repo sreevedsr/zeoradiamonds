@@ -12,23 +12,7 @@
 
     <div class="mx-auto">
         <div class="p-6 sm:p-8 bg-white dark:bg-gray-800 shadow-md rounded-lg">
-            <?php if(session('success')): ?>
-                <div class="mb-4 text-green-600 font-medium bg-green-100 border border-green-300 rounded-md p-3">
-                    <?php echo e(session('success')); ?>
-
-                </div>
-            <?php endif; ?>
-
-            <?php if($errors->any()): ?>
-                <div class="mb-4 text-red-500 font-semibold">
-                    <ul class="list-disc list-inside">
-                        <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                            <li><?php echo e($error); ?></li>
-                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                    </ul>
-                </div>
-            <?php endif; ?>
-
+            
             <form action="<?php echo e(route('admin.merchants.store')); ?>" method="POST" x-data="purchaseForm()"
                 x-init="init();
                 enableSequentialInput();

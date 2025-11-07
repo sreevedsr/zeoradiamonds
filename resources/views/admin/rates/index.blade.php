@@ -1,11 +1,6 @@
 <x-app-layout>
     @slot('title', 'Manage Rates')
 
-
-    @if (session('success'))
-        <div class="mb-4 text-green-600 dark:text-green-400">{{ session('success') }}</div>
-    @endif
-
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
         <!-- Gold Rate Section -->
         <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">

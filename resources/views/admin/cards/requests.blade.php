@@ -5,13 +5,6 @@
     <div class="p-6 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
         <div class="max-w-7xl mx-auto text-gray-900 dark:text-gray-100">
 
-            <!-- Success Message -->
-            @if (session('success'))
-                <div class="mb-4 p-3 bg-green-200 text-green-800 rounded">
-                    {{ session('success') }}
-                </div>
-            @endif
-
             <!-- Merchants Table -->
             <div class="w-full overflow-x-auto">
                 <table class="w-full whitespace-no-wrap">

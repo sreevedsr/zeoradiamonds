@@ -1,6 +1,5 @@
 <x-guest-layout title="Login">
-    <div x-data="pageTransition()"
-        class="relative flex h-screen items-center justify-center overflow-hidden bg-gray-900">
+    <div x-data="pageTransition()" class="relative flex h-screen items-center justify-center overflow-hidden bg-gray-900">
         <!-- Background (hidden until loaded) -->
         <template x-if="loaded">
             <img :src="document.documentElement.classList.contains('dark') ?
@@ -52,9 +51,14 @@
                         <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
                             Email
                         </label>
-                        <input name="email" type="email" required value="{{ old('email') }}"
+                        <input name="email" type="email" required x-ref="emailInput" x-init="// Wait until component and transition are done
+                        $watch('show', value => {
+                            if (value) setTimeout(() => $refs.emailInput.focus(), 700);
+                        });"
+                            value='{{ old('email') }}'
                             class="w-full rounded-lg border border-gray-300/70 bg-white/80 px-4 py-2 text-sm text-gray-900 placeholder-gray-400 shadow-sm focus:border-transparent focus:ring-2 focus:ring-purple-500 dark:border-gray-700 dark:bg-gray-800/80 dark:text-gray-100 dark:placeholder-gray-500"
-                            placeholder="you@example.com" />
+                            placeholder='you@example.com' />
+
                         @error('email')
                             <span class="text-xs text-red-600 dark:text-red-400">{{ $message }}</span>
                         @enderror
@@ -91,6 +95,9 @@
                                 <circle cx="12" cy="12" r="3" />
                             </svg>
                         </button>
+                        @error('password')
+                            <span class="text-xs text-red-600 dark:text-red-400 mt-1 block">{{ $message }}</span>
+                        @enderror
                     </div>
 
                     <!-- Submit Button -->

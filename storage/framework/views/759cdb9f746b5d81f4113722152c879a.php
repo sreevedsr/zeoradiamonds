@@ -10,31 +10,9 @@
 <?php $component->withAttributes([]); ?>
     <?php $__env->slot('title', 'Supplier Registration'); ?>
 
-    <h2 class="mb-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
-        Supplier Registration
-    </h2>
-
     <div class="rounded-lg bg-white p-6 shadow-md dark:bg-gray-800 sm:p-8">
         <div class="mx-auto text-gray-900 dark:text-gray-100">
 
-            <!-- Success Message -->
-            <?php if(session('success')): ?>
-                <div class="mb-4 rounded-md border border-green-300 bg-green-100 p-3 text-green-700">
-                    <?php echo e(session('success')); ?>
-
-                </div>
-            <?php endif; ?>
-
-            <!-- Error Messages -->
-            <?php if($errors->any()): ?>
-                <div class="mb-4 rounded-md border border-red-300 bg-red-100 p-3 text-red-700">
-                    <ul class="list-inside list-disc">
-                        <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                            <li><?php echo e($error); ?></li>
-                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                    </ul>
-                </div>
-            <?php endif; ?>
 
             <!-- Supplier Registration Form -->
             <form method="POST" action="<?php echo e(route('admin.suppliers.store')); ?>" x-data="purchaseForm()"
@@ -138,7 +116,7 @@
 <?php endif; ?>
                     </div>
 
-                    
+
 
                     <!-- State Code Dropdown (unchanged) -->
                     <div class="relative" x-cloak @click.outside="openDropdown = false">

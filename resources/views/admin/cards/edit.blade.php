@@ -5,24 +5,6 @@
         <div class="p-6 sm:p-8 bg-white dark:bg-gray-800 shadow-md rounded-lg">
             <div class="mx-auto text-gray-900 dark:text-gray-100">
 
-                <!-- Success Message -->
-                @if (session('success'))
-                    <div class="mb-4 p-3 bg-green-100 text-green-700 border border-green-300 rounded-md">
-                        {{ session('success') }}
-                    </div>
-                @endif
-
-                <!-- Error Messages -->
-                @if ($errors->any())
-                    <div class="mb-4 p-3 bg-red-100 text-red-700 border border-red-300 rounded-md">
-                        <ul class="list-disc list-inside">
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
-
                 <!-- Form -->
                 <form method="POST" action="{{ route('admin.products.update', $card->id) }}" enctype="multipart/form-data"
                     class="space-y-6">

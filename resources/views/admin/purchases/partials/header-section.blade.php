@@ -18,7 +18,7 @@
                 @foreach ($suppliers ?? [] as $s)
                     <option value="{{ $s->id }}" @selected(old('supplier') == $s->id)> {{ $s->name }} /
                         {{ $s->code ?? $s->id }} </option>
-                    @endforeach
+                @endforeach
             </select> </div>
         <div> <label class="block text-sm font-medium text-gray-700 dark:text-gray-200"> Salesman <span
                     class="text-red-500">*</span> </label> <select name="salesman" x-model="salesman"

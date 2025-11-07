@@ -6,13 +6,6 @@
     <div class="bg-white p-4 shadow dark:bg-gray-800 sm:rounded-lg sm:px-8">
         <div class="mx-auto  text-gray-900 dark:text-gray-100">
 
-            <!-- Success Message -->
-            @if (session('success'))
-                <div class="mb-4 rounded bg-green-200 p-3 text-green-800">
-                    {{ session('success') }}
-                </div>
-            @endif
-
             <!-- Suppliers Table -->
             <x-table
                 :headers="['#', 'Supplier Code', 'Name', 'Phone', 'State', 'GST No', 'Created At', 'Actions']"

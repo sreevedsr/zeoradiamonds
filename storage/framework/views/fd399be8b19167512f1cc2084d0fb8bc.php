@@ -18,7 +18,7 @@
                 <?php $__currentLoopData = $suppliers ?? []; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $s): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                     <option value="<?php echo e($s->id); ?>" <?php if(old('supplier') == $s->id): echo 'selected'; endif; ?>> <?php echo e($s->name); ?> /
                         <?php echo e($s->code ?? $s->id); ?> </option>
-                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
             </select> </div>
         <div> <label class="block text-sm font-medium text-gray-700 dark:text-gray-200"> Salesman <span
                     class="text-red-500">*</span> </label> <select name="salesman" x-model="salesman"

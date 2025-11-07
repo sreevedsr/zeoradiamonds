@@ -13,15 +13,6 @@
     <!-- Certificate Table Section -->
     <div class="bg-white px-6 py-2 shadow dark:bg-gray-800 rounded-lg ">
         <div class="mx-auto max-w-7xl text-gray-900 dark:text-gray-100">
-
-            <!-- Success Message -->
-            <?php if(session('success')): ?>
-                <div class="mb-4 rounded bg-green-200 p-3 text-green-800">
-                    <?php echo e(session('success')); ?>
-
-                </div>
-            <?php endif; ?>
-
             <!-- Certificates Table -->
             <?php if (isset($component)) { $__componentOriginal7d9f6e0b9001f5841f72577781b2d17f = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal7d9f6e0b9001f5841f72577781b2d17f = $attributes; } ?>

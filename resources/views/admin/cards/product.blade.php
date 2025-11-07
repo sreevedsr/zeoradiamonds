@@ -4,26 +4,10 @@
     <div class="rounded-lg bg-white p-6 shadow-md dark:bg-gray-800 sm:p-8">
         <div class="mx-auto text-gray-900 dark:text-gray-100">
 
-            <!-- Success Message -->
-            @if (session('success'))
-                <div class="mb-4 rounded-md border border-green-300 bg-green-100 p-3 text-green-700">
-                    {{ session('success') }}
-                </div>
-            @endif
-
-            <!-- Error Messages -->
-            @if ($errors->any())
-                <div class="mb-4 rounded-md border border-red-300 bg-red-100 p-3 text-red-700">
-                    <ul class="list-inside list-disc">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
-
             <!-- Product Registration Form -->
-            <form method="POST" action="{{ route('admin.products.register') }}">
+            <form method="POST" action="{{ route('admin.products.register') }}" x-init="init();
+            enableSequentialInput();
+            $nextTick(() => focusFirstInput());">
                 @csrf
 
                 <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
@@ -38,17 +22,12 @@
                             placeholder="Auto-generated">
                     </div>
 
-
                     <!-- HSN Code -->
                     <div>
                         <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-200">
                             HSN Code <span class="text-red-500">*</span>
                         </label>
-                        <input type="text" name="hsn_code"
-                            class="w-full rounded-md border border-gray-300 px-3 py-2
-                                   focus:outline-none focus:ring-2 focus:ring-purple-600
-                                   dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100"
-                            placeholder="Enter HSN code" required>
+                        <x-input.text name="hsn_code" placeholder="Enter HSN code" required />
                     </div>
 
                     <!-- Item Code -->
@@ -56,11 +35,7 @@
                         <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-200">
                             Item Code <span class="text-red-500">*</span>
                         </label>
-                        <input type="text" name="item_code"
-                            class="w-full rounded-md border border-gray-300 px-3 py-2
-                                   focus:outline-none focus:ring-2 focus:ring-purple-600
-                                   dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100"
-                            placeholder="Enter item code" required>
+                        <x-input.text name="item_code" placeholder="Enter item code" required />
                     </div>
 
                     <!-- Item Name -->
@@ -68,12 +43,9 @@
                         <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-200">
                             Item Name <span class="text-red-500">*</span>
                         </label>
-                        <input type="text" name="item_name"
-                            class="w-full rounded-md border border-gray-300 px-3 py-2
-                                   focus:outline-none focus:ring-2 focus:ring-purple-600
-                                   dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100"
-                            placeholder="Enter item name" required>
+                        <x-input.text name="item_name" placeholder="Enter item name" required />
                     </div>
+
                 </div>
 
                 <!-- Save Button -->

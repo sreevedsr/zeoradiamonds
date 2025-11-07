@@ -55,7 +55,7 @@ class AdminController extends Controller
             'merchant_code' => 'required|string|max:50|unique:users,merchant_code',
             'merchant_name' => 'required|string|max:255',
             'address' => 'required|string|max:500',
-            'email' => 'required|email',
+            'email' => 'required|email|unique:users,email',
             'phone' => 'required|string|max:20',
             'state_code' => 'required|string|max:10',
             'state' => 'required|string|max:100',

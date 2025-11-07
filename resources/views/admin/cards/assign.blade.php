@@ -6,18 +6,6 @@
         {{-- <h3 class="mb-6 text-xl font-semibold text-gray-700 dark:text-gray-200">
             Assign a Diamond Certificate
         </h3> --}}
-
-        <!-- Success Message -->
-        @if (session('success'))
-            <div class="mb-4 rounded-md border border-green-300 bg-green-100 p-3 text-green-700">
-                {{ session('success') }}
-            </div>
-        @endif
-        @if (session('info'))
-            <div class="mb-4 rounded-md border border-green-300 bg-green-100 p-3 text-green-700">
-                {{ session('info') }}
-            </div>
-        @endif
         <form method="POST" action="{{ route('admin.products.assign') }}" x-data="{
             merchantSearch: '',
             cardSearch: '',

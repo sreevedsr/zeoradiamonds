@@ -4,13 +4,6 @@
     <div class="bg-white px-6 py-2 shadow dark:bg-gray-800 rounded-lg ">
         <div class="mx-auto  text-gray-900 dark:text-gray-100">
 
-            <!-- Success Message -->
-            @if (session('success'))
-                <div class="mb-4 rounded bg-green-200 p-3 text-green-800">
-                    {{ session('success') }}
-                </div>
-            @endif
-
             <!-- Merchants Table -->
             <x-table :headers="[
                 '#',

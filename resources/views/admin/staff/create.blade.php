@@ -4,24 +4,6 @@
     <div class="rounded-lg bg-white p-6 shadow-md dark:bg-gray-800 sm:p-8">
         <div class="mx-auto text-gray-900 dark:text-gray-100">
 
-            <!-- Success Message -->
-            @if (session('success'))
-                <div class="mb-4 rounded-md border border-green-300 bg-green-100 p-3 text-green-700">
-                    {{ session('success') }}
-                </div>
-            @endif
-
-            <!-- Error Messages -->
-            @if ($errors->any())
-                <div class="mb-4 rounded-md border border-red-300 bg-red-100 p-3 text-red-700">
-                    <ul class="list-inside list-disc">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
-
             <!-- Staff Registration Form -->
             <form method="POST" action="{{ route('admin.staff.store') }}" x-init="init();
             enableSequentialInput();

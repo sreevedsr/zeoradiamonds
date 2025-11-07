@@ -3,21 +3,6 @@
 
     <div class="mx-auto">
         <div class="p-6 sm:p-8 bg-white dark:bg-gray-800 shadow-md rounded-lg">
-            @if (session('success'))
-                <div class="mb-4 text-green-600 font-medium bg-green-100 border border-green-300 rounded-md p-3">
-                    {{ session('success') }}
-                </div>
-            @endif
-
-            @if ($errors->any())
-                <div class="mb-4 text-red-500 font-semibold">
-                    <ul class="list-disc list-inside">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
 
             <form action="{{ route('admin.goldrates.storeDiamond') }}" method="POST">
                 @csrf

@@ -295,7 +295,7 @@
                             ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
                             : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }}
                 block rounded-md px-2 py-1 text-sm font-medium">
-                        Add Card
+                        Add Purchase Details
                     </a>
                 </li>
                 <li>

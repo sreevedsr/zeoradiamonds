@@ -4,16 +4,6 @@
     <div class="p-6 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
         <div class="max-w-5xl mx-auto text-gray-900 dark:text-gray-100 space-y-8">
 
-            <!-- Success / Error Messages -->
-            @if (session('success'))
-                <div class="p-3 bg-green-200 text-green-800 rounded">
-                    {{ session('success') }}
-                </div>
-            @elseif (session('error'))
-                <div class="p-3 bg-red-200 text-red-800 rounded">
-                    {{ session('error') }}
-                </div>
-            @endif
 
             <!-- Available Cards Table -->
             <div>

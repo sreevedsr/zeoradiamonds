@@ -8,8 +8,7 @@
 <?php $attributes = $attributes->except(\App\View\Components\GuestLayout::ignoredParameterNames()); ?>
 <?php endif; ?>
 <?php $component->withAttributes(['title' => 'Login']); ?>
-    <div x-data="pageTransition()"
-        class="relative flex h-screen items-center justify-center overflow-hidden bg-gray-900">
+    <div x-data="pageTransition()" class="relative flex h-screen items-center justify-center overflow-hidden bg-gray-900">
         <!-- Background (hidden until loaded) -->
         <template x-if="loaded">
             <img :src="document.documentElement.classList.contains('dark') ?
@@ -61,9 +60,14 @@
                         <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
                             Email
                         </label>
-                        <input name="email" type="email" required value="<?php echo e(old('email')); ?>"
+                        <input name="email" type="email" required x-ref="emailInput" x-init="// Wait until component and transition are done
+                        $watch('show', value => {
+                            if (value) setTimeout(() => $refs.emailInput.focus(), 700);
+                        });"
+                            value='<?php echo e(old('email')); ?>'
                             class="w-full rounded-lg border border-gray-300/70 bg-white/80 px-4 py-2 text-sm text-gray-900 placeholder-gray-400 shadow-sm focus:border-transparent focus:ring-2 focus:ring-purple-500 dark:border-gray-700 dark:bg-gray-800/80 dark:text-gray-100 dark:placeholder-gray-500"
-                            placeholder="you@example.com" />
+                            placeholder='you@example.com' />
+
                         <?php $__errorArgs = ['email'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
@@ -107,6 +111,16 @@ unset($__errorArgs, $__bag); ?>
                                 <circle cx="12" cy="12" r="3" />
                             </svg>
                         </button>
+                        <?php $__errorArgs = ['password'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                            <span class="text-xs text-red-600 dark:text-red-400 mt-1 block"><?php echo e($message); ?></span>
+                        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                     </div>
 
                     <!-- Submit Button -->

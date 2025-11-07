@@ -11,34 +11,11 @@
 <?php $component->withAttributes([]); ?>
     <?php $__env->slot('title', 'Upload Product Purchase Details'); ?>
 
-    <h2 class="mb-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
-        Upload Product Purchase Details
-    </h2>
-
-    
-    <?php if(session('success')): ?>
-        <div class="mb-4 rounded-md border border-green-300 bg-green-100 p-3 text-green-700">
-            <?php echo e(session('success')); ?>
-
-        </div>
-    <?php endif; ?>
-    <?php if($errors->any()): ?>
-        <div class="mb-4 rounded-md border border-red-300 bg-red-100 p-3 text-red-700">
-            <strong class="block mb-1">Please fix the following errors:</strong>
-            <ul class="list-inside list-disc">
-                <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                    <li><?php echo e($error); ?></li>
-                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-            </ul>
-        </div>
-    <?php endif; ?>
-
     <!-- Main Purchase Form -->
-    <form method="POST"
-        action="<?php echo e(route('admin.products.store')); ?>"
-        enctype="multipart/form-data"
-        x-data="purchaseForm()"
-        x-init="init(); enableSequentialInput(); $nextTick(() => focusFirstInput());">
+    <form method="POST" action="<?php echo e(route('admin.products.store')); ?>" enctype="multipart/form-data" x-data="purchaseForm()"
+        x-init="init();
+        enableSequentialInput();
+        $nextTick(() => focusFirstInput());">
 
         <?php echo csrf_field(); ?>
 
@@ -56,17 +33,16 @@
                 <div class="flex items-center justify-between mb-4 border-b border-gray-200 dark:border-gray-700 pb-3">
                     <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100">Product Items</h3>
 
-                    <button type="button"
-                        @click="$store.purchaseModal.open()"
+                    <button type="button" x-ref="addItemBtn" @click="$store.purchaseModal.open()"
                         class="flex items-center gap-2 rounded-md bg-purple-600 px-4 py-2 text-white text-sm
-                        hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
-                            viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 4v16m8-8H4" />
+           hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                         </svg>
                         Add Item
                     </button>
+
                 </div>
 
                 <!-- Items Table -->
@@ -74,14 +50,22 @@
                     <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                         <thead class="bg-gray-50 dark:bg-gray-700">
                             <tr>
-                                <th class="px-4 py-2 text-left text-sm font-medium text-gray-600 dark:text-gray-300">#</th>
-                                <th class="px-4 py-2 text-left text-sm font-medium text-gray-600 dark:text-gray-300">Item Code</th>
-                                <th class="px-4 py-2 text-left text-sm font-medium text-gray-600 dark:text-gray-300">Item Name</th>
-                                <th class="px-4 py-2 text-left text-sm font-medium text-gray-600 dark:text-gray-300">Gross Wt</th>
-                                <th class="px-4 py-2 text-left text-sm font-medium text-gray-600 dark:text-gray-300">Stone Wt</th>
-                                <th class="px-4 py-2 text-left text-sm font-medium text-gray-600 dark:text-gray-300">Net Wt</th>
-                                <th class="px-4 py-2 text-left text-sm font-medium text-gray-600 dark:text-gray-300">Amount</th>
-                                <th class="px-4 py-2 text-right text-sm font-medium text-gray-600 dark:text-gray-300">Actions</th>
+                                <th class="px-4 py-2 text-left text-sm font-medium text-gray-600 dark:text-gray-300">#
+                                </th>
+                                <th class="px-4 py-2 text-left text-sm font-medium text-gray-600 dark:text-gray-300">
+                                    Item Code</th>
+                                <th class="px-4 py-2 text-left text-sm font-medium text-gray-600 dark:text-gray-300">
+                                    Item Name</th>
+                                <th class="px-4 py-2 text-left text-sm font-medium text-gray-600 dark:text-gray-300">
+                                    Gross Wt</th>
+                                <th class="px-4 py-2 text-left text-sm font-medium text-gray-600 dark:text-gray-300">
+                                    Stone Wt</th>
+                                <th class="px-4 py-2 text-left text-sm font-medium text-gray-600 dark:text-gray-300">Net
+                                    Wt</th>
+                                <th class="px-4 py-2 text-left text-sm font-medium text-gray-600 dark:text-gray-300">
+                                    Amount</th>
+                                <th class="px-4 py-2 text-right text-sm font-medium text-gray-600 dark:text-gray-300">
+                                    Actions</th>
                             </tr>
                         </thead>
 
@@ -89,8 +73,8 @@
                             x-show="$store.purchaseModal.items.length">
                             <template x-for="(item, index) in $store.purchaseModal.items" :key="index">
                                 <tr>
-                                    <td class="px-4 py-2 text-sm text-gray-700 dark:text-gray-200"
-                                        x-text="index + 1"></td>
+                                    <td class="px-4 py-2 text-sm text-gray-700 dark:text-gray-200" x-text="index + 1">
+                                    </td>
                                     <td class="px-4 py-2 text-sm" x-text="item.item_code"></td>
                                     <td class="px-4 py-2 text-sm" x-text="item.item_name"></td>
                                     <td class="px-4 py-2 text-sm" x-text="item.gross_weight"></td>
@@ -98,8 +82,7 @@
                                     <td class="px-4 py-2 text-sm" x-text="item.net_weight"></td>
                                     <td class="px-4 py-2 text-sm" x-text="item.total_amount"></td>
                                     <td class="px-4 py-2 text-right">
-                                        <button type="button"
-                                            @click="$store.purchaseModal.items.splice(index, 1)"
+                                        <button type="button" @click="$store.purchaseModal.items.splice(index, 1)"
                                             class="text-red-500 hover:text-red-700 text-sm font-medium">
                                             Remove
                                         </button>
@@ -119,19 +102,24 @@
                     </table>
                 </div>
 
-                <input type="hidden" name="items_json"
-                    :value="JSON.stringify($store.purchaseModal.items)">
+                <input type="hidden" name="items_json" :value="JSON.stringify($store.purchaseModal.items)">
+            </div>
+
+            <!-- Submit Button -->
+            <div class="flex justify-end mt-6">
+                <button type="submit"
+                    class="rounded-md bg-green-600 px-6 py-2 text-white text-sm font-medium
+           hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500">
+                    Submit Purchase
+                </button>
             </div>
         </div>
     </form>
 
     <!-- Detached Modal -->
-    <div x-data
-        x-show="$store.purchaseModal.show"
-        x-transition
+    <div x-data x-show="$store.purchaseModal.show" x-transition
         class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 dark:bg-black/70"
-        @click.self="$store.purchaseModal.close()"
-        x-init="$watch('$store.purchaseModal.show', (open) => {
+        @click.self="$store.purchaseModal.close()" x-init="$watch('$store.purchaseModal.show', (open) => {
             if (open) {
                 $nextTick(() => {
                     enableSequentialInput();
