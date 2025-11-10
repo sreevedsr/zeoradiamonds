@@ -80,6 +80,16 @@ Route::middleware('auth')->group(function () {
             Route::post('/diamond', [RateController::class, 'storeDiamond'])->name('diamond.store');
 
         });
+        Route::get('/api/latest-gold-rate', function () {
+            $latestRate = \App\Models\GoldRate::latest()->value('rate');
+            return response()->json(['rate' => $latestRate]);
+        });
+        Route::get('/api/latest-diamond-rate', function () {
+            $latestRate = \App\Models\DiamondRate::latest()->value('rate');
+            return response()->json(['rate' => $latestRate ?? 0]);
+        });
+
+
         Route::resource('staff', StaffController::class);
 
 

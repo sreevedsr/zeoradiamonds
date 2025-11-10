@@ -1,13 +1,13 @@
 /**
  * Enable Enter-to-Next keyboard navigation for .input-field elements.
- * Optionally specify a next target (e.g., an "Add Item" button) to focus after the last input.
+ * Optionally specify a next target (e.g., an "Add Item" button) to focus before submitting.
  *
  * @param {HTMLElement} container - Scope (defaults to document).
- * @param {string|null} nextTargetSelector - Selector for the element to focus after the last field.
+ * @param {string|null} nextTargetSelector - Selector for the element to focus after the last input.
  */
 export function enableSequentialInput(container = document, nextTargetSelector = null) {
     const inputs = Array.from(container.querySelectorAll(".input-field")).filter(
-        (el) => !el.readOnly && !el.disabled
+        (el) => !el.readOnly && !el.disabled && el.offsetParent !== null
     );
 
     inputs.forEach((input, index) => {
@@ -30,28 +30,36 @@ export function enableSequentialInput(container = document, nextTargetSelector =
 
                 if (next) {
                     next.focus();
-                } else if (nextTargetSelector) {
-                    // 🟣 Focus the next target instead of submitting
-                    const nextTarget =
-                        container.querySelector(nextTargetSelector) ||
-                        document.querySelector(nextTargetSelector);
+                    return;
+                }
 
-                    if (nextTarget) {
-                        nextTarget.focus();
-                        // Uncomment to auto-open modal:
-                        // nextTarget.click();
-                    }
-                } else {
-                    // 🟣 Default: submit form (for other pages)
-                    const form = input.closest("form");
-                    if (form) {
-                        const submitBtn = form.querySelector("#submitBtn");
-                        if (submitBtn) {
-                            submitBtn.focus();
-                            submitBtn.click();
-                        } else {
-                            form.requestSubmit?.();
-                        }
+                // 🟣 Focus Add Item button (or next target) if present
+                const nextTarget =
+                    (nextTargetSelector &&
+                        (container.querySelector(nextTargetSelector) ||
+                            document.querySelector(nextTargetSelector))) ||
+                    null;
+
+                if (nextTarget) {
+                    // Ensure button is focusable
+                    nextTarget.setAttribute("tabindex", nextTarget.getAttribute("tabindex") || "0");
+
+                    // Delay focus slightly to avoid Alpine reactivity issues
+                    setTimeout(() => {
+                        nextTarget.focus({ preventScroll: true });
+                    }, 50);
+                    return; // ✅ stop here, don't submit yet
+                }
+
+                // 🟣 Default: submit form (only if no Add Item button found)
+                const form = input.closest("form");
+                if (form) {
+                    const submitBtn = form.querySelector("#submitBtn");
+                    if (submitBtn) {
+                        submitBtn.focus();
+                        submitBtn.click();
+                    } else {
+                        form.requestSubmit?.();
                     }
                 }
             }

@@ -6,12 +6,33 @@
             focus:ring-purple-600 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100">
     </div>
 
-    <div>
-        <label class="text-sm font-medium">Diamond Price</label>
-        <input type="number" min="0" step="0.01" name="diamond_price" x-model.number="item.diamond_price"
-            class="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2
-            focus:ring-purple-600 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100">
+    <div x-data="{
+        item: { diamond_rate: 0 },
+        async fetchDiamondRate() {
+            try {
+                const response = await fetch('/admin/api/latest-diamond-rate');
+                const data = await response.json();
+                this.item.diamond_rate = data.rate ?? 0;
+            } catch (error) {
+                console.error('Failed to fetch diamond rate:', error);
+            }
+        }
+    }" x-init="fetchDiamondRate()">
+
+        <label class="text-sm font-medium">
+            Diamond Rate (per carat) <span class="text-red-500">*</span>
+        </label>
+
+        <input type="number" min="0" step="0.01" name="diamond_rate" x-model.number="item.diamond_rate"
+            class="w-full rounded-md border border-gray-300 px-3 py-2
+        focus:outline-none focus:ring-2 focus:ring-purple-600
+        dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100">
+
+        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+            Auto-filled from latest diamond rate.
+        </p>
     </div>
+
 
     <div>
         <label class="text-sm font-medium">Making Charge</label>
@@ -37,6 +58,7 @@
     <div>
         <label class="text-sm font-medium">Landing Cost (editable)</label>
         <input type="number" min="0" step="0.01" name="landing_cost" x-model.number="item.landing_cost"
+            :value="formatCurrency(item.total_amount || 0)"
             class="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2
             focus:ring-purple-600 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100">
     </div>

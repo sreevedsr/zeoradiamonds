@@ -17,10 +17,10 @@ class Invoice extends Model
     protected $fillable = [
         'invoice_no',
         'invoice_date',
-        'supplier_name',
-        'supplier_code',
-        'salesman',
+        'supplier_id',
+        'staff_id',
     ];
+
 
     /**
      * Relationship: One invoice has many cards.

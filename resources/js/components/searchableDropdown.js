@@ -5,35 +5,65 @@ export default function searchableDropdown(config = {}) {
         options: [],
         filteredOptions: [],
         selected: null,
+        selectedId: "",
         apiUrl: config.apiUrl,
         optionLabel: config.optionLabel || "name",
         optionValue: config.optionValue || "id",
 
         async init() {
-            const res = await fetch(this.apiUrl);
-            this.options = await res.json();
-            this.filteredOptions = this.options;
+            try {
+                const response = await fetch(this.apiUrl);
+                if (!response.ok) throw new Error("Failed to load dropdown data");
+                this.options = await response.json();
+                this.filteredOptions = this.options;
+            } catch (error) {
+                console.error("Dropdown fetch error:", error);
+                this.options = [];
+                this.filteredOptions = [];
+            }
         },
 
         filterOptions() {
-            const q = this.searchQuery.toLowerCase();
-            this.filteredOptions = this.options.filter((o) =>
-                Object.values(o).some((v) => String(v).toLowerCase().includes(q)),
-            );
+            const query = this.searchQuery.trim().toLowerCase();
+
+            if (!query) {
+                this.filteredOptions = this.options;
+                return;
+            }
+
+            this.filteredOptions = this.options.filter((option) => {
+                const values = [
+                    option[this.optionLabel],
+                    option.merchant_code,
+                    option.supplier_code,
+                    option.business_name,
+                    option.state,
+                ]
+                    .filter(Boolean)
+                    .map((v) => String(v).toLowerCase());
+
+                return values.some((v) => v.includes(query));
+            });
         },
 
         select(option) {
             this.selected = option;
+            this.selectedId = option[this.optionValue];
             this.searchQuery = option[this.optionLabel];
             this.open = false;
 
-            // 🔹 Move focus to next element automatically
+            // Emit event for other Alpine components (optional)
+            this.$dispatch("dropdown-selected", { selected: option });
+
+            // Focus next input
             this.$nextTick(() => {
                 const focusables = Array.from(
-                    document.querySelectorAll("input, select, textarea, button"),
-                );
+                    document.querySelectorAll("input, select, textarea, button")
+                ).filter((el) => !el.disabled && el.tabIndex >= 0);
+
                 const current = document.activeElement;
                 const currentIndex = focusables.indexOf(current);
+
                 if (currentIndex >= 0 && focusables[currentIndex + 1]) {
                     focusables[currentIndex + 1].focus();
                 }

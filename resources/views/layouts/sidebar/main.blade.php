@@ -29,7 +29,7 @@
 
 
 <!-- Mobile Sidebar -->
-<div class="fixed inset-y-0 z-20 mt-16 flex w-64 flex-col justify-between bg-white dark:bg-gray-800
+<div class="fixed inset-y-0 z-30 flex w-80 flex-col justify-between bg-white dark:bg-gray-800
            dark:text-gray-400 md:hidden py-4 border-r border-gray-200 dark:border-gray-700"
     x-show="isSideMenuOpen" x-transition:enter="transition ease-in-out duration-150"
     x-transition:enter-start="opacity-0 transform -translate-x-20"

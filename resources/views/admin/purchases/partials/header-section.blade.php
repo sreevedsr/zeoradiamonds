@@ -1,8 +1,6 @@
-<div class="rounded-lg bg-white p-6 dark:bg-gray-800 sm:p-8 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-transparent shadow-none dark:shadow-md dark:shadow-gray-900/50"
-    x-init="enableSequentialInput();
-    focusFirstInput();">
+<div class="rounded-lg bg-white p-6 dark:bg-gray-800 sm:p-8 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-transparent shadow-none dark:shadow-md dark:shadow-gray-900/50">
 
-    <div class="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <div class=" grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
 
         {{-- Invoice No --}}
         <div>
@@ -42,7 +40,6 @@
                 @keydown.enter.prevent="
             if (filteredOptions.length > 0) {
                 select(filteredOptions[0]);
-                // 🔹 Move to next focusable input
                 const focusables = Array.from(document.querySelectorAll('input, select, textarea, button'));
                 const currentIndex = focusables.indexOf($el);
                 if (currentIndex >= 0 && focusables[currentIndex + 1]) {

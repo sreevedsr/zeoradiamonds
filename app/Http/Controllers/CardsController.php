@@ -174,7 +174,7 @@ class CardsController extends Controller
         $cards = $query->orderBy('created_at', 'desc')->paginate(10);
         $merchants = User::where('role', 'merchant')->orderBy('name')->get();
 
-        return view('admin.cards.assign', compact('cards', 'merchants', 'search'));
+        return view('admin.sales.create', compact('cards', 'merchants', 'search'));
     }
 
     // Handle card assignment
