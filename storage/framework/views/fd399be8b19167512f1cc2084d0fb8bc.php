@@ -7,7 +7,7 @@
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-200">
                 Invoice No. <span class="text-red-500">*</span>
             </label>
-            <input type="text" name="invoice_no" x-model="invoice_no" tabindex="1"
+            <input type="text" name="invoice_no" x-model="invoice_no" tabindex="1" required
                 value="<?php echo e(old('invoice_no', $nextInvoiceNo ?? '')); ?>" placeholder="Enter invoice number"
                 class="input-field w-full rounded-md border border-gray-300 px-3 py-2
                        focus:outline-none focus:ring-2 focus:ring-purple-600
@@ -20,19 +20,19 @@
                 Date <span class="text-red-500">*</span>
             </label>
             <input type="date" name="invoice_date" tabindex="2"
-                value="<?php echo e(old('invoice_date', now()->toDateString())); ?>" readonly
+                value="<?php echo e(old('invoice_date', now()->toDateString())); ?>"
                 class="input-field w-full cursor-not-allowed rounded-md border border-gray-300 bg-gray-100 px-3 py-2 text-gray-700
                        focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100" />
         </div>
 
         <div x-data="searchableDropdown({
-            apiUrl: '<?php echo e(route('dropdown.fetch', ['type' => 'suppliers'])); ?>',
+            apiUrl: '<?php echo e(route('admin.dropdown.fetch', ['type' => 'suppliers'])); ?>',
             optionLabel: 'name',
             optionValue: 'id'
         })" x-init="init()" class="relative" @click.outside="open = false">
 
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-200">
-                Supplier (Name / Code)
+                Supplier <span class="text-red-500">*</span>
             </label>
 
             <!-- Focusable input (for sequential input) -->
@@ -47,7 +47,7 @@
                 }
             }
         "
-                tabindex="3" placeholder="Search supplier"
+                tabindex="3" placeholder="Search supplier" required
                 class="input-field w-full rounded-md border border-gray-300 px-3 py-2
                focus:outline-none focus:ring-2 focus:ring-purple-600
                dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100
@@ -88,7 +88,7 @@
 
         
         <div x-data="searchableDropdown({
-            apiUrl: '<?php echo e(route('dropdown.fetch', ['type' => 'staff'])); ?>',
+            apiUrl: '<?php echo e(route('admin.dropdown.fetch', ['type' => 'staff'])); ?>',
             optionLabel: 'name',
             optionValue: 'id'
         })" x-init="init()" class="relative" @click.outside="open = false">

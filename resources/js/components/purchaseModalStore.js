@@ -18,12 +18,6 @@ export default function registerPurchaseModalStore(Alpine) {
             const formData = new FormData(form);
             const item = Object.fromEntries(formData.entries());
 
-            // Simple validation
-            if (!item.item_name || !item.gross_weight) {
-                alert("Please fill in required fields before adding.");
-                return;
-            }
-
             // ✅ Add item to the store
             this.items.push(item);
 

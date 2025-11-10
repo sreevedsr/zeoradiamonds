@@ -13,7 +13,7 @@
                 class="rounded-lg bg-white dark:bg-gray-800 p-8 border border-gray-200 dark:border-transparent
                 text-gray-900 dark:text-gray-100 shadow-none dark:shadow-md dark:shadow-gray-900/50">
 
-                <div class="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4">
+                <div class="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-3">
                     <!-- Entry No (Auto) -->
                     <div>
                         <label class="text-sm font-medium">Entry No.</label>
@@ -35,28 +35,24 @@
                             class="input-field w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-purple-500" />
                     </div>
 
+                    <!-- Merchant Dropdown -->
                     <div x-data="searchableDropdown({
                         apiUrl: '{{ route('dropdown.fetch', ['type' => 'merchants']) }}',
                         optionLabel: 'name',
                         optionValue: 'id'
-                    })" x-init="init()"
-                        @dropdown-selected.window="
-        // Optional: update nearby read-only merchant info fields
-        document.querySelector('input[name=merchant_state]').value = $event.detail.selected.state || '';
-    "
-                        class="relative" @click.outside="open = false">
+                    })" x-init="init()" class="relative col-span-1"
+                        @click.outside="open = false">
 
-
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-200">
-                            Merchant (Name / Code)
+                        <!-- Label -->
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
+                            Select Merchant (Name / Code)
                         </label>
 
-                        <!-- Focusable input (for sequential input) -->
+                        <!-- Searchable input -->
                         <input type="text" x-model="searchQuery" @input="filterOptions()" @focus="open = true"
                             @keydown.enter.prevent="
             if (filteredOptions.length > 0) {
                 select(filteredOptions[0]);
-                // move to next focusable input
                 const focusables = Array.from(document.querySelectorAll('input, select, textarea, button'));
                 const currentIndex = focusables.indexOf($el);
                 if (currentIndex >= 0 && focusables[currentIndex + 1]) {
@@ -64,17 +60,16 @@
                 }
             }
         "
-                            tabindex="3" placeholder="Search merchant"
+                            tabindex="3" placeholder="Search merchant..."
                             class="input-field w-full rounded-md border border-gray-300 px-3 py-2
                focus:outline-none focus:ring-2 focus:ring-purple-600
                dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100
                hover:border-purple-400 transition duration-150" />
 
-                        <!-- Dropdown container -->
+                        <!-- Dropdown List -->
                         <div x-show="open" x-transition
                             class="absolute z-10 mt-1 w-full max-h-60 overflow-y-auto rounded-md
-               bg-white dark:bg-gray-800 shadow-lg custom-scrollbar border-0">
-
+               bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700">
                             <template x-if="filteredOptions.length > 0">
                                 <ul>
                                     <template x-for="option in filteredOptions" :key="option[optionValue]">
@@ -83,14 +78,9 @@
                                             class="cursor-pointer px-3 py-2 text-sm
                                hover:bg-purple-100 dark:hover:bg-purple-700/40
                                dark:text-gray-100 border-b border-gray-100 dark:border-gray-700 last:border-0">
-                                            <div class="flex justify-between items-center">
-                                                <div>
-                                                    <span x-text="option.name"></span>
-                                                    <span class="text-xs text-gray-500 ml-1"
-                                                        x-text="'(' + option.merchant_code + ')'"></span>
-                                                </div>
-                                                <div class="text-xs text-gray-400" x-text="option.state"></div>
-                                            </div>
+                                            <span x-text="option.name"></span>
+                                            <span class="text-xs text-gray-500 ml-1"
+                                                x-text="'(' + option.merchant_code + ')'"></span>
                                         </li>
                                     </template>
                                 </ul>
@@ -103,10 +93,70 @@
                             </template>
                         </div>
 
-                        <!-- Hidden inputs for backend form -->
+                        <!-- Hidden Fields -->
                         <input type="hidden" name="merchant_id" :value="selected ? selected.id : ''">
                         <input type="hidden" name="merchant_state" :value="selected ? selected.state : ''">
+
+                        <!-- Read-only Merchant Details -->
+                        <template x-if="selected">
+                            <div class="mt-5 rounded-xl border border-gray-200 dark:border-gray-700 dark:bg-gray-800/60
+                   shadow-sm p-5 text-sm text-gray-700 dark:text-gray-100 dark:shadow-md space-y-2 transition-all duration-300 ease-in-out"
+                                x-transition.opacity.duration.300ms>
+                                <h3
+                                    class="font-semibold text-gray-900 dark:text-white text-base flex items-center gap-2 mb-3">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-purple-500"
+                                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 13l4 4L19 7" />
+                                    </svg>
+                                    Merchant Details
+                                </h3>
+
+                                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                                    <div>
+                                        <span class="font-medium text-gray-800 dark:text-gray-300">Merchant Code:</span>
+                                        <div x-text="selected.merchant_code || '-'"></div>
+                                    </div>
+
+                                    <div>
+                                        <span class="font-medium text-gray-800 dark:text-gray-300">Merchant Name:</span>
+                                        <div x-text="selected.name || '-'"></div>
+                                    </div>
+
+                                    <div>
+                                        <span class="font-medium text-gray-800 dark:text-gray-300">Email:</span>
+                                        <div x-text="selected.email || '-'"></div>
+                                    </div>
+
+                                    <div>
+                                        <span class="font-medium text-gray-800 dark:text-gray-300">Phone No.:</span>
+                                        <div x-text="selected.phone || '-'"></div>
+                                    </div>
+
+                                    <div>
+                                        <span class="font-medium text-gray-800 dark:text-gray-300">GST No.:</span>
+                                        <div x-text="selected.gst_no || '-'"></div>
+                                    </div>
+
+                                    <div>
+                                        <span class="font-medium text-gray-800 dark:text-gray-300">State Code:</span>
+                                        <div x-text="selected.state_code || '-'"></div>
+                                    </div>
+
+                                    <div>
+                                        <span class="font-medium text-gray-800 dark:text-gray-300">State:</span>
+                                        <div x-text="selected.state || '-'"></div>
+                                    </div>
+
+                                    <div class="md:col-span-2 lg:col-span-3">
+                                        <span class="font-medium text-gray-800 dark:text-gray-300">Address:</span>
+                                        <div class="leading-snug" x-text="selected.address || '-'"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
                     </div>
+
                 </div>
             </div>
 

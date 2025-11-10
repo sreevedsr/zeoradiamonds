@@ -1,10 +1,10 @@
-@can('edit-merchants')
-            <li class="relative px-6 py-3" x-data="collapsibleMenu({{ request()->routeIs('admin.merchants.*') ? 'true' : 'false' }})">
+<?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('edit-merchants')): ?>
+            <li class="relative px-6 py-3" x-data="collapsibleMenu(<?php echo e(request()->routeIs('admin.merchants.*') ? 'true' : 'false'); ?>)">
 
                 <span
-                    class="{{ request()->routeIs('admin.merchants.*')
+                    class="<?php echo e(request()->routeIs('admin.merchants.*')
                         ? 'absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg'
-                        : '' }}"
+                        : ''); ?>"
                     aria-hidden="true"></span>
 
                 <button @click="toggle" type="button"
@@ -21,9 +21,10 @@
 
                     <!-- Label -->
                     <span
-                        class="{{ request()->routeIs('admin.merchants.*')
+                        class="<?php echo e(request()->routeIs('admin.merchants.*')
                             ? 'text-gray-800 dark:text-gray-200'
-                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }}
+                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>
+
                 ml-2 flex-1 text-left transition-all duration-200 origin-left"
                         :class="isSidebarCollapsed ? 'opacity-0 w-0 overflow-hidden' : 'opacity-100 w-auto'">
                         Merchants
@@ -46,19 +47,21 @@
                     class="mt-2 space-y-2 overflow-hidden px-4 transition-all duration-300 ease-in-out"
                     :class="isSidebarCollapsed ? 'hidden' : 'block'">
                     <li>
-                        <a href="{{ route('admin.merchants.create') }}"
-                            class="{{ request()->routeIs('admin.merchants.create')
+                        <a href="<?php echo e(route('admin.merchants.create')); ?>"
+                            class="<?php echo e(request()->routeIs('admin.merchants.create')
                                 ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
-                                : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }}
+                                : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>
+
             block rounded-md px-2 py-1 text-sm font-medium">
                             Add Merchant
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('admin.merchants.index') }}"
-                            class="{{ request()->routeIs('admin.merchants.index')
+                        <a href="<?php echo e(route('admin.merchants.index')); ?>"
+                            class="<?php echo e(request()->routeIs('admin.merchants.index')
                                 ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
-                                : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }}
+                                : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>
+
             block rounded-md px-2 py-1 text-sm font-medium">
                             View Merchants
                         </a>
@@ -66,16 +69,16 @@
                 </ul>
 
             </li>
-        @endcan
+        <?php endif; ?>
 
-         @can('view-suppliers')
-            <li class="relative px-6 py-3" x-data="collapsibleMenu({{ request()->routeIs('admin.suppliers.*') ? 'true' : 'false' }})">
+         <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('view-suppliers')): ?>
+            <li class="relative px-6 py-3" x-data="collapsibleMenu(<?php echo e(request()->routeIs('admin.suppliers.*') ? 'true' : 'false'); ?>)">
 
                 <!-- Highlight Bar -->
                 <span
-                    class="{{ request()->routeIs('admin.suppliers.*')
+                    class="<?php echo e(request()->routeIs('admin.suppliers.*')
                         ? 'absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg'
-                        : '' }}"
+                        : ''); ?>"
                     aria-hidden="true"></span>
 
                 <!-- Main Menu Button -->
@@ -91,9 +94,10 @@
 
                     <!-- Label -->
                     <span
-                        class="{{ request()->routeIs('admin.suppliers.*')
+                        class="<?php echo e(request()->routeIs('admin.suppliers.*')
                             ? 'text-gray-800 dark:text-gray-200'
-                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }}
+                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>
+
             ml-2 flex-1 text-left transition-all duration-200 origin-left"
                         :class="isSidebarCollapsed ? 'opacity-0 w-0 overflow-hidden' : 'opacity-100 w-auto'">
                         Suppliers
@@ -117,36 +121,38 @@
                     :class="isSidebarCollapsed ? 'hidden' : 'block'">
 
                     <li>
-                        <a href="{{ route('admin.suppliers.create') }}"
-                            class="{{ request()->routeIs('admin.suppliers.create')
+                        <a href="<?php echo e(route('admin.suppliers.create')); ?>"
+                            class="<?php echo e(request()->routeIs('admin.suppliers.create')
                                 ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
-                                : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }}
+                                : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>
+
                 block rounded-md px-2 py-1 text-sm font-medium">
                             Register Supplier
                         </a>
                     </li>
 
                     <li>
-                        <a href="{{ route('admin.suppliers.index') }}"
-                            class="{{ request()->routeIs('admin.suppliers.index')
+                        <a href="<?php echo e(route('admin.suppliers.index')); ?>"
+                            class="<?php echo e(request()->routeIs('admin.suppliers.index')
                                 ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
-                                : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }}
+                                : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>
+
                 block rounded-md px-2 py-1 text-sm font-medium">
                             View Suppliers
                         </a>
                     </li>
                 </ul>
             </li>
-        @endcan
+        <?php endif; ?>
 
-        @can('edit-cards')
-            <li class="relative px-6 py-3" x-data="collapsibleMenu({{ request()->routeIs('admin.products.*') ? 'true' : 'false' }})">
+        <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('edit-cards')): ?>
+            <li class="relative px-6 py-3" x-data="collapsibleMenu(<?php echo e(request()->routeIs('admin.products.*') ? 'true' : 'false'); ?>)">
 
                 <!-- Active Bar -->
                 <span
-                    class="{{ request()->routeIs('admin.products.*')
+                    class="<?php echo e(request()->routeIs('admin.products.*')
                         ? 'absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg'
-                        : '' }}"
+                        : ''); ?>"
                     aria-hidden="true"></span>
 
                 <!-- Button -->
@@ -163,9 +169,10 @@
 
                     <!-- Label -->
                     <span
-                        class="{{ request()->routeIs('admin.products.*')
+                        class="<?php echo e(request()->routeIs('admin.products.*')
                             ? 'text-gray-800 dark:text-gray-200'
-                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }}
+                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>
+
             ml-2 flex-1 text-left transition-all duration-200 origin-left"
                         :class="isSidebarCollapsed ? 'opacity-0 w-0 overflow-hidden' : 'opacity-100 w-auto'">
                         Products
@@ -189,68 +196,74 @@
                     :class="isSidebarCollapsed ? 'hidden' : 'block'">
 
                     <li>
-                        <a href="{{ route('admin.products.register') }}"
-                            class="{{ request()->routeIs('admin.products.register')
+                        <a href="<?php echo e(route('admin.products.register')); ?>"
+                            class="<?php echo e(request()->routeIs('admin.products.register')
                                 ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
-                                : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }}
+                                : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>
+
                 block rounded-md px-2 py-1 text-sm font-medium">
                             Register Product
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('admin.products.create') }}"
-                            class="{{ request()->routeIs('admin.products.create')
+                        <a href="<?php echo e(route('admin.products.create')); ?>"
+                            class="<?php echo e(request()->routeIs('admin.products.create')
                                 ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
-                                : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }}
+                                : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>
+
                 block rounded-md px-2 py-1 text-sm font-medium">
                             Add Purchase Details
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('admin.products.index') }}"
-                            class="{{ request()->routeIs('admin.products.index')
+                        <a href="<?php echo e(route('admin.products.index')); ?>"
+                            class="<?php echo e(request()->routeIs('admin.products.index')
                                 ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
-                                : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }}
+                                : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>
+
                 block rounded-md px-2 py-1 text-sm font-medium">
                             View Products
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('admin.products.assign') }}"
-                            class="{{ request()->routeIs('admin.products.assign')
+                        <a href="<?php echo e(route('admin.products.assign')); ?>"
+                            class="<?php echo e(request()->routeIs('admin.products.assign')
                                 ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
-                                : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }}
+                                : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>
+
                 block rounded-md px-2 py-1 text-sm font-medium">
                             Assign Products
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('admin.products.requests') }}"
-                            class="{{ request()->routeIs('admin.products.requests')
+                        <a href="<?php echo e(route('admin.products.requests')); ?>"
+                            class="<?php echo e(request()->routeIs('admin.products.requests')
                                 ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
-                                : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }}
+                                : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>
+
                 block rounded-md px-2 py-1 text-sm font-medium">
                             View Card Requests
                         </a>
                     </li>
                 </ul>
             </li>
-        @endcan
+        <?php endif; ?>
 
-        @can('view-rates')
+        <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('view-rates')): ?>
             <li class="relative px-6 py-3">
                 <!-- Highlight Bar -->
                 <span
-                    class="{{ request()->routeIs('admin.rates.*')
+                    class="<?php echo e(request()->routeIs('admin.rates.*')
                         ? 'absolute inset-y-0 left-0 w-1 bg-yellow-500 rounded-tr-lg rounded-br-lg'
-                        : '' }}"
+                        : ''); ?>"
                     aria-hidden="true"></span>
 
                 <!-- Single Menu Link -->
-                <a href="{{ route('admin.rates.index') }}"
-                    class="{{ request()->routeIs('admin.rates.*')
+                <a href="<?php echo e(route('admin.rates.index')); ?>"
+                    class="<?php echo e(request()->routeIs('admin.rates.*')
                         ? 'text-gray-800 dark:text-gray-200'
-                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }}
+                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>
+
             inline-flex w-full items-start text-sm font-semibold transition-colors duration-150">
 
                     <!-- Icon -->
@@ -270,16 +283,16 @@
                     </span>
                 </a>
             </li>
-        @endcan
+        <?php endif; ?>
 
-        @can('manage-staff')
-            <li class="relative px-6 py-3" x-data="collapsibleMenu({{ request()->routeIs('admin.staff.*') ? 'true' : 'false' }})">
+        <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('manage-staff')): ?>
+            <li class="relative px-6 py-3" x-data="collapsibleMenu(<?php echo e(request()->routeIs('admin.staff.*') ? 'true' : 'false'); ?>)">
 
                 <!-- Active Bar -->
                 <span
-                    class="{{ request()->routeIs('admin.staff.*')
+                    class="<?php echo e(request()->routeIs('admin.staff.*')
                         ? 'absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg'
-                        : '' }}"
+                        : ''); ?>"
                     aria-hidden="true"></span>
 
                 <!-- Menu Button -->
@@ -301,9 +314,10 @@
 
                     <!-- Label (completely hidden when sidebar collapsed) -->
                     <span
-                        class="{{ request()->routeIs('admin.staff.*')
+                        class="<?php echo e(request()->routeIs('admin.staff.*')
                             ? 'text-gray-800 dark:text-gray-200'
-                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }}
+                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>
+
                 ml-2 flex-1 text-left transition-all duration-200 origin-left"
                         :class="isSidebarCollapsed ? 'hidden' : 'block'">
                         Staff
@@ -325,25 +339,28 @@
                     :class="isSidebarCollapsed ? 'hidden' : 'block'">
 
                     <li>
-                        <a href="{{ route('admin.staff.create') }}"
-                            class="{{ request()->routeIs('admin.staff.create')
+                        <a href="<?php echo e(route('admin.staff.create')); ?>"
+                            class="<?php echo e(request()->routeIs('admin.staff.create')
                                 ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
-                                : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }}
+                                : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>
+
                     block rounded-md px-2 py-1 text-sm font-medium">
                             Register Staff
                         </a>
                     </li>
 
                     <li>
-                        <a href="{{ route('admin.staff.index') }}"
-                            class="{{ request()->routeIs('admin.staff.index')
+                        <a href="<?php echo e(route('admin.staff.index')); ?>"
+                            class="<?php echo e(request()->routeIs('admin.staff.index')
                                 ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
-                                : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200' }}
+                                : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>
+
                     block rounded-md px-2 py-1 text-sm font-medium">
                             View Staff
                         </a>
                     </li>
                 </ul>
             </li>
-        @endcan
+        <?php endif; ?>
         
+<?php /**PATH C:\xampp\htdocs\Zeeyame\resources\views/layouts/sidebar/admin-links.blade.php ENDPATH**/ ?>

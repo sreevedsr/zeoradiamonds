@@ -26,8 +26,8 @@
                 </svg>
             </button>
 
-            <!-- Dynamic Page Title -->
-            <h1 class="text-3xl font-semibold text-gray-800 dark:text-gray-100 truncate">
+            <h1
+                class="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-800 dark:text-gray-100  max-w-[60vw] sm:max-w-none">
                 <?php echo e($title ?? 'Dashboard'); ?>
 
             </h1>

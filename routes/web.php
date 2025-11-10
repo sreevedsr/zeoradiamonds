@@ -101,7 +101,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/merchants/requests', [MerchantRequestController::class, 'index'])->name('merchants.request');
 
         // Merchant management
-        Route::middleware('can:view-merchants')->prefix('merchants')->name('merchants.')->group(function () {
+        Route::middleware('can:edit-merchants')->prefix('merchants')->name('merchants.')->group(function () {
             Route::get('/', [AdminController::class, 'index'])->name('index');
             Route::get('/create', [AdminController::class, 'create'])->name('create');
             Route::post('/store', [AdminController::class, 'store'])->name('store');
@@ -111,6 +111,8 @@ Route::middleware('auth')->group(function () {
             Route::delete('/{id}', [AdminController::class, 'destroy'])->name('destroy');
 
         });
+        Route::get('/api/dropdown/{type}', [DropdownController::class, 'fetch'])->name('dropdown.fetch');
+        Route::get('/api/dropdown/combined', [DropdownController::class, 'combined'])->name('dropdown.combined');
 
     });
 
@@ -150,8 +152,7 @@ Route::middleware('auth')->group(function () {
 
     });
 
-    // routes/web.php
-    Route::get('/api/dropdown/{type}', [DropdownController::class, 'fetch'])->name('dropdown.fetch');
+
 
 });
 

@@ -104,15 +104,12 @@
 
     <!-- Modern Add Item Modal -->
     <div x-data x-show="$store.purchaseModal.show" x-transition.opacity.duration.200ms
-        class="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-black/40 dark:bg-black/60"
+        class="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-black/40 dark:bg-black/60 overflow-y-auto"
         @click.self="$store.purchaseModal.close()" @keydown.escape.window="$store.purchaseModal.close()"
-        x-init="
-        $watch('$store.purchaseModal.show', open => {
+        x-init="$watch('$store.purchaseModal.show', open => {
             if (open) {
                 $nextTick(() => {
-                    // Enable Enter navigation inside modal form
                     enableSequentialInput($refs.modalForm);
-                    // Focus first visible .input-field inside modal
                     focusFirstInput($refs.modalForm);
                 });
             }
@@ -121,20 +118,27 @@
         <div x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0 scale-95 translate-y-3"
             x-transition:enter-end="opacity-100 scale-100 translate-y-0" x-transition:leave="ease-in duration-200"
             x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95"
-            class="relative w-full max-w-5xl bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-700 overflow-hidden"
+            class="relative w-[92%] sm:w-11/12 md:w-5/6 lg:w-4/5 xl:max-w-5xl
+               bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-700
+               overflow-hidden transform transition-all duration-300 my-6"
             role="dialog" aria-modal="true" aria-labelledby="modal-title">
             <!-- Header -->
-            <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+            <div
+                class="flex flex-wrap items-center justify-between gap-3 px-4 sm:px-6 py-3 sm:py-4
+                   border-b border-gray-200 dark:border-gray-700">
                 <h2 id="modal-title"
-                    class="text-lg font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-purple-600 dark:text-purple-400"
-                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    class="text-base sm:text-lg font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-2 truncate">
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                        class="h-5 w-5 text-purple-600 dark:text-purple-400 shrink-0" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                     </svg>
                     Add Item
                 </h2>
+
                 <button type="button" @click="$store.purchaseModal.close()"
-                    class="text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none rounded-full p-1.5 hover:bg-gray-100 dark:hover:bg-gray-800 transition">
+                    class="text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none
+                       rounded-full p-1.5 hover:bg-gray-100 dark:hover:bg-gray-800 transition shrink-0">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -145,28 +149,30 @@
 
             <!-- Body -->
             <form id="itemForm" x-ref="modalForm" x-data="itemForm()" @submit.prevent="addItem"
-                class="px-6 py-5 space-y-8 overflow-y-auto max-h-[75vh] custom-scrollbar">
+                class="px-4 sm:px-6 py-4 space-y-8 overflow-y-auto max-h-[75vh] sm:max-h-[80vh] custom-scrollbar">
                 @include('admin.purchases.partials.product-section')
                 @include('admin.purchases.partials.pricing-section')
                 @include('admin.purchases.partials.card-details')
 
                 <!-- Footer -->
-                <div class="flex justify-end gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
+                <div
+                    class="flex flex-col sm:flex-row justify-end gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
                     <button type="button" @click="$store.purchaseModal.close()"
                         class="rounded-md border border-gray-300 dark:border-gray-600 px-4 py-2 text-sm font-medium
-                    text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition">
+                           text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition w-full sm:w-auto">
                         Cancel
                     </button>
 
                     <button type="submit"
                         class="rounded-md bg-purple-600 px-4 py-2 text-sm font-medium text-white
-                    hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 shadow-sm transition">
+                           hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 shadow-sm transition w-full sm:w-auto">
                         Add Item
                     </button>
                 </div>
             </form>
         </div>
     </div>
+
 
     @if (session('clear_items'))
         <script>

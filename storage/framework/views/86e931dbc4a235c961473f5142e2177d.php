@@ -18,11 +18,6 @@
 
     <!-- AlpineJS -->
     <script src="<?php echo e(asset('assets/js/init-alpine.js')); ?>"></script>
-
-    <!-- Charts -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js" defer></script>
-    <script src="<?php echo e(asset('assets/js/charts-lines.js')); ?>" defer></script>
-    <script src="<?php echo e(asset('assets/js/charts-pie.js')); ?>" defer></script>
 </head>
 
 <body
@@ -90,7 +85,7 @@
 <?php unset($__componentOriginal2b06ec262d265f70cd7e1342bf9df9f0); ?>
 <?php endif; ?>
     <?php endif; ?>
-    
+
 </body>
 
 </html>

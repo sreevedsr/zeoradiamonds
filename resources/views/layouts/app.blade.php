@@ -18,11 +18,6 @@
 
     <!-- AlpineJS -->
     <script src="{{ asset('assets/js/init-alpine.js') }}"></script>
-
-    <!-- Charts -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js" defer></script>
-    <script src="{{ asset('assets/js/charts-lines.js') }}" defer></script>
-    <script src="{{ asset('assets/js/charts-pie.js') }}" defer></script>
 </head>
 
 <body
@@ -51,7 +46,7 @@
     @if ($errors->any())
         <x-alert-toast type="error" :message="$errors->first()" />
     @endif
-    
+
 </body>
 
 </html>

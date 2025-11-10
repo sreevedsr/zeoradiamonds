@@ -77,10 +77,6 @@ export default function itemForm() {
 
         // --- Store Item Locally ---
         addItem() {
-            if (!this.item.item_name || !this.item.certificate_id) {
-                alert('Please fill in required fields (Item Name and Certificate ID).');
-                return;
-            }
 
             // ✅ Add to Alpine store array
             this.$store.purchaseModal.items.push({ ...this.item });
