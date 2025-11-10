@@ -7,16 +7,11 @@
         <div class="mx-auto  text-gray-900 dark:text-gray-100">
 
             <!-- Suppliers Table -->
-            <x-table
-                :headers="['#', 'Supplier Code', 'Name', 'Phone', 'State', 'GST No', 'Created At', 'Actions']"
-                :from="$pagination['from'] ?? 1"
-                :to="$pagination['to'] ?? 10"
-                :total="$pagination['total'] ?? count($suppliers)"
-                :pages="$pagination['pages'] ?? [1]"
-                :current="$pagination['current'] ?? 1"
-            >
+            <x-table :headers="['#', 'Supplier Code', 'Name', 'Phone', 'State', 'GST No', 'Created At', 'Actions']" :from="$pagination['from'] ?? 1" :to="$pagination['to'] ?? 10" :total="$pagination['total'] ?? count($suppliers)" :pages="$pagination['pages'] ?? [1]"
+                :current="$pagination['current'] ?? 1">
                 @foreach ($suppliers as $index => $supplier)
-                    <tr class="text-gray-700 transition-colors hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-700">
+                    <tr
+                        class="text-gray-700 transition-colors hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-700">
                         <td class="px-4 py-3 text-sm">{{ $index + 1 }}</td>
 
                         <td class="px-4 py-3 text-sm">{{ $supplier->supplier_code }}</td>
@@ -49,7 +44,8 @@
                                 </a>
 
                                 <!-- Delete Button -->
-                                <form action="{{ route('admin.suppliers.destroy', $supplier->id) }}" method="POST" class="inline">
+                                <form action="{{ route('admin.suppliers.destroy', $supplier->id) }}" method="POST"
+                                    class="inline">
                                     @csrf
                                     @method('DELETE')
                                     <x-danger-button type="button" x-data
@@ -83,8 +79,8 @@
                     <div class="mt-4 space-y-4">
                         <div>
                             <x-input-label for="edit_supplier_code" value="{{ __('Supplier Code') }}" />
-                            <x-text-input id="edit_supplier_code" name="supplier_code" type="text" class="mt-1 block w-full"
-                                placeholder="{{ __('Enter supplier code') }}" required />
+                            <x-text-input id="edit_supplier_code" name="supplier_code" type="text"
+                                class="mt-1 block w-full" placeholder="{{ __('Enter supplier code') }}" required />
                         </div>
 
                         <div>
@@ -114,8 +110,8 @@
 
                             <div>
                                 <x-input-label for="edit_state_code" value="{{ __('State Code') }}" />
-                                <x-text-input id="edit_state_code" name="state_code" type="text" class="mt-1 block w-full"
-                                    placeholder="{{ __('Enter state code') }}" required />
+                                <x-text-input id="edit_state_code" name="state_code" type="text"
+                                    class="mt-1 block w-full" placeholder="{{ __('Enter state code') }}" required />
                             </div>
                         </div>
 
@@ -139,30 +135,9 @@
             </x-modal>
 
             <!-- Delete Confirmation Modal -->
-            <x-modal name="confirm-delete-modal" focusable>
-                <form method="POST" id="deleteSupplierForm" class="p-6">
-                    @csrf
-                    @method('DELETE')
+            <x-confirm-delete-modal :action="route('admin.suppliers.destroy', $supplier->id)" title="Confirm Deletion"
+                message="Are you sure you want to delete this supplier? This action cannot be undone." />
 
-                    <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-                        {{ __('Confirm Deletion') }}
-                    </h2>
-
-                    <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
-                        {{ __('Are you sure you want to delete this supplier? This action cannot be undone.') }}
-                    </p>
-
-                    <div class="mt-6 flex justify-end space-x-3">
-                        <x-secondary-button type="button" x-on:click="$dispatch('close')">
-                            {{ __('Cancel') }}
-                        </x-secondary-button>
-
-                        <x-danger-button>
-                            {{ __('Yes, Delete') }}
-                        </x-danger-button>
-                    </div>
-                </form>
-            </x-modal>
         </div>
     </div>
 </x-app-layout>

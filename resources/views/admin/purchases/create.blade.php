@@ -21,15 +21,30 @@
                 <div class="flex items-center justify-between mb-4 border-b border-gray-200 dark:border-gray-700 pb-3">
                     <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100">Items Added</h3>
 
-                    <button type="button" id="add-item-btn" tabindex="5" @click="$store.purchaseModal.open()"
+                    <button type="button" id="add-item-btn" tabindex="5"
+                        @click="
+        $store.purchaseModal.open();
+        setTimeout(() => {
+            const modalForm = document.querySelector('[x-ref=modalForm]');
+            if (modalForm) focusFirstInput(modalForm);
+        }, 350); // matches transition timing
+    "
+                        @keydown.enter.prevent="
+        $store.purchaseModal.open();
+        setTimeout(() => {
+            const modalForm = document.querySelector('[x-ref=modalForm]');
+            if (modalForm) focusFirstInput(modalForm);
+        }, 350);
+    "
                         class="flex items-center gap-2 rounded-md bg-purple-600 px-4 py-2 text-white text-sm
-    hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500">
+           hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
                             stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                         </svg>
                         Add Item
                     </button>
+
                 </div>
 
                 <!-- Items Table -->
@@ -108,12 +123,15 @@
         @click.self="$store.purchaseModal.close()" @keydown.escape.window="$store.purchaseModal.close()"
         x-init="$watch('$store.purchaseModal.show', open => {
             if (open) {
-                $nextTick(() => {
-                    enableSequentialInput($refs.modalForm);
-                    focusFirstInput($refs.modalForm);
-                });
+                setTimeout(() => {
+                    const modalForm = $refs.modalForm;
+                    if (modalForm) {
+                        enableSequentialInput(modalForm, '#add-item-btn');
+                        focusFirstInput(modalForm);
+                    }
+                }, 400);
             }
-        })">
+        });">
         <!-- Modal Panel -->
         <div x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0 scale-95 translate-y-3"
             x-transition:enter-end="opacity-100 scale-100 translate-y-0" x-transition:leave="ease-in duration-200"

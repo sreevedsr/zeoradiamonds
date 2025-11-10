@@ -154,30 +154,9 @@
 
 
             <!-- Delete Confirmation Modal -->
-            <x-modal name="confirm-delete-modal" focusable>
-                <form method="POST" id="deleteMerchantForm" class="p-6">
-                    @csrf
-                    @method('DELETE')
+            <x-confirm-delete-modal :action="route('admin.merchants.destroy', $merchant->id)" title="Confirm Merchant Deletion"
+                message="Are you sure you want to delete this merchant? This action cannot be undone." />
 
-                    <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-                        {{ __('Confirm Deletion') }}
-                    </h2>
-
-                    <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
-                        {{ __('Are you sure you want to delete this merchant? This action cannot be undone.') }}
-                    </p>
-
-                    <div class="mt-6 flex justify-end space-x-3">
-                        <x-secondary-button type="button" x-on:click="$dispatch('close')">
-                            {{ __('Cancel') }}
-                        </x-secondary-button>
-
-                        <x-danger-button>
-                            {{ __('Yes, Delete') }}
-                        </x-danger-button>
-                    </div>
-                </form>
-            </x-modal>
         </div>
     </div>
 </x-app-layout>

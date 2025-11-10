@@ -55,4 +55,31 @@ class StaffController extends Controller
 
         return redirect()->route('admin.staff.index')->with('success', 'Staff registered successfully!');
     }
+
+    public function destroy($id)
+    {
+        $staff = Staff::findOrFail($id);
+        $staff->delete();
+
+        return redirect()
+            ->route('admin.staff.index')
+            ->with('success', 'Staff record deleted successfully.');
+    }
+    public function update(Request $request, $id)
+    {
+        $staff = Staff::findOrFail($id);
+
+        $validated = $request->validate([
+            'code' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
+            'phone_no' => 'required|string|max:20',
+            'address' => 'required|string|max:500',
+        ]);
+
+        $staff->update($validated);
+
+        return redirect()->route('admin.staff.index')->with('success', 'Staff details updated successfully.');
+    }
+
+
 }

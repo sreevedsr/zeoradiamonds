@@ -7,7 +7,12 @@
  */
 export function enableSequentialInput(container = document, nextTargetSelector = null) {
     const inputs = Array.from(container.querySelectorAll(".input-field")).filter(
-        (el) => !el.readOnly && !el.disabled && el.offsetParent !== null
+        (el) =>
+            !el.readOnly &&
+            !el.disabled &&
+            el.type !== "hidden" &&
+            el.offsetParent !== null &&
+            el.name !== "item_name" // 🟣 Skip auto-filled item_name fields
     );
 
     inputs.forEach((input, index) => {
@@ -15,16 +20,23 @@ export function enableSequentialInput(container = document, nextTargetSelector =
             if (e.key === "Enter") {
                 e.preventDefault();
 
-                // Handle dropdown fields
+                // 🟣 Handle dropdown fields (trigger click to open)
                 const isDropdown = input.dataset?.type === "dropdown";
                 if (isDropdown) {
                     input.click();
                     return;
                 }
 
-                // Find next visible, enabled input
+                // 🟣 Find next valid input
                 let next = inputs[index + 1];
-                while (next && (next.offsetParent === null || next.readOnly || next.disabled)) {
+                while (
+                    next &&
+                    (next.offsetParent === null ||
+                        next.readOnly ||
+                        next.disabled ||
+                        next.name === "item_name" ||
+                        next.type === "hidden")
+                ) {
                     next = inputs[inputs.indexOf(next) + 1];
                 }
 
@@ -41,14 +53,12 @@ export function enableSequentialInput(container = document, nextTargetSelector =
                     null;
 
                 if (nextTarget) {
-                    // Ensure button is focusable
+                    // Ensure focusable
                     nextTarget.setAttribute("tabindex", nextTarget.getAttribute("tabindex") || "0");
-
-                    // Delay focus slightly to avoid Alpine reactivity issues
                     setTimeout(() => {
                         nextTarget.focus({ preventScroll: true });
                     }, 50);
-                    return; // ✅ stop here, don't submit yet
+                    return; // ✅ Stop here — don’t submit yet
                 }
 
                 // 🟣 Default: submit form (only if no Add Item button found)
@@ -68,12 +78,19 @@ export function enableSequentialInput(container = document, nextTargetSelector =
 }
 
 /**
- * Focus the first visible, enabled input when the form loads.
+ * Focus the first visible, enabled, editable input when the form loads.
+ * Skips hidden, read-only, and auto-filled item_name fields.
  * @param {HTMLElement} container - Optional container scope.
  */
 export function focusFirstInput(container = document) {
     const firstInput = Array.from(container.querySelectorAll(".input-field")).find(
-        (el) => el.offsetParent !== null && !el.readOnly && !el.disabled
+        (el) =>
+            el.offsetParent !== null &&
+            !el.readOnly &&
+            !el.disabled &&
+            el.type !== "hidden" &&
+            el.name !== "item_name"
     );
+
     if (firstInput) firstInput.focus();
 }
