@@ -5,6 +5,7 @@ export default function registerPurchaseModalStore(Alpine) {
         show: false,
         items: [],
 
+        // --- Modal Visibility ---
         open() {
             this.show = true;
         },
@@ -13,28 +14,7 @@ export default function registerPurchaseModalStore(Alpine) {
             this.show = false;
         },
 
-        addItem() {
-            const form = document.getElementById("itemForm");
-            const formData = new FormData(form);
-            const item = Object.fromEntries(formData.entries());
-
-            // ✅ Add item to the store
-            this.items.push(item);
-
-            // ✅ Persist to localStorage
-            this.saveToLocal();
-
-            // Reset and close modal
-            form.reset();
-            this.close();
-        },
-
-        removeItem(index) {
-            this.items.splice(index, 1);
-            this.saveToLocal(); // ✅ Update localStorage when item removed
-        },
-
-        // --- LocalStorage handling ---
+        // --- Item Handling (now handled by purchaseForm, but store persists) ---
         saveToLocal() {
             localStorage.setItem("purchase_items", JSON.stringify(this.items));
         },
@@ -51,26 +31,33 @@ export default function registerPurchaseModalStore(Alpine) {
             }
         },
 
+        removeItem(index) {
+            this.items.splice(index, 1);
+            this.saveToLocal();
+        },
+
         clearAll() {
             this.items = [];
             localStorage.removeItem("purchase_items");
         },
     });
 
-    // Alpine component for purchase form
+    // --- Optional Alpine data helper for syncing ---
     Alpine.data("purchaseFormComponent", () => ({
-        items: Alpine.store("purchaseModal").items,
-
         init() {
             console.log("Purchase form initialized");
 
-            // ✅ Load items from localStorage when component mounts
+            // Load persisted items on mount
             Alpine.store("purchaseModal").loadFromLocal();
 
-            // ✅ Optional: sync with other tabs
+            // Sync across tabs
             window.addEventListener("storage", () =>
                 Alpine.store("purchaseModal").loadFromLocal()
             );
+        },
+
+        get items() {
+            return Alpine.store("purchaseModal").items;
         },
 
         openModal() {
@@ -78,8 +65,7 @@ export default function registerPurchaseModalStore(Alpine) {
         },
 
         removeItem(index) {
-            this.items.splice(index, 1);
-            Alpine.store("purchaseModal").saveToLocal(); // ensure sync
+            Alpine.store("purchaseModal").removeItem(index);
         },
 
         clearAll() {

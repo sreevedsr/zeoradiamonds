@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Card;
 use App\Models\Staff;
 use App\Models\Invoice;
+use App\Models\GoldRate;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -48,8 +49,10 @@ class CardsController extends Controller
 
         $lastInvoice = Invoice::latest('id')->first();
         $nextInvoiceNo = 'INV-' . str_pad(($lastInvoice?->id ?? 0) + 1, 5, '0', STR_PAD_LEFT);
+        $latestGoldRate = GoldRate::latest()->value('rate') ?? 0;
 
-        return view('admin.purchases.create', compact('suppliers', 'staff', 'nextInvoiceNo'));
+
+        return view('admin.purchases.create', compact('suppliers', 'staff', 'nextInvoiceNo', 'latestGoldRate'));
     }
 
     public function storeCard(Request $request)
@@ -245,7 +248,7 @@ class CardsController extends Controller
     {
         $card = Card::findOrFail($id);
         $card->delete();
-        return redirect()->route('admin.cards.index')->with('success', 'Card deleted successfully!');
+        return redirect()->route('admin.products.index')->with('success', 'Card deleted successfully!');
     }
 
 }

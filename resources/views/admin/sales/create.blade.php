@@ -37,7 +37,7 @@
 
                     <!-- Merchant Dropdown -->
                     <div x-data="searchableDropdown({
-                        apiUrl: '{{ route('dropdown.fetch', ['type' => 'merchants']) }}',
+                        apiUrl: '{{ route('admin.dropdown.fetch', ['type' => 'merchants']) }}',
                         optionLabel: 'name',
                         optionValue: 'id'
                     })" x-init="init()" class="relative col-span-1"

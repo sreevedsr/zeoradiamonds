@@ -1,4 +1,4 @@
-<div class="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4" x-data="purchaseForm()" x-init="init()"
+<div class="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4"
     @dropdown-selected.window="item.item_code = $event.detail.selected.item_code;
                                 item.item_name = $event.detail.selected.item_name">
 
@@ -71,7 +71,6 @@
         <input type="hidden" name="item_id" :value="selected ? selected.id : ''">
     </div>
 
-
     <!-- Item Name -->
     <div>
         <label class="text-sm font-medium">Item Name <span class="text-red-500">*</span></label>
@@ -92,28 +91,18 @@
     </div>
 
     <!-- Gold Rate -->
-    <div x-data="{
-        item: { gold_rate: '' },
-        async fetchGoldRate() {
-            try {
-                const response = await fetch('/admin/api/latest-gold-rate');
-                const data = await response.json();
-                this.item.gold_rate = data.rate ?? '';
-            } catch (error) {
-                console.error('Failed to fetch gold rate:', error);
-            }
-        }
-    }" x-init="fetchGoldRate()">
+    <div>
         <label class="text-sm font-medium">Gold Rate (per unit) <span class="text-red-500">*</span></label>
-        <input type="number" step="0.01" name="gold_rate" x-model="item.gold_rate"
+        <input type="number" step="0.01" name="gold_rate" x-model="item.gold_rate" x-init="fetchGoldRate()"
             placeholder="Auto-filled from rate" required
             class="w-full rounded-md border border-gray-300 px-3 py-2
-                   focus:outline-none focus:ring-2 focus:ring-purple-600
-                   dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100">
+                  focus:outline-none focus:ring-2 focus:ring-purple-600
+                  dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100">
         <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
             Auto-fetched from latest gold rate.
         </p>
     </div>
+
 
     <!-- Gross Weight -->
     <div>
@@ -137,7 +126,7 @@
 
     <!-- Diamond Weight -->
     <div>
-        <label class="text-sm font-medium">Diamond Weight (g) <span class="text-red-500">*</span></label>
+        <label class="text-sm font-medium">Diamond Weight (ct) <span class="text-red-500">*</span></label>
         <input type="number" step="0.001" name="diamond_weight" x-model="item.diamond_weight"
             placeholder="Enter Diamond Weight" required
             class="w-full rounded-md border border-gray-300 px-3 py-2

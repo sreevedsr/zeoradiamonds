@@ -362,5 +362,5 @@
                 </ul>
             </li>
         <?php endif; ?>
-        
+
 <?php /**PATH C:\xampp\htdocs\Zeeyame\resources\views/layouts/sidebar/admin-links.blade.php ENDPATH**/ ?>

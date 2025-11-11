@@ -8,7 +8,7 @@ export default function purchaseForm() {
             cardOpen: false,
         },
 
-        // --- Main Item Object ---
+        // --- Main Item Object (UI clean, backend-safe) ---
         item: {
             supplier: "",
             invoice_no: "",
@@ -19,29 +19,33 @@ export default function purchaseForm() {
             item_code: "",
             item_name: "",
             quantity: 1,
-            gold_rate: 0,
-            gross_weight: 0,
-            stone_weight: 0,
-            diamond_weight: 0,
-            stone_amount: 0,
-            diamond_price: 0,
-            making_charge: 0,
-            card_charge: 0,
-            other_charge: 0,
-            landing_cost: 0,
-            retail_percent: 0,
-            mrp_percent: 0,
+            gross_weight: "",
+            stone_weight: "",
+            diamond_weight: "", // entered in carats (UI)
+            stone_amount: "",
+            gold_rate: "",
+            diamond_rate: "",
+            making_charge: "",
+            card_charge: "",
+            other_charge: "",
+            landing_cost: "",
+            retail_percent: "",
+            mrp_percent: "",
             certificate_id: "",
             diamond_purchase_location: "",
             category: "",
             diamond_shape: "",
-            carat_weight: 0,
             color: "",
             clarity: "",
             cut: "",
-            valuation: 0,
+            valuation: "",
             certificate_code: "",
-            net_weight: 0, // computed and updated live
+            net_weight: "",
+            gold_component: "",
+            total_amount: "",
+            retail_cost: "",
+            mrp_cost: "",
+            diamond_image: null,
         },
 
         // --- UI Panels ---
@@ -50,20 +54,18 @@ export default function purchaseForm() {
 
         // --- Lifecycle ---
         init() {
-            // Watch for dropdown-selected event
             window.addEventListener("dropdown-selected", (e) => {
                 this.item.item_code = e.detail.selected.item_code;
                 this.item.item_name = e.detail.selected.item_name;
             });
 
-            // Auto-calculation watchers
             const watchedFields = [
                 "item.gross_weight",
                 "item.stone_weight",
                 "item.diamond_weight",
-                "item.gold_rate",
                 "item.stone_amount",
-                "item.diamond_price",
+                "item.gold_rate",
+                "item.diamond_rate",
                 "item.making_charge",
                 "item.card_charge",
                 "item.other_charge",
@@ -78,6 +80,18 @@ export default function purchaseForm() {
             this.recalculateAll();
         },
 
+        // --- Utility Helpers ---
+        safeNumber(value) {
+            const num = parseFloat(value);
+            return isNaN(num) ? 0 : num;
+        },
+
+        diamondWeightInGrams() {
+            const carats = parseFloat(this.item.diamond_weight);
+            if (isNaN(carats) || carats <= 0) return 0;
+            return +(carats * 0.002).toFixed(3);
+        },
+
         // --- Derived Computations ---
         recalculateAll() {
             this.item.net_weight = this.calculateNetWeight();
@@ -89,56 +103,133 @@ export default function purchaseForm() {
         },
 
         calculateNetWeight() {
-            const g = parseFloat(this.item.gross_weight || 0);
-            const s = parseFloat(this.item.stone_weight || 0);
-            const d = parseFloat(this.item.diamond_weight || 0);
+            const g = this.safeNumber(this.item.gross_weight);
+            const s = this.safeNumber(this.item.stone_weight);
+            const d = this.diamondWeightInGrams(); // convert carats to grams
             const result = g - (s + d);
             return result > 0 ? +result.toFixed(3) : 0;
         },
 
         calculateGoldComponent() {
-            return +(this.item.net_weight * parseFloat(this.item.gold_rate || 0)).toFixed(2);
+            const net = this.safeNumber(this.item.net_weight);
+            const rate = this.safeNumber(this.item.gold_rate);
+            const result = +(net * rate).toFixed(2);
+
+            console.log("Gold Component:", {
+                net_weight: net,
+                gold_rate: rate,
+                gold_component: result,
+            });
+
+            return result;
+        },
+
+        async fetchGoldRate() {
+            try {
+                const response = await fetch("/admin/api/latest-gold-rate");
+                const data = await response.json();
+                this.item.gold_rate = data.rate ?? 0;
+                console.log("Fetched Gold Rate:", this.item.gold_rate);
+            } catch (error) {
+                console.error("Failed to fetch gold rate:", error);
+            }
+        },
+
+        async fetchDiamondRate() {
+            try {
+                const response = await fetch("/admin/api/latest-diamond-rate");
+                const data = await response.json();
+                this.item.diamond_rate = data.rate ?? 0;
+                console.log("Fetched Diamond Rate:", this.item.diamond_rate);
+            } catch (error) {
+                console.error("Failed to fetch diamond rate:", error);
+            }
         },
 
         calculateTotalAmount() {
-            const gold = this.calculateGoldComponent();
-            const stone = parseFloat(this.item.stone_amount || 0);
-            const diamond = parseFloat(this.item.diamond_price || 0);
+            const goldComponent = this.safeNumber(this.item.gold_component);
+            const stone = this.safeNumber(this.item.stone_amount);
+            const diamond = this.safeNumber(this.item.diamond_rate);
             const charges =
-                parseFloat(this.item.making_charge || 0) +
-                parseFloat(this.item.card_charge || 0) +
-                parseFloat(this.item.other_charge || 0);
+                this.safeNumber(this.item.making_charge) +
+                this.safeNumber(this.item.card_charge) +
+                this.safeNumber(this.item.other_charge);
 
-            return +(gold + stone + diamond + charges).toFixed(2);
+            const total = goldComponent + stone + diamond + charges;
+
+            console.log("Total Amount Calculation:", {
+                gold_component: goldComponent,
+                stone_amount: stone,
+                diamond_rate: diamond,
+                charges,
+                total_amount: total,
+            });
+
+            return +total.toFixed(2);
         },
 
         calculateLandingCost() {
             const suggested =
-                parseFloat(this.calculateTotalAmount()) - parseFloat(this.calculateGoldComponent());
+                this.safeNumber(this.calculateTotalAmount()) -
+                this.safeNumber(this.calculateGoldComponent());
             return suggested > 0 ? +suggested.toFixed(2) : 0;
         },
 
         calculateRetailCost() {
-            const landing = parseFloat(this.calculateLandingCost());
-            const percent = parseFloat(this.item.retail_percent || 0);
+            const landing = this.safeNumber(this.calculateLandingCost());
+            const percent = this.safeNumber(this.item.retail_percent);
             return +(landing * (1 + percent / 100)).toFixed(2);
         },
 
         calculateMrpCost() {
-            const landing = parseFloat(this.calculateLandingCost());
-            const percent = parseFloat(this.item.mrp_percent || 0);
+            const landing = this.safeNumber(this.calculateLandingCost());
+            const percent = this.safeNumber(this.item.mrp_percent);
             return +(landing * (1 + percent / 100)).toFixed(2);
-        },
-
-        // --- Helpers ---
-        formatCurrency(value) {
-            if (isNaN(value)) return "₹0.00";
-            return "₹" + parseFloat(value).toFixed(2);
         },
 
         generateBarcode() {
             const randomCode = Math.random().toString(36).substring(2, 9).toUpperCase();
             this.item.barcode = "BC-" + randomCode;
+        },
+
+        formatCurrency(value) {
+            const num = parseFloat(value);
+            if (isNaN(num)) return "₹0.00";
+            return (
+                "₹" +
+                num.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+            );
+        },
+
+        addItem() {
+            // ✅ Recalculate before adding
+            this.recalculateAll();
+
+            // ✅ Get store safely (this never fails even if async loaded)
+            const modal = Alpine.store("purchaseModal");
+
+            // if (!modal) {
+            //     console.error("❌ purchaseModal store not found.");
+            //     return;
+            // }
+
+            // ✅ Push to store and persist
+            modal.items.push({ ...this.item });
+            modal.saveToLocal?.();
+
+            // ✅ Reset item form
+            this.resetItem();
+
+            // ✅ Close modal cleanly
+            modal.close();
+        },
+
+        resetItem() {
+            Object.keys(this.item).forEach((key) => {
+                if (typeof this.item[key] === "number") this.item[key] = 0;
+                else this.item[key] = "";
+            });
+            this.item.quantity = 1;
         },
     };
 }

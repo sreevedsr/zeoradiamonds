@@ -2,9 +2,14 @@
 
 $__newAttributes = [];
 $__propNames = \Illuminate\View\ComponentAttributeBag::extractPropNames(([
-    'name',
-    'type' => 'text',
+    'label' => null,
+    'name' => null,
     'model' => null,
+    'readonly' => false,
+    'required' => false,
+    'placeholder' => '',
+    'step' => null,
+    'type' => 'text',
     'value' => null,
 ]));
 
@@ -22,9 +27,14 @@ unset($__propNames);
 unset($__newAttributes);
 
 foreach (array_filter(([
-    'name',
-    'type' => 'text',
+    'label' => null,
+    'name' => null,
     'model' => null,
+    'readonly' => false,
+    'required' => false,
+    'placeholder' => '',
+    'step' => null,
+    'type' => 'text',
     'value' => null,
 ]), 'is_string', ARRAY_FILTER_USE_KEY) as $__key => $__value) {
     $$__key = $$__key ?? $__value;

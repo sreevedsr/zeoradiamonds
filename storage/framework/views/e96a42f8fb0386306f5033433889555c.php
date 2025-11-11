@@ -28,7 +28,7 @@
                     fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                 </svg>
-                Add Sale Item (B2B)
+                Add Sale Item
             </h2>
 
             <button type="button" @click="$store.purchaseModal.close()"
@@ -40,143 +40,330 @@
             </button>
         </div>
 
-        <!-- Body (form controlled by Alpine saleItemForm) -->
-        <form id="saleItemForm" x-ref="saleForm" x-data="saleItemForm()" @submit.prevent="addItem"
-            class="px-6 py-5 space-y-6 overflow-y-auto max-h-[70vh] custom-scrollbar">
+        <form id="saleItemForm"
+      x-ref="saleForm"
+      x-data="saleItemForm()"
+      @submit.prevent="addItem"
+      class="px-6 py-5 space-y-6 overflow-y-auto max-h-[70vh] custom-scrollbar
+             bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100 rounded-lg shadow-sm transition-colors">
 
-            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                <!-- SI No. (auto incremented in JS or left blank for server) -->
-                <div>
-                    <label class="text-sm font-medium">SI. No.</label>
-                    <input type="text" x-model="si_no" readonly
-                        class="w-full rounded-md border border-gray-300 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-sm">
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+
+        <?php if (isset($component)) { $__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8 = $attributes; } ?>
+<?php $component = App\View\Components\Input\Text::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('input.text'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\App\View\Components\Input\Text::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['label' => 'SI. No.','model' => 'si_no','readonly' => true]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8)): ?>
+<?php $attributes = $__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8; ?>
+<?php unset($__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8)): ?>
+<?php $component = $__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8; ?>
+<?php unset($__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8); ?>
+<?php endif; ?>
+
+        <?php if (isset($component)) { $__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8 = $attributes; } ?>
+<?php $component = App\View\Components\Input\Text::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('input.text'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\App\View\Components\Input\Text::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['label' => 'Barcode','model' => 'barcode','placeholder' => 'Scan or type barcode']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8)): ?>
+<?php $attributes = $__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8; ?>
+<?php unset($__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8)): ?>
+<?php $component = $__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8; ?>
+<?php unset($__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8); ?>
+<?php endif; ?>
+
+        <?php if (isset($component)) { $__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8 = $attributes; } ?>
+<?php $component = App\View\Components\Input\Text::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('input.text'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\App\View\Components\Input\Text::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['label' => 'Product Code','model' => 'product_code','placeholder' => 'Product Code']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8)): ?>
+<?php $attributes = $__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8; ?>
+<?php unset($__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8)): ?>
+<?php $component = $__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8; ?>
+<?php unset($__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8); ?>
+<?php endif; ?>
+
+        <?php if (isset($component)) { $__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8 = $attributes; } ?>
+<?php $component = App\View\Components\Input\Text::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('input.text'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\App\View\Components\Input\Text::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['label' => 'Item Code','model' => 'item_code','readonly' => true]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8)): ?>
+<?php $attributes = $__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8; ?>
+<?php unset($__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8)): ?>
+<?php $component = $__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8; ?>
+<?php unset($__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8); ?>
+<?php endif; ?>
+
+        <?php if (isset($component)) { $__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8 = $attributes; } ?>
+<?php $component = App\View\Components\Input\Text::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('input.text'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\App\View\Components\Input\Text::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['label' => 'Item Name','model' => 'item_name','readonly' => true]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8)): ?>
+<?php $attributes = $__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8; ?>
+<?php unset($__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8)): ?>
+<?php $component = $__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8; ?>
+<?php unset($__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8); ?>
+<?php endif; ?>
+
+        <?php if (isset($component)) { $__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8 = $attributes; } ?>
+<?php $component = App\View\Components\Input\Text::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('input.text'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\App\View\Components\Input\Text::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['label' => 'HSN Code','model' => 'hsn','required' => true]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8)): ?>
+<?php $attributes = $__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8; ?>
+<?php unset($__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8)): ?>
+<?php $component = $__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8; ?>
+<?php unset($__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8); ?>
+<?php endif; ?>
+
+        <?php if (isset($component)) { $__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8 = $attributes; } ?>
+<?php $component = App\View\Components\Input\Text::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('input.text'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\App\View\Components\Input\Text::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['label' => 'Quantity','type' => 'number','model' => 'quantity','step' => '1','@input' => 'recomputeAll']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8)): ?>
+<?php $attributes = $__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8; ?>
+<?php unset($__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8)): ?>
+<?php $component = $__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8; ?>
+<?php unset($__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8); ?>
+<?php endif; ?>
+
+        <?php if (isset($component)) { $__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8 = $attributes; } ?>
+<?php $component = App\View\Components\Input\Text::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('input.text'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\App\View\Components\Input\Text::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['label' => 'Gross Weight (g)','type' => 'number','model' => 'gross_weight','step' => '0.001','@input' => 'recomputeAll']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8)): ?>
+<?php $attributes = $__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8; ?>
+<?php unset($__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8)): ?>
+<?php $component = $__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8; ?>
+<?php unset($__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8); ?>
+<?php endif; ?>
+
+        <?php if (isset($component)) { $__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8 = $attributes; } ?>
+<?php $component = App\View\Components\Input\Text::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('input.text'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\App\View\Components\Input\Text::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['label' => 'Stone Weight (g)','type' => 'number','model' => 'stone_weight','step' => '0.001','@input' => 'recomputeAll']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8)): ?>
+<?php $attributes = $__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8; ?>
+<?php unset($__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8)): ?>
+<?php $component = $__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8; ?>
+<?php unset($__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8); ?>
+<?php endif; ?>
+
+        <?php if (isset($component)) { $__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8 = $attributes; } ?>
+<?php $component = App\View\Components\Input\Text::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('input.text'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\App\View\Components\Input\Text::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['label' => 'Diamond Weight (g)','type' => 'number','model' => 'diamond_weight','step' => '0.001','@input' => 'recomputeAll']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8)): ?>
+<?php $attributes = $__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8; ?>
+<?php unset($__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8)): ?>
+<?php $component = $__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8; ?>
+<?php unset($__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8); ?>
+<?php endif; ?>
+
+        <?php if (isset($component)) { $__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8 = $attributes; } ?>
+<?php $component = App\View\Components\Input\Text::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('input.text'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\App\View\Components\Input\Text::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['label' => 'Net Weight (g)','type' => 'number','model' => 'net_weight','readonly' => true]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8)): ?>
+<?php $attributes = $__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8; ?>
+<?php unset($__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8)): ?>
+<?php $component = $__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8; ?>
+<?php unset($__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8); ?>
+<?php endif; ?>
+
+        <?php if (isset($component)) { $__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8 = $attributes; } ?>
+<?php $component = App\View\Components\Input\Text::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('input.text'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\App\View\Components\Input\Text::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['label' => 'Net Amount (₹)','type' => 'number','model' => 'net_amount','step' => '0.01','@input' => 'recomputeTaxes']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8)): ?>
+<?php $attributes = $__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8; ?>
+<?php unset($__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8)): ?>
+<?php $component = $__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8; ?>
+<?php unset($__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8); ?>
+<?php endif; ?>
+
+        <!-- Taxes -->
+        <div class="col-span-1 sm:col-span-2 lg:col-span-3 mt-2 grid gap-3">
+            <template x-if="intraState">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">
+                    <div class="p-3 rounded border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
+                        <div class="text-xs text-gray-500 dark:text-gray-400">CGST (1.5%)</div>
+                        <div class="font-medium" x-text="formatMoney(cgst_amount)"></div>
+                    </div>
+                    <div class="p-3 rounded border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
+                        <div class="text-xs text-gray-500 dark:text-gray-400">SGST (1.5%)</div>
+                        <div class="font-medium" x-text="formatMoney(sgst_amount)"></div>
+                    </div>
                 </div>
+            </template>
 
-                <!-- Barcode -->
-                <div>
-                    <label class="text-sm font-medium">Barcode</label>
-                    <input type="text" x-model="barcode" placeholder="Scan or type barcode"
-                        class="input-field w-full rounded-md border px-3 py-2 text-sm">
+            <template x-if="!intraState">
+                <div class="p-3 rounded border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 w-full">
+                    <div class="text-xs text-gray-500 dark:text-gray-400">IGST (3%)</div>
+                    <div class="font-medium" x-text="formatMoney(igst_amount)"></div>
                 </div>
+            </template>
+        </div>
 
-                <!-- Product Code -->
-                <div>
-                    <label class="text-sm font-medium">Product Code</label>
-                    <input type="text" x-model="product_code" placeholder="Product Code"
-                        class="input-field w-full rounded-md border px-3 py-2 text-sm">
-                </div>
+        <?php if (isset($component)) { $__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8 = $attributes; } ?>
+<?php $component = App\View\Components\Input\Text::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('input.text'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\App\View\Components\Input\Text::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['label' => 'Total Amount (₹)','model' => 'total_amount_display','readonly' => true]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8)): ?>
+<?php $attributes = $__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8; ?>
+<?php unset($__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8)): ?>
+<?php $component = $__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8; ?>
+<?php unset($__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8); ?>
+<?php endif; ?>
+    </div>
 
-                <!-- Item Code (auto generated/lookup) -->
-                <div>
-                    <label class="text-sm font-medium">Item Code</label>
-                    <input type="text" x-model="item_code" readonly
-                        class="w-full rounded-md border px-3 py-2 bg-gray-50 dark:bg-gray-700 text-sm">
-                </div>
+    <!-- Footer -->
+    <div class="flex justify-end gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
+        <button type="button" @click="$store.purchaseModal.close()"
+                class="rounded-md border border-gray-300 dark:border-gray-600
+                       px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200
+                       hover:bg-gray-100 dark:hover:bg-gray-800 transition">
+            Cancel
+        </button>
 
-                <!-- Item Name -->
-                <div>
-                    <label class="text-sm font-medium">Item Name</label>
-                    <input type="text" x-model="item_name" readonly
-                        class="w-full rounded-md border px-3 py-2 bg-gray-50 dark:bg-gray-700 text-sm">
-                </div>
+        <button type="submit"
+                class="rounded-md bg-purple-600 px-4 py-2 text-sm font-medium text-white
+                       hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500
+                       shadow-sm transition">
+            Add Item
+        </button>
+    </div>
+</form>
 
-                <!-- HSN Code -->
-                <div>
-                    <label class="text-sm font-medium">HSN Code <span class="text-red-500">*</span></label>
-                    <input type="text" x-model="hsn" required
-                        class="input-field w-full rounded-md border px-3 py-2 text-sm">
-                </div>
-
-                <!-- Quantity -->
-                <div>
-                    <label class="text-sm font-medium">Quantity</label>
-                    <input type="number" min="0" step="1" x-model.number="quantity" @input="recomputeAll"
-                        class="input-field w-full rounded-md border px-3 py-2 text-sm">
-                </div>
-
-                <!-- Gross Weight -->
-                <div>
-                    <label class="text-sm font-medium">Gross Weight (g)</label>
-                    <input type="number" min="0" step="0.001" x-model.number="gross_weight"
-                        @input="recomputeAll" class="input-field w-full rounded-md border px-3 py-2 text-sm">
-                </div>
-
-                <!-- Stone Weight -->
-                <div>
-                    <label class="text-sm font-medium">Stone Weight (g)</label>
-                    <input type="number" min="0" step="0.001" x-model.number="stone_weight"
-                        @input="recomputeAll" class="input-field w-full rounded-md border px-3 py-2 text-sm">
-                </div>
-
-                <!-- Diamond Weight -->
-                <div>
-                    <label class="text-sm font-medium">Diamond Weight (g)</label>
-                    <input type="number" min="0" step="0.001" x-model.number="diamond_weight"
-                        @input="recomputeAll" class="input-field w-full rounded-md border px-3 py-2 text-sm">
-                </div>
-
-                <!-- Net Weight (auto = gross - stone - diamond) -->
-                <div>
-                    <label class="text-sm font-medium">Net Weight (g)</label>
-                    <input type="number" x-model.number="net_weight" readonly
-                        class="w-full rounded-md border px-3 py-2 bg-gray-50 dark:bg-gray-700 text-sm">
-                </div>
-
-                <!-- Net Amount (including gold rate) -->
-                <div>
-                    <label class="text-sm font-medium">Net Amount (₹)</label>
-                    <input type="number" min="0" step="0.01" x-model.number="net_amount"
-                        @input="recomputeTaxes" class="input-field w-full rounded-md border px-3 py-2 text-sm">
-                    <div class="text-xs text-gray-500 mt-1">Include gold weight rate / item value here.</div>
-                </div>
-
-                <!-- Tax display (dynamic CGST/SGST vs IGST) -->
-                <div class="col-span-1 sm:col-span-2 lg:col-span-3 mt-2 grid gap-3">
-
-                    <!-- ✅ CGST + SGST (Intra-state only) -->
-                    <template x-if="intraState">
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">
-                            <div class="p-3 rounded border border-gray-200 dark:border-gray-700">
-                                <div class="text-xs text-gray-500">CGST (1.5%)</div>
-                                <div class="font-medium" x-text="formatMoney(cgst_amount)"></div>
-                            </div>
-                            <div class="p-3 rounded border border-gray-200 dark:border-gray-700">
-                                <div class="text-xs text-gray-500">SGST (1.5%)</div>
-                                <div class="font-medium" x-text="formatMoney(sgst_amount)"></div>
-                            </div>
-                        </div>
-                    </template>
-
-                    <!-- ✅ IGST (Inter-state only) -->
-                    <template x-if="!intraState">
-                        <div class="p-3 rounded border border-gray-200 dark:border-gray-700 w-full">
-                            <div class="text-xs text-gray-500">IGST (3%)</div>
-                            <div class="font-medium" x-text="formatMoney(igst_amount)"></div>
-                        </div>
-                    </template>
-                </div>
-
-                <!-- Total Amount -->
-                <div class="col-span-1 sm:col-span-1 lg:col-span-3">
-                    <label class="text-sm font-medium">Total Amount (₹)</label>
-                    <input type="text" x-model="total_amount_display" readonly
-                        class="w-full rounded-md border px-3 py-2 bg-gray-50 dark:bg-gray-700 text-sm">
-                </div>
-            </div>
-
-            <!-- Footer -->
-            <div class="flex justify-end gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
-                <button type="button" @click="$store.purchaseModal.close()"
-                    class="rounded-md border border-gray-300 dark:border-gray-600 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition">
-                    Cancel
-                </button>
-
-                <button type="submit"
-                    class="rounded-md bg-purple-600 px-4 py-2 text-sm font-medium text-white hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 shadow-sm transition">
-                    Add Item
-                </button>
-            </div>
-        </form>
     </div>
 </div>
 

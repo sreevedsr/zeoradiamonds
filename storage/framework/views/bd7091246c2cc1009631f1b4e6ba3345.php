@@ -12,12 +12,12 @@
 
     <form method="POST" action="<?php echo e(route('admin.products.store')); ?>" enctype="multipart/form-data" x-data="purchaseForm()"
         x-init="enableSequentialInput(document, '#add-item-btn');
-        focusFirstInput();">
+        focusFirstInput();
+        $store.purchaseModal.loadFromLocal();">
 
         <?php echo csrf_field(); ?>
 
         <div class="space-y-8">
-
             
             <?php echo $__env->make('admin.purchases.partials.header-section', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
@@ -30,30 +30,15 @@
                 <div class="flex items-center justify-between mb-4 border-b border-gray-200 dark:border-gray-700 pb-3">
                     <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100">Items Added</h3>
 
-                    <button type="button" id="add-item-btn" tabindex="5"
-                        @click="
-        $store.purchaseModal.open();
-        setTimeout(() => {
-            const modalForm = document.querySelector('[x-ref=modalForm]');
-            if (modalForm) focusFirstInput(modalForm);
-        }, 350); // matches transition timing
-    "
-                        @keydown.enter.prevent="
-        $store.purchaseModal.open();
-        setTimeout(() => {
-            const modalForm = document.querySelector('[x-ref=modalForm]');
-            if (modalForm) focusFirstInput(modalForm);
-        }, 350);
-    "
+                    <button type="button" id="add-item-btn" tabindex="5" @click="$store.purchaseModal.open()"
                         class="flex items-center gap-2 rounded-md bg-purple-600 px-4 py-2 text-white text-sm
-           hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500">
+                        hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
                             stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                         </svg>
                         Add Item
                     </button>
-
                 </div>
 
                 <!-- Items Table -->
@@ -142,92 +127,130 @@
                 <input type="hidden" name="items_json" :value="JSON.stringify($store.purchaseModal.items)">
             </div>
         </div>
-    </form>
 
-    <!-- Modern Add Item Modal -->
-    <div x-data x-show="$store.purchaseModal.show" x-transition.opacity.duration.200ms
-        class="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-black/40 dark:bg-black/60 overflow-y-auto"
-        @click.self="$store.purchaseModal.close()" @keydown.escape.window="$store.purchaseModal.close()"
-        x-init="$watch('$store.purchaseModal.show', open => {
-            if (open) {
-                setTimeout(() => {
-                    const modalForm = $refs.modalForm;
-                    if (modalForm) {
-                        enableSequentialInput(modalForm, '#add-item-btn');
-                        focusFirstInput(modalForm);
-                    }
-                }, 400);
-            }
-        });">
-        <!-- Modal Panel -->
-        <div x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0 scale-95 translate-y-3"
-            x-transition:enter-end="opacity-100 scale-100 translate-y-0" x-transition:leave="ease-in duration-200"
-            x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95"
-            class="relative w-[92%] sm:w-11/12 md:w-5/6 lg:w-4/5 xl:max-w-5xl
-               bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-700
-               overflow-hidden transform transition-all duration-300 my-6"
-            role="dialog" aria-modal="true" aria-labelledby="modal-title">
-            <!-- Header -->
-            <div
-                class="flex flex-wrap items-center justify-between gap-3 px-4 sm:px-6 py-3 sm:py-4
-                   border-b border-gray-200 dark:border-gray-700">
-                <h2 id="modal-title"
-                    class="text-base sm:text-lg font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-2 truncate">
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                        class="h-5 w-5 text-purple-600 dark:text-purple-400 shrink-0" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                    </svg>
-                    Add Item
-                </h2>
-
-                <button type="button" @click="$store.purchaseModal.close()"
-                    class="text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none
-                       rounded-full p-1.5 hover:bg-gray-100 dark:hover:bg-gray-800 transition shrink-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </div>
-
-            <!-- Body -->
-            <form id="itemForm" x-ref="modalForm" x-data="itemForm()" @submit.prevent="addItem"
-                class="px-4 sm:px-6 py-4 space-y-8 overflow-y-auto max-h-[75vh] sm:max-h-[80vh] custom-scrollbar">
-                <?php echo $__env->make('admin.purchases.partials.product-section', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
-                <?php echo $__env->make('admin.purchases.partials.pricing-section', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
-                <?php echo $__env->make('admin.purchases.partials.card-details', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
-
-                <!-- Footer -->
+        <!-- Modern Add Item Modal -->
+        <div x-show="$store.purchaseModal.show" x-transition.opacity.duration.250ms
+            class="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md bg-black/50 dark:bg-black/70"
+            @click.self="$store.purchaseModal.close()" @keydown.escape.window="$store.purchaseModal.close()">
+            <!-- Modal Panel -->
+            <div x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-6 scale-95"
+                x-transition:enter-end="opacity-100 translate-y-0 scale-100" x-transition:leave="ease-in duration-200"
+                x-transition:leave-start="opacity-100 scale-100"
+                x-transition:leave-end="opacity-0 translate-y-4 scale-95"
+                class="relative w-[95%] sm:w-11/12 md:w-5/6 lg:w-4/5 xl:max-w-5xl
+               bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700
+               transform transition-all duration-300 max-h-[90vh] flex flex-col overflow-hidden"
+                role="dialog" aria-modal="true" aria-labelledby="modal-title">
+                <!-- Sticky Header -->
                 <div
-                    class="flex flex-col sm:flex-row justify-end gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
+                    class="flex-none sticky top-0 z-10 flex items-center justify-between px-6 py-4
+                   border-b border-gray-200 dark:border-gray-700 bg-gray-50/90 dark:bg-gray-800/80 backdrop-blur-sm">
+                    <div class="flex items-center gap-3">
+                        <div
+                            class="flex h-9 w-9 items-center justify-center rounded-full bg-purple-100 dark:bg-purple-700/40">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-purple-600 dark:text-purple-400"
+                                fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 4v16m8-8H4" />
+                            </svg>
+                        </div>
+                        <h2 id="modal-title" class="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                            Add New Item
+                        </h2>
+                    </div>
+
                     <button type="button" @click="$store.purchaseModal.close()"
-                        class="rounded-md border border-gray-300 dark:border-gray-600 px-4 py-2 text-sm font-medium
-                           text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition w-full sm:w-auto">
+                        class="text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 rounded-full p-2 transition hover:bg-gray-100 dark:hover:bg-gray-800"
+                        title="Close">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Scrollable Body -->
+                <div class="flex-1 overflow-y-auto px-6 py-8 custom-scrollbar">
+                    <form x-ref="itemForm" class="space-y-12" novalidate>
+                        
+                        <section>
+                            <h3 class="text-base font-semibold text-gray-800 dark:text-gray-200 mb-4">
+                                Product Details
+                            </h3>
+                            <div class="space-y-6">
+                                <?php echo $__env->make('admin.purchases.partials.product-section', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+                            </div>
+                        </section>
+
+                        <div class="border-t border-gray-200 dark:border-gray-700 my-10"></div>
+
+                        
+                        <section>
+                            <h3 class="text-base font-semibold text-gray-800 dark:text-gray-200 mb-4">
+                                Pricing & Charges
+                            </h3>
+                            <div class="space-y-6">
+                                <?php echo $__env->make('admin.purchases.partials.pricing-section', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+                            </div>
+                        </section>
+
+                        <div class="border-t border-gray-200 dark:border-gray-700 my-10"></div>
+
+                        
+                        <section>
+                            <h3 class="text-base font-semibold text-gray-800 dark:text-gray-200 mb-4">
+                                Certification & Card Details
+                            </h3>
+                            <div class="space-y-6">
+                                <?php echo $__env->make('admin.purchases.partials.card-details', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+                            </div>
+                        </section>
+                    </form>
+                </div>
+
+
+                <!-- Sticky Footer -->
+                <div
+                    class="flex-none sticky bottom-0 flex flex-col sm:flex-row justify-end gap-3 px-6 py-4
+                   border-t border-gray-200 dark:border-gray-700 bg-gray-50/90 dark:bg-gray-800/80 backdrop-blur-sm">
+                    <button type="button" @click="$store.purchaseModal.close()"
+                        class="rounded-md border border-gray-300 dark:border-gray-600 px-5 py-2 text-sm font-medium
+                       text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800
+                       transition w-full sm:w-auto flex items-center justify-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12" />
+                        </svg>
                         Cancel
                     </button>
 
-                    <button type="submit"
-                        class="rounded-md bg-purple-600 px-4 py-2 text-sm font-medium text-white
-                           hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 shadow-sm transition w-full sm:w-auto">
+                    <!-- ✅ Now directly calls Alpine function -->
+                    <button type="button" @click="addItem()"
+                        class="rounded-md bg-purple-600 hover:bg-purple-700 px-5 py-2 text-sm font-semibold
+                       text-white shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-purple-500
+                       transition w-full sm:w-auto flex items-center justify-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 4v16m8-8H4" />
+                        </svg>
                         Add Item
                     </button>
                 </div>
-            </form>
+            </div>
         </div>
-    </div>
+
+    </form>
 
 
     <?php if(session('clear_items')): ?>
         <script>
             document.addEventListener('DOMContentLoaded', () => {
-                // ✅ Clear Alpine store items
                 if (window.Alpine && Alpine.store('purchaseModal')) {
                     Alpine.store('purchaseModal').clearAll?.();
                 }
-
-                // ✅ Also clear localStorage manually (in case store isn’t loaded yet)
                 localStorage.removeItem('purchase_items');
             });
         </script>

@@ -1,7 +1,12 @@
 @props([
-    'name',
-    'type' => 'text',
+    'label' => null,
+    'name' => null,
     'model' => null,
+    'readonly' => false,
+    'required' => false,
+    'placeholder' => '',
+    'step' => null,
+    'type' => 'text',
     'value' => null,
 ])
 
