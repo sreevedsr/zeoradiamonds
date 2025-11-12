@@ -9,6 +9,7 @@ $__propNames = \Illuminate\View\ComponentAttributeBag::extractPropNames(([
     'required' => false,
     'placeholder' => '',
     'step' => null,
+    'min' => null,
     'type' => 'text',
     'value' => null,
 ]));
@@ -34,6 +35,7 @@ foreach (array_filter(([
     'required' => false,
     'placeholder' => '',
     'step' => null,
+    'min' => null,
     'type' => 'text',
     'value' => null,
 ]), 'is_string', ARRAY_FILTER_USE_KEY) as $__key => $__value) {
@@ -52,14 +54,31 @@ unset($__defined_vars, $__key, $__value); ?>
     $value = $value ?? ($errors->any() ? old($name) : '');
 ?>
 
-<input
-    type="<?php echo e($type); ?>"
-    name="<?php echo e($name); ?>"
-    <?php if($model): ?> x-model="<?php echo e($model); ?>" <?php endif; ?>
-    value="<?php echo e($value); ?>"
-    <?php echo e($attributes->merge([
-        'class' => 'input-field w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-600 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100'
-    ])); ?>
+<div class="space-y-1">
+    <?php if($label): ?>
+        <label for="<?php echo e($name); ?>" class="text-sm font-medium text-gray-700 dark:text-gray-200">
+            <?php echo e($label); ?>
 
-/>
+            <?php if($required): ?>
+                <span class="text-red-500">*</span>
+            <?php endif; ?>
+        </label>
+    <?php endif; ?>
+
+    <input id="<?php echo e($name); ?>" type="<?php echo e($type); ?>" name="<?php echo e($name); ?>"
+        <?php if($model): ?> x-model="<?php echo e($model); ?>" <?php endif; ?> value="<?php echo e($value); ?>"
+        placeholder="<?php echo e($placeholder); ?>" <?php if($readonly): ?> readonly <?php endif; ?>
+        <?php if($required): ?> required <?php endif; ?>
+        <?php if($step): ?> step="<?php echo e($step); ?>" <?php endif; ?>
+        <?php if($min): ?> min="<?php echo e($min); ?>" <?php endif; ?>
+        <?php echo e($attributes->merge([
+            'class' =>
+                'input-field w-full rounded-md border border-gray-300 px-3 py-2
+                                focus:outline-none focus:ring-2 focus:ring-purple-600
+                                dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100
+                                hover:border-purple-400 transition duration-150
+                                ' .
+                ($readonly ? 'bg-gray-100 dark:bg-gray-800 cursor-not-allowed text-gray-700 dark:text-gray-300' : ''),
+        ])); ?> />
+</div>
 <?php /**PATH C:\xampp\htdocs\Zeeyame\resources\views/components/input/text.blade.php ENDPATH**/ ?>

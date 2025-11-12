@@ -8,12 +8,15 @@ use App\Http\Controllers\CardsController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use App\Http\Controllers\DropdownController;
 use App\Http\Controllers\GoldRateController;
 use App\Http\Controllers\MerchantController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\TempPurchaseController;
 use App\Http\Controllers\MerchantRequestController;
+
 
 
 // Redirect root URL to login or dashboard
@@ -50,12 +53,19 @@ Route::middleware('auth')->group(function () {
             Route::get('register', [ProductController::class, 'create'])->name('register');
             Route::post('register', [ProductController::class, 'store'])->name('register');
 
+            Route::get('/create', [TempPurchaseController::class, 'index'])->name('purchases.create');
+            Route::post('/add-item', [TempPurchaseController::class, 'add'])->name('purchases.add-item');
+            Route::delete('/remove-item/{id}', [TempPurchaseController::class, 'remove'])->name('purchases.remove-item');
+            Route::delete('/clear-items', [TempPurchaseController::class, 'clear'])->name('purchases.clear-items');
+
+
             // Cards management
             Route::get('/', [CardsController::class, 'index'])->name('index');
             Route::get('/create', [CardsController::class, 'createCard'])->name('create');
             Route::post('/store', [CardsController::class, 'storeCard'])->name('store');
             Route::get('/assign', [CardsController::class, 'showAssignPage'])->name('assign');
             Route::post('/assign', [CardsController::class, 'assignCard'])->name('assign');
+            Route::get('/lookup', [CardsController::class, 'lookup'])->name('lookup');
             Route::get('/requests', [DashboardController::class, 'customerRequests'])->name('requests');
 
             Route::get('/{id}', [CardsController::class, 'show'])->name('show');
@@ -113,6 +123,9 @@ Route::middleware('auth')->group(function () {
         });
         Route::get('/api/dropdown/{type}', [DropdownController::class, 'fetch'])->name('dropdown.fetch');
         Route::get('/api/dropdown/combined', [DropdownController::class, 'combined'])->name('dropdown.combined');
+        Route::get('/generate-qr/{data}', function ($data) {
+            return QrCode::format('svg')->size(200)->generate($data);
+        });
 
     });
 

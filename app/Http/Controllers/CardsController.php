@@ -8,6 +8,7 @@ use App\Models\Invoice;
 use App\Models\GoldRate;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
+use App\Models\TempPurchaseItem;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\Auth;
@@ -55,110 +56,203 @@ class CardsController extends Controller
         return view('admin.purchases.create', compact('suppliers', 'staff', 'nextInvoiceNo', 'latestGoldRate'));
     }
 
-    public function storeCard(Request $request)
+    // public function storeCard(Request $request)
+    // {
+    //     // ✅ Restrict to Admins
+    //     if (!Auth::check() || Auth::user()->role !== 'admin') {
+    //         abort(403, 'Unauthorized access');
+    //     }
+
+    //     // ✅ Validate top-level invoice data
+    //     $validated = $request->validate([
+    //         'invoice_no' => 'required|string|max:100|unique:invoices,invoice_no',
+    //         'invoice_date' => 'required|date',
+    //         'supplier_id' => 'required|exists:suppliers,id',
+    //         'items_json' => 'required|string',
+    //     ]);
+
+    //     // ✅ Fetch Supplier
+    //     $supplier = Supplier::findOrFail($validated['supplier_id']);
+
+    //     // ✅ Create Invoice
+    //     $invoice = Invoice::create([
+    //         'invoice_no' => $validated['invoice_no'],
+    //         'invoice_date' => $validated['invoice_date'],
+    //         'supplier_id' => $supplier->id,
+    //     ]);
+
+    //     // ✅ Decode JSON Product Items
+    //     $items = json_decode($validated['items_json'], true);
+    //     if (!is_array($items) || empty($items)) {
+    //         return back()->withErrors(['items_json' => 'No valid product items found.']);
+    //     }
+
+    //     // ✅ Store each product (card)
+    //     foreach ($items as $item) {
+    //         // Handle optional certificate image
+    //         $imagePath = null;
+    //         if (isset($item['diamond_image']) && $item['diamond_image'] instanceof \Illuminate\Http\UploadedFile) {
+    //             $imagePath = $item['diamond_image']->store('diamond_certificates', 'public');
+    //         }
+
+    //         Card::create([
+
+    //             // 🧾 Invoice Info
+    //             'invoice_no' => $validated['invoice_no'] ?? 'N/A',
+    //             'invoice_date' => $validated['invoice_date'] ?? now(),
+    //             'supplier_id' => $supplier->id ?? null,
+
+    //             // 🧱 Product Details
+    //             'product_code' => $item['product_code'] ?? 'N/A',
+    //             'item_code' => $item['item_code'] ?? 'N/A',
+    //             'item_name' => $item['item_name'] ?? 'N/A',
+    //             'quantity' => is_numeric($item['quantity']) ? $item['quantity'] : 1,
+    //             'gold_rate' => is_numeric($item['gold_rate']) ? $item['gold_rate'] : 0,
+    //             'gross_weight' => is_numeric($item['gross_weight']) ? $item['gross_weight'] : 0,
+    //             'stone_weight' => is_numeric($item['stone_weight']) ? $item['stone_weight'] : 0,
+    //             'diamond_weight' => is_numeric($item['diamond_weight']) ? $item['diamond_weight'] : 0,
+    //             'net_weight' => is_numeric($item['net_weight']) ? $item['net_weight'] : 0,
+
+    //             // 💰 Pricing & Charges
+    //             'stone_amount' => is_numeric($item['stone_amount']) ? $item['stone_amount'] : 0,
+    //             'diamond_rate' => is_numeric($item['diamond_rate']) ? $item['diamond_rate'] : 0,
+    //             'making_charge' => is_numeric($item['making_charge']) ? $item['making_charge'] : 0,
+    //             'card_charge' => is_numeric($item['card_charge']) ? $item['card_charge'] : 0,
+    //             'other_charge' => is_numeric($item['other_charge']) ? $item['other_charge'] : 0,
+    //             'total_amount' => is_numeric($item['total_amount']) ? $item['total_amount'] : 0,
+    //             'landing_cost' => is_numeric($item['landing_cost']) ? $item['landing_cost'] : 0,
+    //             'retail_percent' => is_numeric($item['retail_percent']) ? $item['retail_percent'] : 0,
+    //             'retail_cost' => is_numeric($item['retail_cost']) ? $item['retail_cost'] : 0,
+    //             'mrp_percent' => is_numeric($item['mrp_percent']) ? $item['mrp_percent'] : 0,
+    //             'mrp_cost' => is_numeric($item['mrp_cost']) ? $item['mrp_cost'] : 0,
+
+    //             // 💎 Certification & Card Details
+    //             'certificate_id' => !empty($item['certificate_id']) ? $item['certificate_id'] : uniqid('CERT-'),
+    //             'category' => $item['category'] ?: 'General',
+    //             'diamond_shape' => $item['diamond_shape'] ?: 'Unknown',
+    //             'color' => $item['color'] ?: 'N/A',
+    //             'clarity' => $item['clarity'] ?: 'N/A',
+    //             'cut' => $item['cut'] ?: 'N/A',
+    //             'certificate_code' => $item['certificate_code'] ?? null,
+    //             'diamond_image' => $imagePath,
+    //         ]);
+    //     }
+
+    //     return redirect()
+    //         ->back()
+    //         ->with('success', "Invoice #{$invoice->invoice_no} and all product items saved successfully.")
+    //         ->with('clear_items', true);
+    // }
+public function storeCard(Request $request)
+{
+    // validate invoice data ...
+    // $invoice = Invoice::create([...]);
+
+    $tempItems = TempPurchaseItem::where('user_id', Auth::id())->get();
+
+    foreach ($tempItems as $item) {
+        Card::create([
+            'invoice_id' => $invoice->id,
+            'item_name' => $item->item_name,
+            'quantity' => $item->quantity,
+            'gold_rate' => $item->gold_rate,
+            'total_amount' => $item->total_amount,
+        ]);
+    }
+
+    // clear temp
+    TempPurchaseItem::where('user_id', Auth::id())->delete();
+
+    return redirect()->route('admin.products.index')->with('success', 'Invoice and items added successfully.');
+}
+    public function update(Request $request, $id)
     {
-        // ✅ Only admins
+        // ✅ Restrict to Admin
         if (!Auth::check() || Auth::user()->role !== 'admin') {
             abort(403, 'Unauthorized access');
         }
 
-        // ✅ Validate fields
+        // ✅ Validate all updatable fields
         $validated = $request->validate([
-            'invoice_no' => 'required|string|max:100|unique:invoices,invoice_no',
-            'invoice_date' => 'required|date',
-            'supplier_id' => 'required|exists:suppliers,id', // ✅ validate by ID
-            'staff_id' => 'required|exists:staff,id',         // ✅ validate by ID
-            'items_json' => 'required|string',                // JSON array
-        ]);
+            // Product Info
+            'product_code' => 'required|string|max:255',
+            'item_code' => 'required|string|max:255',
+            'item_name' => 'required|string|max:255',
+            'quantity' => 'required|numeric|min:1',
+            'gold_rate' => 'nullable|numeric|min:0',
+            'gross_weight' => 'nullable|numeric|min:0',
+            'stone_weight' => 'nullable|numeric|min:0',
+            'diamond_weight' => 'nullable|numeric|min:0',
+            'net_weight' => 'nullable|numeric|min:0',
 
-        // ✅ Fetch related supplier & staff details
-        $supplier = Supplier::find($validated['supplier_id']);
-        $staff = Staff::find($validated['staff_id']);
+            // Pricing
+            'stone_amount' => 'nullable|numeric|min:0',
+            'diamond_rate' => 'nullable|numeric|min:0',
+            'making_charge' => 'nullable|numeric|min:0',
+            'card_charge' => 'nullable|numeric|min:0',
+            'other_charge' => 'nullable|numeric|min:0',
+            'total_amount' => 'nullable|numeric|min:0',
+            'landing_cost' => 'nullable|numeric|min:0',
+            'retail_percent' => 'nullable|numeric|min:0',
+            'retail_cost' => 'nullable|numeric|min:0',
+            'mrp_percent' => 'nullable|numeric|min:0',
+            'mrp_cost' => 'nullable|numeric|min:0',
 
-        // ✅ Create invoice with related info
-        $invoice = Invoice::create([
-            'invoice_no' => $validated['invoice_no'],
-            'invoice_date' => $validated['invoice_date'],
-            'supplier_id' => $supplier->id,
-            'staff_id' => $staff->id,
-        ]);
-
-        // ✅ Decode JSON items
-        $items = json_decode($validated['items_json'], true);
-        if (!is_array($items) || empty($items)) {
-            return back()->withErrors(['items_json' => 'No valid items found.']);
-        }
-
-        // ✅ Store each item
-        foreach ($items as $item) {
-            $imagePath = null;
-            if (isset($item['diamond_image']) && $item['diamond_image'] instanceof \Illuminate\Http\UploadedFile) {
-                $imagePath = $item['diamond_image']->store('diamond_certificates', 'public');
-            }
-
-            Card::create([
-                'invoice_id' => $invoice->id,
-                'certificate_id' => $item['certificate_id'] ?? uniqid('CERT-'),
-                'diamond_purchase_location' => $item['diamond_purchase_location'] ?? 'N/A',
-                'category' => $item['category'] ?? 'General',
-                'diamond_shape' => $item['diamond_shape'] ?? 'Unknown',
-                'carat_weight' => $item['carat_weight'] ?? 0,
-                'clarity' => $item['clarity'] ?? 'N/A',
-                'color' => $item['color'] ?? 'N/A',
-                'cut' => $item['cut'] ?? 'N/A',
-                'valuation' => $item['valuation'] ?? 0,
-                'diamond_image' => $imagePath,
-            ]);
-        }
-
-        return redirect()
-            ->back()
-            ->with('success', "Invoice #{$invoice->invoice_no} and items added successfully!")
-            ->with('clear_items', true);
-
-    }
-
-
-    public function update(Request $request, $id)
-    {
-        // Check role
-        if (!Auth::user() || Auth::user()->role !== 'admin') {
-            abort(403, 'Unauthorized access');
-        }
-
-        // Validate input
-        $validatedData = $request->validate([
+            // Certification
             'certificate_id' => 'required|string|max:255',
-            'diamond_purchase_location' => 'required|string|max:255',
-            'category' => 'required|string|max:100',
-            'diamond_type' => 'required|string|max:100',
-            'carat_weight' => 'required|numeric|min:0',
-            'clarity' => 'required|string|max:50',
-            'color' => 'required|string|max:5',
-            'cut' => 'required|string|max:100',
-            'diamond_image' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:10240', // optional image
+            'diamond_purchase_location' => 'nullable|string|max:255',
+            'category' => 'nullable|string|max:100',
+            'diamond_shape' => 'nullable|string|max:100',
+            'color' => 'nullable|string|max:10',
+            'clarity' => 'nullable|string|max:50',
+            'cut' => 'nullable|string|max:100',
+            'valuation' => 'nullable|numeric|min:0',
+            'diamond_image' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:10240',
         ]);
 
-        // Find card
         $card = Card::findOrFail($id);
 
-        // Handle image update (if new image uploaded)
-        if ($request->hasFile('diamond_image')) {
-            // Delete old image if it exists
-            if ($card->diamond_image && file_exists(public_path('storage/' . $card->diamond_image))) {
-                unlink(public_path('storage/' . $card->diamond_image));
-            }
+        // ✅ Handle new certificate upload
+        // if ($request->hasFile('diamond_image')) {
+        //     if ($card->diamond_image && Storage::disk('public')->exists($card->diamond_image)) {
+        //         Storage::disk('public')->delete($card->diamond_image);
+        //     }
 
-            // Store new image
-            $path = $request->file('diamond_image')->store('diamond_images', 'public');
-            $validatedData['diamond_image'] = $path;
+        //     $validated['diamond_image'] = $request->file('diamond_image')->store('diamond_certificates', 'public');
+        // }
+
+
+
+        // ✅ Normalize numeric fields (avoid empty string errors)
+        foreach ([
+            'gold_rate',
+            'gross_weight',
+            'stone_weight',
+            'diamond_weight',
+            'net_weight',
+            'stone_amount',
+            'diamond_rate',
+            'making_charge',
+            'card_charge',
+            'other_charge',
+            'total_amount',
+            'landing_cost',
+            'retail_percent',
+            'retail_cost',
+            'mrp_percent',
+            'mrp_cost',
+            'valuation'
+        ] as $field) {
+            $validated[$field] = is_numeric($validated[$field] ?? null)
+                ? $validated[$field]
+                : 0;
         }
 
-        // Update card record
-        $card->update($validatedData);
+        $card->update($validated);
 
-        // Redirect back
-        return redirect()->route('admin.cards.index')->with('success', 'Card details updated successfully!');
+        return redirect()
+            ->route('admin.products.index')
+            ->with('success', 'Card product details updated successfully.');
     }
 
     public function showAssignPage(Request $request)
@@ -178,6 +272,40 @@ class CardsController extends Controller
         $merchants = User::where('role', 'merchant')->orderBy('name')->get();
 
         return view('admin.sales.create', compact('cards', 'merchants', 'search'));
+    }
+
+    public function lookup(Request $request)
+    {
+        $search = $request->get('q') ?? $request->get('barcode') ?? $request->get('product_code');
+
+        $query = \DB::table('cards')
+            ->leftJoin('products', 'cards.item_code', '=', 'products.item_code')
+            ->select([
+                'cards.id',
+                'cards.product_code',
+                'cards.item_code',
+                'cards.item_name',
+                'products.hsn_code as hsn',
+                'cards.quantity',
+                'cards.gross_weight',
+                'cards.stone_weight',
+                'cards.diamond_weight',
+                'cards.net_weight',
+                'cards.total_amount'
+            ]);
+
+        // 🟢 If user typed something, filter by it
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('cards.product_code', 'like', "%{$search}%")
+                    ->orWhere('cards.item_name', 'like', "%{$search}%");
+            });
+        }
+
+        // 🟢 Default limit
+        $products = $query->limit(25)->get();
+
+        return response()->json($products);
     }
 
     // Handle card assignment
@@ -223,7 +351,7 @@ class CardsController extends Controller
         ]);
         // optional: check if already assigned
         if ($card->merchant_id == $merchantId) {
-            return redirect()->route('admin.cards.assign')
+            return redirect()->route('admin.products.assign')
                 ->with('info', 'Card is already assigned to the selected merchant.');
 
         }
@@ -233,7 +361,7 @@ class CardsController extends Controller
         // dd($card->merchant_id, $card->merchant ? $card->merchant->id : null);
 
 
-        return redirect()->route('admin.cards.assign')
+        return redirect()->route('admin.products.assign')
             ->with('success', 'Card assigned to merchant successfully!');
     }
 

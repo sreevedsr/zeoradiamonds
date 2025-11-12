@@ -5,9 +5,20 @@ export default function registerPurchaseModalStore(Alpine) {
         show: false,
         items: [],
 
-        // --- Modal Visibility ---
         open() {
             this.show = true;
+
+            // Wait until Alpine has updated the DOM and transitions are applied
+            setTimeout(() => {
+                const modal = document.querySelector('[x-show="$store.purchaseModal.show"]');
+                if (!modal) return;
+
+                // ✅ Focus the first input inside modal
+                focusFirstInput(modal);
+
+                // ✅ Enable sequential Enter navigation
+                enableSequentialInput(modal, "#add-item-btn");
+            }, 250); // Matches transition duration (250ms)
         },
 
         close() {
@@ -51,9 +62,7 @@ export default function registerPurchaseModalStore(Alpine) {
             Alpine.store("purchaseModal").loadFromLocal();
 
             // Sync across tabs
-            window.addEventListener("storage", () =>
-                Alpine.store("purchaseModal").loadFromLocal()
-            );
+            window.addEventListener("storage", () => Alpine.store("purchaseModal").loadFromLocal());
         },
 
         get items() {

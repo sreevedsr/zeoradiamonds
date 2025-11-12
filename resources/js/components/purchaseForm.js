@@ -1,4 +1,5 @@
 // resources/js/components/purchaseForm.js
+import QRCode from 'qrcode';
 
 export default function purchaseForm() {
     return {
@@ -59,6 +60,7 @@ export default function purchaseForm() {
                 this.item.item_name = e.detail.selected.item_name;
             });
 
+            // Only watch input fields — not computed ones
             const watchedFields = [
                 "item.gross_weight",
                 "item.stone_weight",
@@ -88,18 +90,26 @@ export default function purchaseForm() {
 
         diamondWeightInGrams() {
             const carats = parseFloat(this.item.diamond_weight);
-            if (isNaN(carats) || carats <= 0) return 0;
-            return +(carats * 0.002).toFixed(3);
+            return isNaN(carats) || carats <= 0 ? 0 : +(carats * 0.002).toFixed(3);
         },
 
         // --- Derived Computations ---
         recalculateAll() {
-            this.item.net_weight = this.calculateNetWeight();
-            this.item.gold_component = this.calculateGoldComponent();
-            this.item.total_amount = this.calculateTotalAmount();
-            this.item.landing_cost = this.calculateLandingCost();
-            this.item.retail_cost = this.calculateRetailCost();
-            this.item.mrp_cost = this.calculateMrpCost();
+            // compute values first
+            const newNet = this.calculateNetWeight();
+            const newGold = this.calculateGoldComponent(newNet);
+            const newTotal = this.calculateTotalAmount(newGold);
+            const newLanding = this.calculateLandingCost(newTotal, newGold);
+            const newRetail = this.calculateRetailCost(newLanding);
+            const newMrp = this.calculateMrpCost(newLanding);
+
+            // only update if changed (prevents loops)
+            if (this.item.net_weight !== newNet) this.item.net_weight = newNet;
+            if (this.item.gold_component !== newGold) this.item.gold_component = newGold;
+            if (this.item.total_amount !== newTotal) this.item.total_amount = newTotal;
+            if (this.item.landing_cost !== newLanding) this.item.landing_cost = newLanding;
+            if (this.item.retail_cost !== newRetail) this.item.retail_cost = newRetail;
+            if (this.item.mrp_cost !== newMrp) this.item.mrp_cost = newMrp;
         },
 
         calculateNetWeight() {
@@ -110,44 +120,37 @@ export default function purchaseForm() {
             return result > 0 ? +result.toFixed(3) : 0;
         },
 
-        calculateGoldComponent() {
-            const net = this.safeNumber(this.item.net_weight);
+        calculateGoldComponent(netWeight = this.item.net_weight) {
+            const net = this.safeNumber(netWeight);
             const rate = this.safeNumber(this.item.gold_rate);
-            const result = +(net * rate).toFixed(2);
-
-            console.log("Gold Component:", {
-                net_weight: net,
-                gold_rate: rate,
-                gold_component: result,
-            });
-
-            return result;
+            console.log("Gold " + (net * rate).toFixed(2));
+            return +(net * rate).toFixed(2);
         },
 
         async fetchGoldRate() {
             try {
-                const response = await fetch("/admin/api/latest-gold-rate");
-                const data = await response.json();
+                const res = await fetch("/admin/api/latest-gold-rate");
+                const data = await res.json();
                 this.item.gold_rate = data.rate ?? 0;
                 console.log("Fetched Gold Rate:", this.item.gold_rate);
-            } catch (error) {
-                console.error("Failed to fetch gold rate:", error);
+            } catch (e) {
+                console.error("Failed to fetch gold rate:", e);
             }
         },
 
         async fetchDiamondRate() {
             try {
-                const response = await fetch("/admin/api/latest-diamond-rate");
-                const data = await response.json();
+                const res = await fetch("/admin/api/latest-diamond-rate");
+                const data = await res.json();
                 this.item.diamond_rate = data.rate ?? 0;
                 console.log("Fetched Diamond Rate:", this.item.diamond_rate);
-            } catch (error) {
-                console.error("Failed to fetch diamond rate:", error);
+            } catch (e) {
+                console.error("Failed to fetch diamond rate:", e);
             }
         },
 
-        calculateTotalAmount() {
-            const goldComponent = this.safeNumber(this.item.gold_component);
+        calculateTotalAmount(goldComponent = this.item.gold_component) {
+            const gold = this.safeNumber(goldComponent);
             const stone = this.safeNumber(this.item.stone_amount);
             const diamond = this.safeNumber(this.item.diamond_rate);
             const charges =
@@ -155,41 +158,61 @@ export default function purchaseForm() {
                 this.safeNumber(this.item.card_charge) +
                 this.safeNumber(this.item.other_charge);
 
-            const total = goldComponent + stone + diamond + charges;
-
-            console.log("Total Amount Calculation:", {
-                gold_component: goldComponent,
-                stone_amount: stone,
-                diamond_rate: diamond,
-                charges,
-                total_amount: total,
-            });
-
-            return +total.toFixed(2);
+            return +(gold + stone + diamond + charges).toFixed(2);
         },
 
-        calculateLandingCost() {
-            const suggested =
-                this.safeNumber(this.calculateTotalAmount()) -
-                this.safeNumber(this.calculateGoldComponent());
+        calculateLandingCost(total = this.item.total_amount, gold = this.item.gold_component) {
+            console.log("🔍 calculateLandingCost() called with:");
+            console.log("   total_amount:", total);
+            console.log("   gold_component:", gold);
+
+            const suggested = this.safeNumber(total) - this.safeNumber(gold);
+
+            console.log("   safe total:", this.safeNumber(total));
+            console.log("   safe gold:", this.safeNumber(gold));
+            console.log("   calculated landing cost:", suggested > 0 ? +suggested.toFixed(2) : 0);
+            console.log("--------------------------------------");
+
             return suggested > 0 ? +suggested.toFixed(2) : 0;
         },
 
-        calculateRetailCost() {
-            const landing = this.safeNumber(this.calculateLandingCost());
+        calculateRetailCost(landing = this.item.landing_cost) {
             const percent = this.safeNumber(this.item.retail_percent);
             return +(landing * (1 + percent / 100)).toFixed(2);
         },
 
-        calculateMrpCost() {
-            const landing = this.safeNumber(this.calculateLandingCost());
+        calculateMrpCost(landing = this.item.landing_cost) {
             const percent = this.safeNumber(this.item.mrp_percent);
             return +(landing * (1 + percent / 100)).toFixed(2);
         },
 
-        generateBarcode() {
-            const randomCode = Math.random().toString(36).substring(2, 9).toUpperCase();
-            this.item.barcode = "BC-" + randomCode;
+        generateQRCodeData() {
+            const goldRate = this.item.gold_rate || 0;
+            const mrp = this.item.mrp_cost || 0;
+            const productCode = this.item.product_code || "N/A";
+            const unique = Math.floor(Math.random() * 999999)
+                .toString()
+                .padStart(6, "0");
+
+            // Create structured data for QR content (JSON)
+            return JSON.stringify({
+                product_code: productCode,
+                gold_rate: goldRate,
+                mrp: mrp,
+                id: unique,
+                generated_at: new Date().toISOString(),
+            });
+        },
+
+        async generateQRCode() {
+            const qrData = this.generateQRCodeData();
+
+            // Use a local QR API (qrcode.js)
+            const qrCanvas = document.createElement("canvas");
+            await QRCode.toCanvas(qrCanvas, qrData, { width: 200 });
+
+            // Convert to base64 image
+            this.item.qr_code = qrCanvas.toDataURL("image/png");
         },
 
         formatCurrency(value) {
@@ -197,37 +220,25 @@ export default function purchaseForm() {
             if (isNaN(num)) return "₹0.00";
             return (
                 "₹" +
-                num.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+                num.toLocaleString("en-IN", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                })
             );
         },
 
         addItem() {
-            // ✅ Recalculate before adding
             this.recalculateAll();
-
-            // ✅ Get store safely (this never fails even if async loaded)
             const modal = Alpine.store("purchaseModal");
-
-            // if (!modal) {
-            //     console.error("❌ purchaseModal store not found.");
-            //     return;
-            // }
-
-            // ✅ Push to store and persist
             modal.items.push({ ...this.item });
             modal.saveToLocal?.();
-
-            // ✅ Reset item form
             this.resetItem();
-
-            // ✅ Close modal cleanly
             modal.close();
         },
 
         resetItem() {
             Object.keys(this.item).forEach((key) => {
-                if (typeof this.item[key] === "number") this.item[key] = 0;
-                else this.item[key] = "";
+                this.item[key] = typeof this.item[key] === "number" ? 0 : "";
             });
             this.item.quantity = 1;
         },

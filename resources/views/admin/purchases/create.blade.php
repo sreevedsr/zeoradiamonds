@@ -4,7 +4,7 @@
     <form method="POST" action="{{ route('admin.products.store') }}" enctype="multipart/form-data" x-data="purchaseForm()"
         x-init="enableSequentialInput(document, '#add-item-btn');
         focusFirstInput();
-        $store.purchaseModal.loadFromLocal();">
+        $store.purchaseModal.loadFromLocal();" novalidate>
 
         @csrf
 
@@ -179,8 +179,14 @@
                                 @include('admin.purchases.partials.card-details')
                             </div>
                         </section>
+                        <div class="flex flex-col items-center mt-6" x-show="item.qr_code">
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">QR Code Preview</p>
+                            <img :src="item.qr_code" alt="QR Code" class="w-40 h-40 border rounded-lg shadow-md">
+                        </div>
+                        <input type="hidden" name="qr_code" x-model="item.qr_code">
                     </form>
                 </div>
+
 
 
                 <!-- Sticky Footer -->

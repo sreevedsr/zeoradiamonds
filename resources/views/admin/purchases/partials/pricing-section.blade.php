@@ -1,110 +1,87 @@
-<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
 
     <!-- Stone Amount -->
-    <div>
-        <label class="text-sm font-medium">Stone Amount</label>
-        <input type="number" min="0" step="0.01" name="stone_amount" x-model.number="item.stone_amount"
-            class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm sm:text-base
-            focus:outline-none focus:ring-2 focus:ring-purple-600 dark:border-gray-600
-            dark:bg-gray-700 dark:text-gray-100">
-    </div>
+    <x-input.text type="number" label="Stone Amount" name="stone_amount" model="item.stone_amount" min="0"
+        step="0.01" />
 
     <!-- Diamond Rate -->
-    <div>
-        <label class="text-sm font-medium">
-            Diamond Rate (per carat) <span class="text-red-500">*</span>
-        </label>
-
-        <input type="number" min="0" step="0.01" name="diamond_rate" x-model.number="item.diamond_rate"
-            x-init="fetchDiamondRate()"
-            class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm sm:text-base
-                  focus:outline-none focus:ring-2 focus:ring-purple-600 dark:border-gray-600
-                  dark:bg-gray-700 dark:text-gray-100">
-
-        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400 leading-tight">
+    <div class="space-y-1">
+        <x-input.text type="number" label="Diamond Rate (per carat)" name="diamond_rate" model="item.diamond_rate"
+            min="0" step="0.01" x-init="fetchDiamondRate()" required />
+        <p class="text-xs text-gray-500 dark:text-gray-400">
             Auto-fetched from latest diamond rate.
         </p>
     </div>
 
     <!-- Making Charge -->
-    <div>
-        <label class="text-sm font-medium">Making Charge</label>
-        <input type="number" min="0" step="0.01" name="making_charge" x-model.number="item.making_charge"
-            class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm sm:text-base
-            focus:outline-none focus:ring-2 focus:ring-purple-600 dark:border-gray-600
-            dark:bg-gray-700 dark:text-gray-100">
-    </div>
+    <x-input.text type="number" label="Making Charge" name="making_charge" model="item.making_charge" min="0"
+        step="0.01" />
 
     <!-- Card Charge -->
-    <div>
-        <label class="text-sm font-medium">Card Charge</label>
-        <input type="number" min="0" step="0.01" name="card_charge" x-model.number="item.card_charge"
-            class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm sm:text-base
-            focus:outline-none focus:ring-2 focus:ring-purple-600 dark:border-gray-600
-            dark:bg-gray-700 dark:text-gray-100">
-    </div>
+    <x-input.text type="number" label="Card Charge" name="card_charge" model="item.card_charge" min="0"
+        step="0.01" />
 
     <!-- Other Charge -->
-    <div>
-        <label class="text-sm font-medium">Other Charge</label>
-        <input type="number" min="0" step="0.01" name="other_charge" x-model.number="item.other_charge"
-            class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm sm:text-base
-            focus:outline-none focus:ring-2 focus:ring-purple-600 dark:border-gray-600
-            dark:bg-gray-700 dark:text-gray-100">
-    </div>
+    <x-input.text type="number" label="Other Charge" name="other_charge" model="item.other_charge" min="0"
+        step="0.01" />
 
     <!-- Total Amount -->
-    <div class="col-span-full">
-        <label class="text-sm font-medium">Total Amount (Including Gold Rate)</label>
-        <input type="text" readonly :value="formatCurrency(item.total_amount || 0)"
-            class="w-full rounded-md border border-gray-300 bg-gray-50 px-3 py-2 text-base sm:text-lg
-            font-semibold text-gray-900 focus:outline-none dark:border-gray-600 dark:bg-gray-700
-            dark:text-gray-100">
+    <div class="col-span-full lg:col-span-2">
+        <x-input.text type="text" label="Total Amount (Including Gold Rate)" name="total_amount" readonly
+            x-bind:value="formatCurrency(item.total_amount || 0)"
+            class="font-semibold text-lg sm:text-xl bg-gray-50 dark:bg-gray-800" />
     </div>
 
     <!-- Landing Cost -->
-    <div>
-        <label class="text-sm font-medium">Landing Cost (editable)</label>
-        <input type="number" min="0" step="0.01" name="landing_cost" x-model.number="item.landing_cost"
-            class="w-full rounded-md border border-gray-300 bg-gray-50 px-3 py-2 text-base sm:text-lg
-            font-semibold text-gray-900 focus:outline-none dark:border-gray-600 dark:bg-gray-700
-            dark:text-gray-100">
-
+    <div class="lg:col-span-2">
+        <x-input.text type="number" label="Landing Cost" name="landing_cost" model="item.landing_cost"
+            min="0" step="0.01" class="font-semibold text-base sm:text-lg" />
     </div>
 
     <!-- Retail & MRP Costs -->
-    <div class="col-span-full sm:col-span-2 md:col-span-3 lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <div class="col-span-full grid grid-cols-1 sm:grid-cols-2 gap-4">
 
-        <!-- Retail Cost -->
-        <div>
-            <label class="text-sm font-medium">Retail Cost (%)</label>
-            <div class="flex flex-col sm:flex-row gap-2">
-                <input type="number" min="0" step="0.01" x-model.number="item.retail_percent"
-                    name="retail_percent"
-                    class="w-full sm:w-1/2 rounded-md border border-gray-300 px-3 py-2 text-sm sm:text-base
-                    focus:outline-none focus:ring-2 focus:ring-purple-600 dark:border-gray-600
-                    dark:bg-gray-700 dark:text-gray-100">
-                <input type="text" readonly :value="formatCurrency(item.retail_cost || 0)"
-                    class="w-full sm:w-1/2 rounded-md border border-gray-300 bg-gray-50 px-3 py-2
-                    text-sm sm:text-base text-gray-800 dark:border-gray-600 dark:bg-gray-700
-                    dark:text-gray-100">
+        <!-- Retail Markup -->
+        <div class="space-y-1.5">
+            <div class="flex items-center justify-between">
+                <label class="text-sm font-medium text-gray-700 dark:text-gray-200">
+                    Retail Cost (%)
+                </label>
+            </div>
+
+            <div class="flex flex-col sm:flex-row sm:items-center gap-2">
+                <!-- Retail % Input -->
+                <x-input.text type="number" name="retail_percent" model="item.retail_percent" min="0"
+                    step="0.01" placeholder="Enter percentage" class="flex-1 text-sm" />
+
+                <!-- Retail Cost Result -->
+                <x-input.text type="text" name="retail_cost" readonly
+                    x-bind:value="formatCurrency(item.retail_cost || 0)"
+                    class="flex-1 bg-gray-50 dark:bg-gray-800 font-medium text-gray-800 dark:text-gray-100" />
             </div>
         </div>
 
-        <!-- MRP Cost -->
-        <div>
-            <label class="text-sm font-medium">MRP Cost (%)</label>
-            <div class="flex flex-col sm:flex-row gap-2">
-                <input type="number" min="0" step="0.01" x-model.number="item.mrp_percent" name="mrp_percent"
-                    class="w-full sm:w-1/2 rounded-md border border-gray-300 px-3 py-2 text-sm sm:text-base
-                    focus:outline-none focus:ring-2 focus:ring-purple-600 dark:border-gray-600
-                    dark:bg-gray-700 dark:text-gray-100">
-                <input type="text" readonly :value="formatCurrency(item.mrp_cost || 0)"
-                    class="w-full sm:w-1/2 rounded-md border border-gray-300 bg-gray-50 px-3 py-2
-                    text-sm sm:text-base text-gray-800 dark:border-gray-600 dark:bg-gray-700
-                    dark:text-gray-100">
+        <!-- MRP Margin -->
+        <div class="space-y-1.5">
+            <div class="flex items-center justify-between">
+                <label class="text-sm font-medium text-gray-700 dark:text-gray-200">
+                    MRP Cost (%)
+                </label>
+            </div>
+
+            <div class="flex flex-col sm:flex-row sm:items-center gap-2">
+                <!-- MRP % Input -->
+                <x-input.text type="number" name="mrp_percent" model="item.mrp_percent" min="0" step="0.01"
+                    placeholder="Enter percentage" class="flex-1 text-sm" />
+
+                <!-- MRP Cost Result -->
+                <x-input.text type="text" name="mrp_cost" readonly x-bind:value="formatCurrency(item.mrp_cost || 0)"
+                    class="flex-1 bg-gray-50 dark:bg-gray-800 font-medium text-gray-800 dark:text-gray-100" />
             </div>
         </div>
+
     </div>
+
+
 
 </div>

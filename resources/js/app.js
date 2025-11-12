@@ -2,6 +2,7 @@
 import './bootstrap';
 import Alpine from 'alpinejs';
 
+
 // Import all components
 import stateCode from './components/stateCode.js';
 import pageTransition from './components/pageTransition.js';
@@ -13,6 +14,7 @@ import { enableSequentialInput, focusFirstInput } from './utils/formNavigation.j
 
 // 🧩 Attach Alpine globally
 window.Alpine = Alpine;
+import './components/saleModal.js';
 
 // 🧰 Attach helpers globally (so Blade can use them)
 window.enableSequentialInput = enableSequentialInput;
@@ -27,6 +29,7 @@ Alpine.data('stateCode', stateCode);
 Alpine.data('pageTransition', pageTransition);
 Alpine.data('purchaseForm', purchaseForm);
 Alpine.data('collapsibleMenu', collapsibleMenu);
+
 
 // ✅ Load store data AFTER Alpine initializes
 document.addEventListener('alpine:init', () => {
