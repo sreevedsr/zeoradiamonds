@@ -16,7 +16,9 @@ use App\Http\Controllers\MerchantController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TempPurchaseController;
+use App\Http\Controllers\TempSaleController;
 use App\Http\Controllers\MerchantRequestController;
+use App\Http\Controllers\SaleAssignController;
 use App\Http\Controllers\TempPurchaseItemController;
 
 
@@ -84,6 +86,13 @@ Route::middleware('auth')->group(function () {
         Route::put('/temp-items/{id}', [TempPurchaseItemController::class, 'update']);
         Route::delete('/temp-items/{id}', [TempPurchaseItemController::class, 'destroy']);
         Route::delete('/temp-items', [TempPurchaseItemController::class, 'clearAll']);
+
+        Route::post('temp-sales', [TempSaleController::class, 'store']);
+        Route::get('temp-sales', [TempSaleController::class, 'index']);
+        Route::delete('temp-sales/{tempSale}', [TempSaleController::class, 'destroy']);
+
+        Route::post('sales/finalize', [SaleAssignController::class, 'finalize'])->name('admin.sales.finalize');
+
 
         Route::middleware(['auth', 'can:edit-cards'])->prefix('products')->name('products.')->group(function () {
             Route::get('register', [ProductController::class, 'create'])->name('register');

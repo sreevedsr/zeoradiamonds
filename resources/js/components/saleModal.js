@@ -1,170 +1,195 @@
 // resources/js/components/saleModal.js
 import { enableSequentialInput, focusFirstInput } from "../utils/formNavigation";
 
-/**
- * Sales Modal Alpine Store + saleItemForm component
- * Self-registering Alpine module.
- */
 document.addEventListener("alpine:init", () => {
-    // 🟢 Store registration
-    Alpine.store("saleModal", {
-        show: false,
-        items: [],
-
-        open() {
-            this.show = true;
-
-            Alpine.nextTick(() => {
-                const modalForm = document.querySelector("#saleItemForm");
-                if (modalForm) {
-                    enableSequentialInput(modalForm);
-                    focusFirstInput(modalForm);
-                }
-            });
-        },
-
-        close() {
-            this.show = false;
-        },
-
-        clear() {
-            this.items = [];
-            this.saveToLocal();
-        },
-
-        add(item) {
-            this.items.push(item);
-            this.saveToLocal();
-        },
-
-        remove(index) {
-            this.items.splice(index, 1);
-            this.saveToLocal();
-        },
-
-        loadFromLocal() {
-            const stored = localStorage.getItem("sale_items");
-            if (stored) this.items = JSON.parse(stored);
-        },
-
-        saveToLocal() {
-            localStorage.setItem("sale_items", JSON.stringify(this.items));
-        },
-    });
-
-    // 🟢 Component registration
+    // ------------------------------------------------------------
+    // 🔵 Sale Item Form Component (Modal)
+    // ------------------------------------------------------------
     Alpine.data("saleItemForm", () => ({
+        // REQUIRED FIELDS FOR BLADE
         si_no: "",
         barcode: "",
         product_code: "",
         item_code: "",
         item_name: "",
         hsn: "",
-        quantity: 1,
+
+        // WEIGHTS
         gross_weight: 0,
         stone_weight: 0,
         diamond_weight: 0,
         net_weight: 0,
+
+        // AMOUNTS
+        quantity: 1,
         net_amount: 0,
+        total_amount_display: "0.00",
+
+        // TAX FLAGS
+        intraState: true,
         cgst_amount: 0,
         sgst_amount: 0,
         igst_amount: 0,
-        total_amount_display: "0.00",
-        intraState: true,
-        merchant_state_code: "",
-        merchant_state: "",
-        company_state: window?.companyState || "Kerala",
+
+        // INTERNAL ID
+        id: null,
 
         init() {
-            this.listenForProductSelection();
-        },
+            // Auto-focus inputs when modal opens
+            this.$watch("open", (val) => {
+                if (val && this.$refs.saleForm) {
+                    enableSequentialInput(this.$refs.saleForm);
+                    focusFirstInput(this.$refs.saleForm);
+                }
+            });
 
-        listenForProductSelection() {
+            // When user selects product from dropdown
             document.addEventListener("product-selected", (e) => {
-                const product = e.detail.product;
-                this.fillProductDetails(product);
+                const p = e.detail.product;
+
+                this.id = p.id ?? null;
+
+                this.product_code = p.product_code ?? "";
+                this.item_code = p.item_code ?? "";
+                this.item_name = p.item_name ?? "";
+                this.hsn = p.hsn ?? "";
+
+                this.barcode = p.barcode ?? "";
+
+                this.quantity = Number(p.quantity ?? 1);
+                this.gross_weight = Number(p.gross_weight ?? 0);
+                this.stone_weight = Number(p.stone_weight ?? 0);
+                this.diamond_weight = Number(p.diamond_weight ?? 0);
+                this.net_weight = Number(p.net_weight ?? 0);
+
+                this.net_amount = Number(p.total_amount ?? 0);
+                this.total_amount_display = this.net_amount.toFixed(2);
+
+                this.computeTaxes();
             });
         },
 
-        fillProductDetails(data) {
-            this.product_code = data.product_code || "";
-            this.item_code = data.item_code || "";
-            this.item_name = data.item_name || "";
-            this.hsn = data.hsn || "";
-            this.quantity = data.quantity || 1;
-            this.gross_weight = data.gross_weight || 0;
-            this.stone_weight = data.stone_weight || 0;
-            this.diamond_weight = data.diamond_weight || 0;
-            this.net_weight = data.net_weight || 0;
-            this.net_amount = data.total_amount || 0;
-            this.recomputeTaxes();
-        },
-
-        recomputeTaxes() {
-            const netAmt = parseFloat(this.net_amount) || 0;
-            this.intraState = String(this.merchant_state_code || "").trim() === "29";
+        // ------------------------------------------------------------
+        // TAX CALCULATIONS
+        // ------------------------------------------------------------
+        computeTaxes() {
+            const net = Number(this.net_amount);
 
             if (this.intraState) {
-                this.cgst_amount = +(netAmt * 0.015).toFixed(2);
-                this.sgst_amount = +(netAmt * 0.015).toFixed(2);
+                this.cgst_amount = +(net * 0.015).toFixed(2);
+                this.sgst_amount = +(net * 0.015).toFixed(2);
                 this.igst_amount = 0;
             } else {
-                this.igst_amount = +(netAmt * 0.03).toFixed(2);
                 this.cgst_amount = 0;
                 this.sgst_amount = 0;
+                this.igst_amount = +(net * 0.03).toFixed(2);
             }
 
-            const total = netAmt + this.cgst_amount + this.sgst_amount + this.igst_amount;
-            this.total_amount_display = total.toFixed(2);
+            this.total_amount_display = (
+                net +
+                this.cgst_amount +
+                this.sgst_amount +
+                this.igst_amount
+            ).toFixed(2);
         },
 
         formatMoney(v) {
             return (parseFloat(v) || 0).toFixed(2);
         },
 
-        addItem() {
-            const item = {
-                si_no: this.si_no,
-                barcode: this.barcode,
-                product_code: this.product_code,
-                item_code: this.item_code,
-                item_name: this.item_name,
-                hsn: this.hsn,
-                quantity: this.quantity,
-                gross_weight: this.gross_weight,
-                stone_weight: this.stone_weight,
-                diamond_weight: this.diamond_weight,
-                net_weight: this.net_weight,
-                net_amount: this.net_amount,
-                cgst_amount: this.cgst_amount,
-                sgst_amount: this.sgst_amount,
-                igst_amount: this.igst_amount,
-                total_amount: this.total_amount_display,
-            };
+        // ------------------------------------------------------------
+        // SAVE ITEM INTO DB
+        // ------------------------------------------------------------
+        async addItem() {
+            const form = new FormData();
+            form.append("id", this.id);
+            form.append("quantity", this.quantity);
+            form.append("net_weight", this.net_weight);
+            form.append("net_amount", this.net_amount);
+            form.append("total_amount", this.total_amount_display);
+            form.append("cgst", this.cgst_amount);
+            form.append("sgst", this.sgst_amount);
+            form.append("igst", this.igst_amount);
 
-            Alpine.store("saleModal").add(item);
+            const res = await fetch("/admin/temp-sales", {
+                method: "POST",
+                headers: {
+                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content,
+                    Accept: "application/json",
+                },
+                body: form,
+            });
+
+            if (!res.ok) {
+                console.error("Server:", await res.text());
+                return;
+            }
+
+            // Reload the main table
+            window.dispatchEvent(new CustomEvent("refresh-sales-table"));
+
+            this.closeModal();
+        },
+
+        // ------------------------------------------------------------
+        // CLOSE MODAL + RESET
+        // ------------------------------------------------------------
+        closeModal() {
             this.resetForm();
-            Alpine.store("saleModal").close();
+            document.getElementById("saleModalClose")?.click();
         },
 
         resetForm() {
             Object.assign(this, {
+                si_no: "",
                 barcode: "",
                 product_code: "",
                 item_code: "",
                 item_name: "",
                 hsn: "",
-                quantity: 1,
+
                 gross_weight: 0,
                 stone_weight: 0,
                 diamond_weight: 0,
                 net_weight: 0,
+
+                quantity: 1,
                 net_amount: 0,
+                total_amount_display: "0.00",
+
+                intraState: true,
                 cgst_amount: 0,
                 sgst_amount: 0,
                 igst_amount: 0,
-                total_amount_display: "0.00",
+
+                id: null,
             });
+        },
+    }));
+
+    // ------------------------------------------------------------
+    // 🔵 Sales Table Component (DB-Driven)
+    // ------------------------------------------------------------
+    Alpine.data("salesTable", () => ({
+        items: [],
+
+        async init() {
+            await this.loadItems();
+
+            window.addEventListener("refresh-sales-table", () => {
+                this.loadItems();
+            });
+        },
+
+        async loadItems() {
+            try {
+                const res = await fetch("/admin/temp-sales");
+                if (!res.ok) return;
+
+                this.items = await res.json();
+            } catch (err) {
+                console.error("Fetch failed:", err);
+            }
         },
     }));
 });

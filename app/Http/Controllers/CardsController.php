@@ -7,8 +7,10 @@ use App\Models\Staff;
 use App\Models\Invoice;
 use App\Models\GoldRate;
 use App\Models\Supplier;
+use App\Models\TempSale;
 use Illuminate\Http\Request;
 use App\Models\TempPurchaseItem;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\Auth;
@@ -276,58 +278,33 @@ class CardsController extends Controller
     // Handle card assignment
     public function assignCard(Request $request)
     {
-        // Base merchant validation (exists as user + has role merchant)
         $request->validate([
-            'merchant_id' => [
-                'required',
-                'exists:users,id',
-                function ($attribute, $value, $fail) {
-                    $user = User::find($value);
-                    if (!$user || $user->role !== 'merchant') {
-                        $fail('The selected user is not a merchant.');
-                    }
-                },
-            ],
+            'merchant_id' => 'required|exists:users,id',
+            'invoice_no' => 'nullable|string',
         ]);
 
-        $merchantId = $request->merchant_id;
+        DB::transaction(function () use ($request) {
 
-        // If card_id provided -> assign existing card to merchant
+            // Fetch temp sales for this user only
+            $items = TempSale::where('created_by', auth()->id())->get();
 
-        $request->validate([
-            'card_id' => 'required|exists:cards,id',
-        ]);
+            if ($items->isEmpty()) {
+                throw new \Exception("No sale items found.");
+            }
 
-        $card = Card::find($request->card_id);
+            foreach ($items as $saleItem) {
 
-        \Log::info('Before refresh', [
-            'card_id' => $card->id,
-            'merchant_id_in_card' => $card->merchant_id,
-            'merchant_id_in_request' => $request->merchant_id,
-            'same_before_refresh' => $card->merchant_id == $request->merchant_id,
-        ]);
+                Card::where('id', $saleItem->card_id)->update([
+                    'merchant_id' => $request->merchant_id
+                ]);
+            }
 
-        $card->refresh();
+            // Clear temp items
+            TempSale::where('created_by', auth()->id())->delete();
+        });
 
-        \Log::info('After refresh', [
-            'merchant_id_in_card' => $card->merchant_id,
-            'merchant_id_in_request' => $request->merchant_id,
-            'same_after_refresh' => $card->merchant_id == $request->merchant_id,
-        ]);
-        // optional: check if already assigned
-        if ($card->merchant_id == $merchantId) {
-            return redirect()->route('admin.products.assign')
-                ->with('info', 'Card is already assigned to the selected merchant.');
+        return redirect()->back()->with('success', 'Sales assigned successfully.');
 
-        }
-
-        $card->merchant_id = $merchantId;
-        $card->save();
-        // dd($card->merchant_id, $card->merchant ? $card->merchant->id : null);
-
-
-        return redirect()->route('admin.products.assign')
-            ->with('success', 'Card assigned to merchant successfully!');
     }
 
 
