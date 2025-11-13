@@ -54,6 +54,8 @@ return new class extends Migration {
             $table->string('cut')->nullable();                // Cut
             $table->string('certificate_image')->nullable();  // Certificate Image Path
             $table->string('product_image')->nullable();      // Product Image Path
+            $table->text('barcode_data')->nullable();
+
 
             /* ================================
              * 🔹 Optional Metadata

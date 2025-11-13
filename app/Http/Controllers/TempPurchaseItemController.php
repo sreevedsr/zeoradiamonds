@@ -25,6 +25,23 @@ class TempPurchaseItemController extends Controller
         return response()->json(['status' => 'success']);
     }
 
+    public function update(Request $request, $id)
+    {
+        $item = TempPurchaseItem::findOrFail($id);
+
+        $item->update([
+            'item_name' => $request->item_name,
+            'quantity' => $request->quantity,
+            'net_weight' => $request->net_weight,
+            'total_amount' => $request->total_amount,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Item updated successfully'
+        ]);
+    }
+
     // Delete a single item
     public function destroy($id)
     {

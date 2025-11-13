@@ -3,16 +3,17 @@
 
     {{-- Root Alpine scope - listens for close event from purchaseForm --}}
     <div x-data="{ showModal: false }" @close-purchase-modal.window="showModal = false">
-        <form method="POST" action="{{ route('admin.products.store') }}" enctype="multipart/form-data"
-            x-init="enableSequentialInput($el, '#add-item-btn'); focusFirstInput();" novalidate>
-            @csrf
-            {{-- Purchase Header --}}
-            @include('admin.purchases.partials.header-section')
-
-            {{-- Items Table (DB Driven) --}}
-            {{-- NOTE: ensure the Add Item button inside this partial uses @click="showModal = true" --}}
-            @include('admin.purchases.partials.items-table')
-        </form>
+        <div>
+            <form method="POST" action="{{ route('admin.products.store') }}" enctype="multipart/form-data"
+                x-init="enableSequentialInput($el, '#add-item-btn'); focusFirstInput();" novalidate>
+                @csrf
+                {{-- Purchase Header --}}
+                @include('admin.purchases.partials.header-section')
+                {{-- Items Table (DB Driven) --}}
+                {{-- NOTE: ensure the Add Item button inside this partial uses @click="showModal = true" --}}
+                @include('admin.purchases.partials.items-table')
+            </form>
+        </div>
 
         <!-- Modern Add Item Modal -->
         <div x-show="showModal" x-transition.opacity.duration.250ms

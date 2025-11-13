@@ -1,20 +1,33 @@
 <div
     class="rounded-lg bg-white dark:bg-gray-800 p-8 border border-gray-200 dark:border-transparent
-    text-gray-900 dark:text-gray-100 shadow-none dark:shadow-md dark:shadow-gray-900/50">
+           text-gray-900 dark:text-gray-100 shadow-none dark:shadow-md dark:shadow-gray-900/50">
 
     <!-- Section Header -->
     <div class="flex items-center justify-between mb-4 border-b border-gray-200 dark:border-gray-700 pb-3">
         <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100">Items Added</h3>
 
-        <button type="button" id="add-item-btn" tabindex="5" @click="showModal = true"
-            class="flex items-center gap-2 rounded-md bg-purple-600 px-4 py-2 text-white text-sm
-            hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
-                stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-            </svg>
+        <?php if (isset($component)) { $__componentOriginald411d1792bd6cc877d687758b753742c = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginald411d1792bd6cc877d687758b753742c = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.primary-button','data' => ['type' => 'button','id' => 'add-item-btn','tabindex' => '5','@click' => 'showModal = true']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('primary-button'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['type' => 'button','id' => 'add-item-btn','tabindex' => '5','@click' => 'showModal = true']); ?>
+            
             Add Item
-        </button>
+         <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginald411d1792bd6cc877d687758b753742c)): ?>
+<?php $attributes = $__attributesOriginald411d1792bd6cc877d687758b753742c; ?>
+<?php unset($__attributesOriginald411d1792bd6cc877d687758b753742c); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginald411d1792bd6cc877d687758b753742c)): ?>
+<?php $component = $__componentOriginald411d1792bd6cc877d687758b753742c; ?>
+<?php unset($__componentOriginald411d1792bd6cc877d687758b753742c); ?>
+<?php endif; ?>
     </div>
 
     <!-- Items Table -->
@@ -24,10 +37,11 @@
                 <tr>
                     <th class="px-4 py-2 text-left text-sm font-medium">#</th>
                     <th class="px-4 py-2 text-left text-sm font-medium">Item Code</th>
-                    <th class="px-4 py-2 text-left text-sm font-medium">Item Name</th>
+                    <th class="px-4 py-2 text-left text-sm font-medium">Name</th>
                     <th class="px-4 py-2 text-left text-sm font-medium">Qty</th>
                     <th class="px-4 py-2 text-left text-sm font-medium">Net Wt</th>
                     <th class="px-4 py-2 text-left text-sm font-medium">Amount</th>
+                    <th class="px-4 py-2 text-center text-sm font-medium">QR</th>
                     <th class="px-4 py-2 text-right text-sm font-medium">Actions</th>
                 </tr>
             </thead>
@@ -41,11 +55,43 @@
                         <td class="px-4 py-2 text-sm" x-text="item.quantity || '-'"></td>
                         <td class="px-4 py-2 text-sm" x-text="item.net_weight"></td>
                         <td class="px-4 py-2 text-sm" x-text="item.total_amount"></td>
-                        <td class="px-4 py-2 text-right">
-                            <button type="button" @click="deleteItem(item.id)"
-                                class="text-red-500 hover:text-red-700 text-sm font-medium">
+
+                        <!-- QR Column -->
+                        <td class="px-4 py-2 text-center">
+                            <template x-if="item.barcode_data">
+                                <img :src="`/qr/${item.id}`" class="w-16 h-16 mx-auto object-contain" alt="QR Code">
+                            </template>
+
+                            <template x-if="!item.barcode_data">
+                                <span class="text-gray-400 text-xs">No QR</span>
+                            </template>
+                        </td>
+
+                        <!-- Actions -->
+                        <td class="px-4 py-2 text-right space-x-2">
+                            
+
+                            <?php if (isset($component)) { $__componentOriginal656e8c5ea4d9a4fa173298297bfe3f11 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal656e8c5ea4d9a4fa173298297bfe3f11 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.danger-button','data' => ['type' => 'button','@click' => 'deleteItem(item.id)','class' => 'text-red-500 hover:text-red-700 text-sm font-medium']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('danger-button'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['type' => 'button','@click' => 'deleteItem(item.id)','class' => 'text-red-500 hover:text-red-700 text-sm font-medium']); ?>
                                 Remove
-                            </button>
+                             <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal656e8c5ea4d9a4fa173298297bfe3f11)): ?>
+<?php $attributes = $__attributesOriginal656e8c5ea4d9a4fa173298297bfe3f11; ?>
+<?php unset($__attributesOriginal656e8c5ea4d9a4fa173298297bfe3f11); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal656e8c5ea4d9a4fa173298297bfe3f11)): ?>
+<?php $component = $__componentOriginal656e8c5ea4d9a4fa173298297bfe3f11; ?>
+<?php unset($__componentOriginal656e8c5ea4d9a4fa173298297bfe3f11); ?>
+<?php endif; ?>
                         </td>
                     </tr>
                 </template>
@@ -53,7 +99,7 @@
 
             <tbody x-show="!items.length">
                 <tr>
-                    <td colspan="7" class="px-4 py-6 text-center text-gray-500 dark:text-gray-400 text-sm">
+                    <td colspan="8" class="px-4 py-6 text-center text-gray-500 dark:text-gray-400 text-sm">
                         No items added yet. Click “Add Item” to begin.
                     </td>
                 </tr>
@@ -91,6 +137,7 @@
         </div>
     </div>
 </div>
+
 <script>
     function tempItemsTable() {
         return {

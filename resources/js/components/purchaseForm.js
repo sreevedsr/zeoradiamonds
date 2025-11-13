@@ -233,11 +233,13 @@ export default function purchaseForm() {
             return +(landing * (1 + percent / 100)).toFixed(2);
         },
 
-        generateBarcode() {
-            const randomCode = Math.random().toString(36).substring(2, 9).toUpperCase();
-            this.item.barcode = "BC-" + randomCode;
+        generateBarcodeData() {
+            return JSON.stringify({
+                pc: this.item.product_code,
+                mrp: this.item.mrp_cost,
+                gr: this.item.gold_rate,
+            });
         },
-
         formatCurrency(value) {
             const num = parseFloat(value);
             if (isNaN(num)) return "₹0.00";
@@ -255,6 +257,9 @@ export default function purchaseForm() {
                 console.warn("Validation failed:", this.errors);
                 return;
             }
+
+            this.item.barcode_data = this.generateBarcodeData();
+
             try {
                 const response = await fetch("/admin/temp-items", {
                     method: "POST",
@@ -275,9 +280,9 @@ export default function purchaseForm() {
 
                 window.dispatchEvent(new CustomEvent("refresh-temp-items"));
                 this.resetItem();
-
-                // Tell parent Alpine component to close the modal
-                window.dispatchEvent(new Event("close-purchase-modal"));
+                this.$nextTick(() => {
+                    window.dispatchEvent(new Event("close-purchase-modal"));
+                });
             } catch (error) {
                 console.error("Add Item Error:", error);
             }

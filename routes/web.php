@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\TempPurchaseItem;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RateController;
@@ -45,6 +46,34 @@ Route::middleware('auth')->group(function () {
     // Shared dashboard for admin & merchant
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
+    Route::get('/qr/{id}', function ($id) {
+        // QR payload should ONLY contain an ID
+        $payload = json_encode(['id' => (int) $id]);
+
+        return response(
+            QrCode::format('svg')->size(200)->generate($payload),
+            200,
+            ['Content-Type' => 'image/svg+xml']
+        );
+    })->where('id', '[0-9]+');
+    Route::get('/scan/{id}', function ($id) {
+
+        $item = TempPurchaseItem::findOrFail($id);
+
+        $goldRate = DB::table('gold_rates')
+            ->orderBy('created_at', 'desc')
+            ->value('rate');
+
+        return response()->json([
+            'product_code' => $item->product_code,
+            'mrp' => $item->mrp_cost,
+            'gold_rate' => $goldRate, // always LIVE
+        ]);
+    });
+
+
+
+
     // ================================
     // Admin-only routes
     // ================================
@@ -52,6 +81,7 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/temp-items', [TempPurchaseItemController::class, 'index']);
         Route::post('/temp-items', [TempPurchaseItemController::class, 'store']);
+        Route::put('/temp-items/{id}', [TempPurchaseItemController::class, 'update']);
         Route::delete('/temp-items/{id}', [TempPurchaseItemController::class, 'destroy']);
         Route::delete('/temp-items', [TempPurchaseItemController::class, 'clearAll']);
 

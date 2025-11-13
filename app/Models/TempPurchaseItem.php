@@ -37,6 +37,7 @@ class TempPurchaseItem extends Model
         'cut',
         'certificate_image',
         'product_image',
+        'barcode_data',
         'notes',
     ];
 

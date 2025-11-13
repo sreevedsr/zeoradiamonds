@@ -12,16 +12,17 @@
 
     
     <div x-data="{ showModal: false }" @close-purchase-modal.window="showModal = false">
-        <form method="POST" action="<?php echo e(route('admin.products.store')); ?>" enctype="multipart/form-data"
-            x-init="enableSequentialInput($el, '#add-item-btn'); focusFirstInput();" novalidate>
-            <?php echo csrf_field(); ?>
-            
-            <?php echo $__env->make('admin.purchases.partials.header-section', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
-
-            
-            
-            <?php echo $__env->make('admin.purchases.partials.items-table', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
-        </form>
+        <div>
+            <form method="POST" action="<?php echo e(route('admin.products.store')); ?>" enctype="multipart/form-data"
+                x-init="enableSequentialInput($el, '#add-item-btn'); focusFirstInput();" novalidate>
+                <?php echo csrf_field(); ?>
+                
+                <?php echo $__env->make('admin.purchases.partials.header-section', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+                
+                
+                <?php echo $__env->make('admin.purchases.partials.items-table', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+            </form>
+        </div>
 
         <!-- Modern Add Item Modal -->
         <div x-show="showModal" x-transition.opacity.duration.250ms
