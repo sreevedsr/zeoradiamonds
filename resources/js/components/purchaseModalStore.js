@@ -4,42 +4,33 @@ export default function registerPurchaseModalStore(Alpine) {
     Alpine.store("purchaseModal", {
         show: false,
         items: [],
+        mode: "purchase", // 🔹 'purchase' or 'sales'
+        storageKey: "purchase_items",
 
-        open() {
+        // --- Modal Control ---
+        open(mode = "purchase") {
+            this.mode = mode;
+            this.storageKey = mode === "sales" ? "sale_items" : "purchase_items";
             this.show = true;
 
-            // Wait until Alpine has updated the DOM and transitions are applied
+            // Wait for DOM to settle
             setTimeout(() => {
                 const modal = document.querySelector('[x-show="$store.purchaseModal.show"]');
                 if (!modal) return;
 
-                // ✅ Focus the first input inside modal
                 focusFirstInput(modal);
-
-                // ✅ Enable sequential Enter navigation
                 enableSequentialInput(modal, "#add-item-btn");
-            }, 250); // Matches transition duration (250ms)
+            }, 250);
         },
 
         close() {
             this.show = false;
         },
 
-        // --- Item Handling (now handled by purchaseForm, but store persists) ---
-        saveToLocal() {
-            localStorage.setItem("purchase_items", JSON.stringify(this.items));
-        },
-
-        loadFromLocal() {
-            const stored = localStorage.getItem("purchase_items");
-            if (stored) {
-                try {
-                    this.items = JSON.parse(stored);
-                } catch (e) {
-                    console.error("Failed to parse saved items:", e);
-                    this.items = [];
-                }
-            }
+        // --- Item Handling ---
+        addItem(item) {
+            this.items.push(item);
+            this.saveToLocal();
         },
 
         removeItem(index) {
@@ -49,28 +40,45 @@ export default function registerPurchaseModalStore(Alpine) {
 
         clearAll() {
             this.items = [];
-            localStorage.removeItem("purchase_items");
+            localStorage.removeItem(this.storageKey);
+        },
+
+        // --- Local Storage Persistence ---
+        saveToLocal() {
+            localStorage.setItem(this.storageKey, JSON.stringify(this.items));
+        },
+
+        loadFromLocal() {
+            const stored = localStorage.getItem(this.storageKey);
+            if (stored) {
+                try {
+                    this.items = JSON.parse(stored);
+                } catch (e) {
+                    console.error(`Failed to parse saved items (${this.storageKey}):`, e);
+                    this.items = [];
+                }
+            }
         },
     });
 
-    // --- Optional Alpine data helper for syncing ---
+    // --- Helper Component for Page Sync ---
     Alpine.data("purchaseFormComponent", () => ({
         init() {
-            console.log("Purchase form initialized");
+            console.log("Purchase/Sales form initialized");
 
-            // Load persisted items on mount
-            Alpine.store("purchaseModal").loadFromLocal();
+            const store = Alpine.store("purchaseModal");
+            store.loadFromLocal();
 
             // Sync across tabs
-            window.addEventListener("storage", () => Alpine.store("purchaseModal").loadFromLocal());
+            window.addEventListener("storage", () => store.loadFromLocal());
         },
 
         get items() {
             return Alpine.store("purchaseModal").items;
         },
 
-        openModal() {
-            Alpine.store("purchaseModal").open();
+        openModal(mode = "purchase") {
+            Alpine.store("purchaseModal").open(mode);
         },
 
         removeItem(index) {

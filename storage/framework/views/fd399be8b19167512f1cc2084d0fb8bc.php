@@ -1,5 +1,5 @@
 <div
-    class="rounded-lg bg-white p-6 dark:bg-gray-800 sm:p-8 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-transparent shadow-none dark:shadow-md dark:shadow-gray-900/50">
+    class="rounded-lg bg-white p-6 dark:bg-gray-800 sm:p-8 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-transparent shadow-none dark:shadow-md dark:shadow-gray-900/50 mb-6">
 
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
 

@@ -16,6 +16,7 @@ use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TempPurchaseController;
 use App\Http\Controllers\MerchantRequestController;
+use App\Http\Controllers\TempPurchaseItemController;
 
 
 
@@ -49,14 +50,15 @@ Route::middleware('auth')->group(function () {
     // ================================
     Route::middleware('role:admin')->prefix('admin')->name('admin.')->group(function () {
 
+        Route::get('/temp-items', [TempPurchaseItemController::class, 'index']);
+        Route::post('/temp-items', [TempPurchaseItemController::class, 'store']);
+        Route::delete('/temp-items/{id}', [TempPurchaseItemController::class, 'destroy']);
+        Route::delete('/temp-items', [TempPurchaseItemController::class, 'clearAll']);
+
         Route::middleware(['auth', 'can:edit-cards'])->prefix('products')->name('products.')->group(function () {
             Route::get('register', [ProductController::class, 'create'])->name('register');
             Route::post('register', [ProductController::class, 'store'])->name('register');
 
-            Route::get('/create', [TempPurchaseController::class, 'index'])->name('purchases.create');
-            Route::post('/add-item', [TempPurchaseController::class, 'add'])->name('purchases.add-item');
-            Route::delete('/remove-item/{id}', [TempPurchaseController::class, 'remove'])->name('purchases.remove-item');
-            Route::delete('/clear-items', [TempPurchaseController::class, 'clear'])->name('purchases.clear-items');
 
 
             // Cards management

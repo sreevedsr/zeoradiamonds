@@ -66,19 +66,16 @@ unset($__defined_vars, $__key, $__value); ?>
     <?php endif; ?>
 
     <input id="<?php echo e($name); ?>" type="<?php echo e($type); ?>" name="<?php echo e($name); ?>"
-        <?php if($model): ?> x-model="<?php echo e($model); ?>" <?php endif; ?> value="<?php echo e($value); ?>"
-        placeholder="<?php echo e($placeholder); ?>" <?php if($readonly): ?> readonly <?php endif; ?>
-        <?php if($required): ?> required <?php endif; ?>
+        <?php if($model): ?> x-model="<?php echo e($model); ?>" <?php endif; ?>
+        value="<?php echo e(is_array($value) ? '' : $value); ?>" placeholder="<?php echo e($placeholder); ?>"
+        <?php if($readonly): ?> readonly <?php endif; ?> <?php if($required): ?> required <?php endif; ?>
         <?php if($step): ?> step="<?php echo e($step); ?>" <?php endif; ?>
         <?php if($min): ?> min="<?php echo e($min); ?>" <?php endif; ?>
         <?php echo e($attributes->merge([
-            'class' =>
-                'input-field w-full rounded-md border border-gray-300 px-3 py-2
-                                focus:outline-none focus:ring-2 focus:ring-purple-600
-                                dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100
-                                hover:border-purple-400 transition duration-150
-                                ' .
-                ($readonly ? 'bg-gray-100 dark:bg-gray-800 cursor-not-allowed text-gray-700 dark:text-gray-300' : ''),
+            'class' => 'input-field w-full rounded-md border border-gray-300 px-3 py-2
+                    focus:outline-none focus:ring-2 focus:ring-purple-600
+                    dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100
+                    hover:border-purple-400 transition duration-150',
         ])); ?> />
 </div>
 <?php /**PATH C:\xampp\htdocs\Zeeyame\resources\views/components/input/text.blade.php ENDPATH**/ ?>

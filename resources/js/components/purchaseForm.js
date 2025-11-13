@@ -1,6 +1,4 @@
 // resources/js/components/purchaseForm.js
-import QRCode from 'qrcode';
-
 export default function purchaseForm() {
     return {
         // --- Accordion UI State ---
@@ -11,42 +9,39 @@ export default function purchaseForm() {
 
         // --- Main Item Object (UI clean, backend-safe) ---
         item: {
-            supplier: "",
-            invoice_no: "",
-            salesman: "",
-            si_no: "",
-            barcode: "",
             product_code: "",
             item_code: "",
             item_name: "",
             quantity: 1,
+
             gross_weight: "",
             stone_weight: "",
-            diamond_weight: "", // entered in carats (UI)
-            stone_amount: "",
+            diamond_weight: "",
             gold_rate: "",
             diamond_rate: "",
+            stone_amount: "",
             making_charge: "",
             card_charge: "",
             other_charge: "",
-            landing_cost: "",
-            retail_percent: "",
-            mrp_percent: "",
-            certificate_id: "",
-            diamond_purchase_location: "",
-            category: "",
-            diamond_shape: "",
-            color: "",
-            clarity: "",
-            cut: "",
-            valuation: "",
-            certificate_code: "",
+
             net_weight: "",
             gold_component: "",
             total_amount: "",
+            landing_cost: "",
+
+            // Final standardized fields
+            retail_percent: "",
             retail_cost: "",
+            mrp_percent: "",
             mrp_cost: "",
-            diamond_image: null,
+
+            certificate_id: "",
+            color: "",
+            clarity: "",
+            cut: "",
+            certificate_image: "",
+            product_image: "",
+            notes: "",
         },
 
         // --- UI Panels ---
@@ -186,33 +181,9 @@ export default function purchaseForm() {
             return +(landing * (1 + percent / 100)).toFixed(2);
         },
 
-        generateQRCodeData() {
-            const goldRate = this.item.gold_rate || 0;
-            const mrp = this.item.mrp_cost || 0;
-            const productCode = this.item.product_code || "N/A";
-            const unique = Math.floor(Math.random() * 999999)
-                .toString()
-                .padStart(6, "0");
-
-            // Create structured data for QR content (JSON)
-            return JSON.stringify({
-                product_code: productCode,
-                gold_rate: goldRate,
-                mrp: mrp,
-                id: unique,
-                generated_at: new Date().toISOString(),
-            });
-        },
-
-        async generateQRCode() {
-            const qrData = this.generateQRCodeData();
-
-            // Use a local QR API (qrcode.js)
-            const qrCanvas = document.createElement("canvas");
-            await QRCode.toCanvas(qrCanvas, qrData, { width: 200 });
-
-            // Convert to base64 image
-            this.item.qr_code = qrCanvas.toDataURL("image/png");
+        generateBarcode() {
+            const randomCode = Math.random().toString(36).substring(2, 9).toUpperCase();
+            this.item.barcode = "BC-" + randomCode;
         },
 
         formatCurrency(value) {
@@ -227,13 +198,33 @@ export default function purchaseForm() {
             );
         },
 
-        addItem() {
-            this.recalculateAll();
-            const modal = Alpine.store("purchaseModal");
-            modal.items.push({ ...this.item });
-            modal.saveToLocal?.();
-            this.resetItem();
-            modal.close();
+        async addItem() {
+            try {
+                const response = await fetch("/admin/temp-items", {
+                    method: "POST",
+                    headers: {
+                        "X-CSRF-TOKEN": document.querySelector("meta[name=csrf-token]").content,
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(this.item),
+                });
+
+                const result = await response.text();
+
+                if (!response.ok) {
+                    console.error("Server Response:", result);
+                    alert("Failed to save item.");
+                    return;
+                }
+
+                window.dispatchEvent(new CustomEvent("refresh-temp-items"));
+                this.resetItem();
+
+                // Tell parent Alpine component to close the modal
+                window.dispatchEvent(new Event("close-purchase-modal"));
+            } catch (error) {
+                console.error("Add Item Error:", error);
+            }
         },
 
         resetItem() {

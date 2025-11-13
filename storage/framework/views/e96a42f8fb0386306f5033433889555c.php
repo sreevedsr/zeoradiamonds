@@ -359,25 +359,11 @@
 <?php $component = $__componentOriginal3b0e04e43cf890250cc4d85cff4d94af; ?>
 <?php unset($__componentOriginal3b0e04e43cf890250cc4d85cff4d94af); ?>
 <?php endif; ?>
-                <?php if (isset($component)) { $__componentOriginald411d1792bd6cc877d687758b753742c = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginald411d1792bd6cc877d687758b753742c = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.primary-button','data' => ['type' => 'submit']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('primary-button'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['type' => 'submit']); ?>Add Item <?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginald411d1792bd6cc877d687758b753742c)): ?>
-<?php $attributes = $__attributesOriginald411d1792bd6cc877d687758b753742c; ?>
-<?php unset($__attributesOriginald411d1792bd6cc877d687758b753742c); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginald411d1792bd6cc877d687758b753742c)): ?>
-<?php $component = $__componentOriginald411d1792bd6cc877d687758b753742c; ?>
-<?php unset($__componentOriginald411d1792bd6cc877d687758b753742c); ?>
-<?php endif; ?>
+
+                <button type="button" @click="addItem()"
+                    class="w-full rounded-md bg-purple-600 px-4 py-2 text-white hover:bg-purple-700">
+                    Add to Sales
+                </button>
             </div>
         </form>
     </div>

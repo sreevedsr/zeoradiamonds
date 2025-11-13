@@ -113,7 +113,11 @@
             <!-- Footer -->
             <div class="flex justify-end gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
                 <x-secondary-button @click="$store.saleModal.close()">Cancel</x-secondary-button>
-                <x-primary-button type="submit">Add Item</x-primary-button>
+
+                <button type="button" @click="addItem()"
+                    class="w-full rounded-md bg-purple-600 px-4 py-2 text-white hover:bg-purple-700">
+                    Add to Sales
+                </button>
             </div>
         </form>
     </div>
