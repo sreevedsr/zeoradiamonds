@@ -1,6 +1,58 @@
 // resources/js/components/purchaseForm.js
 export default function purchaseForm() {
     return {
+        errors: {},
+
+        validateItem() {
+            this.errors = {};
+
+            // Required text fields
+            const requiredText = ["product_code", "item_code", "item_name", "certificate_id"];
+
+            requiredText.forEach((field) => {
+                if (!this.item[field] || this.item[field].toString().trim() === "") {
+                    this.errors[field] = "This field is required.";
+                }
+            });
+
+            // Required numeric fields (must be > 0)
+            const requiredNumbers = [
+                "quantity",
+                "gross_weight",
+                "gold_rate",
+                "total_amount",
+                "landing_cost",
+            ];
+
+            requiredNumbers.forEach((field) => {
+                const value = parseFloat(this.item[field]);
+                if (isNaN(value) || value <= 0) {
+                    this.errors[field] = "Enter a valid number greater than 0.";
+                }
+            });
+
+            // Optional numeric fields (must be >= 0)
+            const optionalNumbers = [
+                "stone_weight",
+                "diamond_weight",
+                "stone_amount",
+                "diamond_rate",
+                "making_charge",
+                "card_charge",
+                "other_charge",
+                "retail_percent",
+                "mrp_percent",
+            ];
+
+            optionalNumbers.forEach((field) => {
+                const value = parseFloat(this.item[field]);
+                if (value < 0) {
+                    this.errors[field] = "Value cannot be negative.";
+                }
+            });
+
+            return Object.keys(this.errors).length === 0;
+        },
         // --- Accordion UI State ---
         accordion: {
             purchaseOpen: true,
@@ -199,6 +251,10 @@ export default function purchaseForm() {
         },
 
         async addItem() {
+            if (!this.validateItem()) {
+                console.warn("Validation failed:", this.errors);
+                return;
+            }
             try {
                 const response = await fetch("/admin/temp-items", {
                     method: "POST",

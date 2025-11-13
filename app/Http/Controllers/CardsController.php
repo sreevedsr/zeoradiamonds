@@ -8,6 +8,7 @@ use App\Models\Invoice;
 use App\Models\GoldRate;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
+use App\Models\TempPurchaseItem;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\Auth;
@@ -57,91 +58,79 @@ class CardsController extends Controller
 
     public function storeCard(Request $request)
     {
-        // ✅ Restrict to Admins
+        // Restrict to admin
         if (!Auth::check() || Auth::user()->role !== 'admin') {
             abort(403, 'Unauthorized access');
         }
 
-        // ✅ Validate top-level invoice data
+        // Validate the top-level invoice fields
         $validated = $request->validate([
             'invoice_no' => 'required|string|max:100|unique:invoices,invoice_no',
             'invoice_date' => 'required|date',
             'supplier_id' => 'required|exists:suppliers,id',
-            'items_json' => 'required|string',
         ]);
 
-        // ✅ Fetch Supplier
-        $supplier = Supplier::findOrFail($validated['supplier_id']);
+        // Fetch temp items for the logged-in admin
+        $tempItems = TempPurchaseItem::where('user_id', auth()->id())->get();
 
-        // ✅ Create Invoice
+        if ($tempItems->isEmpty()) {
+            return back()->withErrors(['items' => 'You must add at least one item before submitting the invoice.']);
+        }
+
+        // Create Invoice
         $invoice = Invoice::create([
             'invoice_no' => $validated['invoice_no'],
             'invoice_date' => $validated['invoice_date'],
-            'supplier_id' => $supplier->id,
+            'supplier_id' => $validated['supplier_id'],
         ]);
 
-        // ✅ Decode JSON Product Items
-        $items = json_decode($validated['items_json'], true);
-        if (!is_array($items) || empty($items)) {
-            return back()->withErrors(['items_json' => 'No valid product items found.']);
+        // Loop through each temp item and move to cards table
+        foreach ($tempItems as $item) {
+            Card::create($item->only([
+                'invoice_no',
+                'invoice_date',
+                'supplier_id',
+                'product_code',
+                'item_code',
+                'item_name',
+                'quantity',
+                'gold_rate',
+                'gross_weight',
+                'stone_weight',
+                'diamond_weight',
+                'net_weight',
+                'stone_amount',
+                'diamond_rate',
+                'making_charge',
+                'card_charge',
+                'other_charge',
+                'total_amount',
+                'landing_cost',
+                'retail_percent',
+                'retail_cost',
+                'mrp_percent',
+                'mrp_cost',
+                'certificate_id',
+                'category',
+                'diamond_shape',
+                'color',
+                'clarity',
+                'cut',
+                'certificate_code',
+                'diamond_image',
+                'product_image'
+            ]));
         }
 
-        // ✅ Store each product (card)
-        foreach ($items as $item) {
-            // Handle optional certificate image
-            $imagePath = null;
-            if (isset($item['diamond_image']) && $item['diamond_image'] instanceof \Illuminate\Http\UploadedFile) {
-                $imagePath = $item['diamond_image']->store('diamond_certificates', 'public');
-            }
-
-            Card::create([
-
-                // 🧾 Invoice Info
-                'invoice_no' => $validated['invoice_no'] ?? 'N/A',
-                'invoice_date' => $validated['invoice_date'] ?? now(),
-                'supplier_id' => $supplier->id ?? null,
-
-                // 🧱 Product Details
-                'product_code' => $item['product_code'] ?? 'N/A',
-                'item_code' => $item['item_code'] ?? 'N/A',
-                'item_name' => $item['item_name'] ?? 'N/A',
-                'quantity' => is_numeric($item['quantity']) ? $item['quantity'] : 1,
-                'gold_rate' => is_numeric($item['gold_rate']) ? $item['gold_rate'] : 0,
-                'gross_weight' => is_numeric($item['gross_weight']) ? $item['gross_weight'] : 0,
-                'stone_weight' => is_numeric($item['stone_weight']) ? $item['stone_weight'] : 0,
-                'diamond_weight' => is_numeric($item['diamond_weight']) ? $item['diamond_weight'] : 0,
-                'net_weight' => is_numeric($item['net_weight']) ? $item['net_weight'] : 0,
-
-                // 💰 Pricing & Charges
-                'stone_amount' => is_numeric($item['stone_amount']) ? $item['stone_amount'] : 0,
-                'diamond_rate' => is_numeric($item['diamond_rate']) ? $item['diamond_rate'] : 0,
-                'making_charge' => is_numeric($item['making_charge']) ? $item['making_charge'] : 0,
-                'card_charge' => is_numeric($item['card_charge']) ? $item['card_charge'] : 0,
-                'other_charge' => is_numeric($item['other_charge']) ? $item['other_charge'] : 0,
-                'total_amount' => is_numeric($item['total_amount']) ? $item['total_amount'] : 0,
-                'landing_cost' => is_numeric($item['landing_cost']) ? $item['landing_cost'] : 0,
-                'retail_percent' => is_numeric($item['retail_percent']) ? $item['retail_percent'] : 0,
-                'retail_cost' => is_numeric($item['retail_cost']) ? $item['retail_cost'] : 0,
-                'mrp_percent' => is_numeric($item['mrp_percent']) ? $item['mrp_percent'] : 0,
-                'mrp_cost' => is_numeric($item['mrp_cost']) ? $item['mrp_cost'] : 0,
-
-                // 💎 Certification & Card Details
-                'certificate_id' => !empty($item['certificate_id']) ? $item['certificate_id'] : uniqid('CERT-'),
-                'category' => $item['category'] ?: 'General',
-                'diamond_shape' => $item['diamond_shape'] ?: 'Unknown',
-                'color' => $item['color'] ?: 'N/A',
-                'clarity' => $item['clarity'] ?: 'N/A',
-                'cut' => $item['cut'] ?: 'N/A',
-                'certificate_code' => $item['certificate_code'] ?? null,
-                'diamond_image' => $imagePath,
-            ]);
-        }
+        // Delete temp items after move
+        TempPurchaseItem::where('user_id', auth()->id())->delete();
 
         return redirect()
             ->back()
-            ->with('success', "Invoice #{$invoice->invoice_no} and all product items saved successfully.")
+            ->with('success', "Invoice #{$invoice->invoice_no} saved and all product items added successfully.")
             ->with('clear_items', true);
     }
+
 
     public function update(Request $request, $id)
     {
