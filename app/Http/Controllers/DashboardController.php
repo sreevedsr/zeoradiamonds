@@ -2,159 +2,185 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Card;
+use App\Models\Customer;
+use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Cache;
 
 class DashboardController extends Controller
 {
-    /**
-     * Show the main dashboard for admin or merchant.
-     */
-    public function index()
+    public function index(Request $request)
     {
-        $user = Auth::user();
+        $user = auth()->user();
+        $isAdmin = $user->role === 'admin';
+        $merchantId = $isAdmin ? null : $user->id;
 
-        // ---------------------------
-        // Dummy data (hardcoded)
-        // ---------------------------
-        // Overall vendor/admin data
-        $vendorData = [
-            'total_clients' => 152,
-            'sales_this_month' => 245000,   // in INR
-            'sales_last_month' => 210000,
-            'new_customers_this_month' => 12,
-            'new_customers_last_month' => 9,
-            'top_customers' => [
-                ['name' => 'Kumar Jewellers', 'orders' => 8, 'amount' => 78000],
-                ['name' => 'Radiant Gems', 'orders' => 5, 'amount' => 42000],
-                ['name' => 'S & Sons', 'orders' => 3, 'amount' => 29000],
-            ],
-            // last 6 months sales for chart
-            'monthly_sales' => [
-                ['label' => 'May', 'value' => 160000],
-                ['label' => 'Jun', 'value' => 175000],
-                ['label' => 'Jul', 'value' => 190000],
-                ['label' => 'Aug', 'value' => 205000],
-                ['label' => 'Sep', 'value' => 210000],
-                ['label' => 'Oct', 'value' => 245000],
-            ],
-        ];
+        // Scope for merchant
+        $merchantScope = function ($query) use ($merchantId, $isAdmin) {
+            if (!$isAdmin) {
+                return $query->where('merchant_id', $merchantId);
+            }
+            return $query;
+        };
 
-        // Merchant-specific sample (only their own)
-        $merchantData = [
-            'total_clients' => 38,
-            'sales_this_month' => 82000,
-            'sales_last_month' => 73000,
-            'new_customers_this_month' => 4,
-            'new_customers_last_month' => 3,
-            'top_customers' => [
-                ['name' => 'Local Buyer A', 'orders' => 2, 'amount' => 22000],
-                ['name' => 'Local Buyer B', 'orders' => 1, 'amount' => 18000],
-            ],
-            'monthly_sales' => [
-                ['label' => 'May', 'value' => 45000],
-                ['label' => 'Jun', 'value' => 48000],
-                ['label' => 'Jul', 'value' => 51000],
-                ['label' => 'Aug', 'value' => 56000],
-                ['label' => 'Sep', 'value' => 73000],
-                ['label' => 'Oct', 'value' => 82000],
-            ],
-        ];
+        $cacheKey = 'dashboard_v4_' . ($isAdmin ? 'admin' : 'merchant_' . $merchantId);
 
-        // pick which dataset to show
-        if ($user->role === 'vendor' || $user->role === 'admin') {
-            $data = $this->prepareMetrics($vendorData);
-            $scope = 'vendor';
-        } else {
-            // merchant
-            $data = $this->prepareMetrics($merchantData);
-            $scope = 'merchant';
-        }
+        $metrics = Cache::remember($cacheKey, now()->addMinutes(10), function () use ($merchantScope, $isAdmin) {
 
-        return view('dashboard.main', [
-            'user' => $user,
-            'scope' => $scope,
-            'metrics' => $data,
-        ]);
-    }
+            /** -------------------------------------
+             * SALES STATISTICS (same for admin/merchant, but merchant-scoped)
+             --------------------------------------*/
+            $months = collect();
+            $values = collect();
 
-    /**
-     * Prepare metrics (calculate diffs, percent etc).
-     */
-    private function prepareMetrics(array $src)
-    {
-        $salesThis = $src['sales_this_month'];
-        $salesLast = $src['sales_last_month'];
+            for ($i = 5; $i >= 0; $i--) {
+                $dt = Carbon::now()->subMonths($i);
+                $label = $dt->format('M Y');
 
-        $sales_diff = $salesThis - $salesLast;
-        $sales_diff_percent = $salesLast > 0 ? ($sales_diff / $salesLast) * 100 : null;
+                $sum = $merchantScope(Card::query())
+                    ->whereBetween('invoice_date', [
+                        $dt->startOfMonth(),
+                        $dt->endOfMonth()
+                    ])
+                    ->sum('total_amount');
 
-        $newCustThis = $src['new_customers_this_month'];
-        $newCustLast = $src['new_customers_last_month'];
-        $newCust_diff = $newCustThis - $newCustLast;
-        $newCust_diff_percent = $newCustLast > 0 ? ($newCust_diff / $newCustLast) * 100 : null;
+                $months->push($label);
+                $values->push((float) $sum);
+            }
 
-        return array_merge($src, [
-            'sales_diff' => $sales_diff,
-            'sales_diff_percent' => $sales_diff_percent,
-            'new_customers_diff' => $newCust_diff,
-            'new_customers_diff_percent' => $newCust_diff_percent,
-        ]);
-    }
+            $salesThisMonth = $merchantScope(Card::query())
+                ->whereBetween('invoice_date', [
+                    Carbon::now()->startOfMonth(),
+                    Carbon::now()->endOfMonth()
+                ])
+                ->sum('total_amount');
 
+            $salesLastMonth = $merchantScope(Card::query())
+                ->whereBetween('invoice_date', [
+                    Carbon::now()->subMonth()->startOfMonth(),
+                    Carbon::now()->subMonth()->endOfMonth()
+                ])
+                ->sum('total_amount');
 
-    /**
-     * Admin-only: view cards.
-     */
-    public function cards()
-    {
-        return view('dashboard.cards'); // Blade: resources/views/dashboard/cards.blade.php
-    }
+            $salesDiff = $salesThisMonth - $salesLastMonth;
+            $salesDiffPercent = $salesLastMonth > 0
+                ? round(($salesDiff / $salesLastMonth) * 100, 2)
+                : null;
 
-    /**
-     * Admin-only: view logs.
-     */
-    public function logs()
-    {
-        return view('dashboard.logs'); // Blade
-    }
+            /** -------------------------------------
+             * IF ADMIN → SHOW MERCHANT ANALYTICS
+             --------------------------------------*/
+            if ($isAdmin) {
 
-    /**
-     * Admin-only: view requests.
-     */
-    public function requests()
-    {
-        return view('admin.cards.requests'); // Blade
-    }
+                // Total merchants
+                $totalMerchants = User::where('role', 'merchant')->count();
 
-    public function merchantRequests()
-    {
-        return view('dashboard.merchant-requests'); // Blade
-    }
+                // New merchants this month
+                $newMerchantsThisMonth = User::where('role', 'merchant')
+                    ->whereBetween('created_at', [
+                        Carbon::now()->startOfMonth(),
+                        Carbon::now()->endOfMonth()
+                    ])
+                    ->count();
 
-    /**
-     * Merchant-only: store new request.
-     */
-    public function storeRequest(Request $request)
-    {
-        // Logic to store merchant request
-        return redirect()->route('merchant.requests');
-    }
+                // Last month merchants
+                $last = User::where('role', 'merchant')
+                    ->whereBetween('created_at', [
+                        Carbon::now()->subMonth()->startOfMonth(),
+                        Carbon::now()->subMonth()->endOfMonth()
+                    ])
+                    ->count();
 
+                $newMerchantsDiffPercent = $last > 0
+                    ? round((($newMerchantsThisMonth - $last) / $last) * 100, 2)
+                    : null;
 
-    // Show form to add a new customer
-    public function createCustomer()
-    {
-        return view('merchant.customers.create');
-    }
+                // Top merchants (by sale)
+                $topMerchants = Card::query()
+                    ->selectRaw('merchant_id, COUNT(*) as orders, SUM(total_amount) as amount')
+                    ->with('merchant')
+                    ->whereNotNull('merchant_id')
+                    ->groupBy('merchant_id')
+                    ->orderByDesc('amount')
+                    ->limit(8)
+                    ->get()
+                    ->map(fn($m) => [
+                        'name' => optional($m->merchant)->name ?? 'Unknown',
+                        'orders' => $m->orders,
+                        'amount' => $m->amount
+                    ]);
 
-    // Store new customer
+                return [
+                    'scope' => 'admin',
+                    'entity_title' => 'Merchants',
+                    'monthly_sales' => $months->map(fn($l, $i) => ['label' => $l, 'value' => $values[$i]]),
+                    'sales_this_month' => $salesThisMonth,
+                    'sales_last_month' => $salesLastMonth,
+                    'sales_diff' => $salesDiff,
+                    'sales_diff_percent' => $salesDiffPercent,
+                    'total_entities' => $totalMerchants,
+                    'new_entities_this_month' => $newMerchantsThisMonth,
+                    'new_entities_diff_percent' => $newMerchantsDiffPercent,
+                    'top_entities' => $topMerchants
+                ];
+            }
 
+            /** -------------------------------------
+             * IF MERCHANT → SHOW CUSTOMER ANALYTICS
+             --------------------------------------*/
 
-    // View customer requests
-    public function customerRequests()
-    {
-        // $requests = []; // Replace with actual requests from DB
-        return view('admin.cards.requests');
+            $totalCustomers = Customer::where('merchant_id', $merchantId)->count();
+
+            $newCustomersThisMonth = Customer::where('merchant_id', $merchantId)
+                ->whereBetween('created_at', [
+                    Carbon::now()->startOfMonth(),
+                    Carbon::now()->endOfMonth()
+                ])
+                ->count();
+
+            $last = Customer::where('merchant_id', $merchantId)
+                ->whereBetween('created_at', [
+                    Carbon::now()->subMonth()->startOfMonth(),
+                    Carbon::now()->subMonth()->endOfMonth()
+                ])
+                ->count();
+
+            $newCustomersDiffPercent = $last > 0
+                ? round((($newCustomersThisMonth - $last) / $last) * 100, 2)
+                : null;
+
+            $topCustomers = Card::query()
+                ->selectRaw('customer_id, COUNT(*) as orders, SUM(total_amount) as amount')
+                ->where('merchant_id', $merchantId)
+                ->with('customer')
+                ->whereNotNull('customer_id')
+                ->groupBy('customer_id')
+                ->orderByDesc('amount')
+                ->limit(8)
+                ->get()
+                ->map(fn($c) => [
+                    'name' => optional($c->customer)->name ?? 'Unknown',
+                    'orders' => $c->orders,
+                    'amount' => $c->amount
+                ]);
+
+            return [
+                'scope' => 'merchant',
+                'entity_title' => 'Customers',
+                'monthly_sales' => $months->map(fn($l, $i) => ['label' => $l, 'value' => $values[$i]]),
+                'sales_this_month' => $salesThisMonth,
+                'sales_last_month' => $salesLastMonth,
+                'sales_diff' => $salesDiff,
+                'sales_diff_percent' => $salesDiffPercent,
+                'total_entities' => $totalCustomers,
+                'new_entities_this_month' => $newCustomersThisMonth,
+                'new_entities_diff_percent' => $newCustomersDiffPercent,
+                'top_entities' => $topCustomers
+            ];
+        });
+
+        return view('dashboard.main', compact('metrics'));
     }
 }

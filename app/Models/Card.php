@@ -4,95 +4,154 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Card extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        // 🔹 Invoice Relations
+        // 🔹 Invoice / Sale Information
         'invoice_id',
         'invoice_no',
-        'invoice_date',
+        'date',                 // DB column (invoice_date in UI)
         'supplier_id',
+        'staff_id',
 
-        // 🔹 Product Details
+        // 🔹 Product / Item Details
         'product_code',
         'item_code',
         'item_name',
         'quantity',
+
+        // 🔹 Gold / Weight / Rates
         'gold_rate',
+        'diamond_rate',
         'gross_weight',
         'stone_weight',
         'diamond_weight',
         'net_weight',
 
-        // 🔹 Pricing & Charges
+        // 🔹 Charges
         'stone_amount',
-        'diamond_rate',
         'making_charge',
         'card_charge',
         'other_charge',
-        'total_amount',
         'landing_cost',
-        'retail_percent',
+
+        // 🔹 Retail / MRP normalized
+        'retail_cost_percent',  // DB original
         'retail_cost',
-        'mrp_percent',
+        'mrp_cost_percent',     // DB original
         'mrp_cost',
 
-        // 🔹 Certification & Card Details
+        // 🔹 Certification / Diamond Details
         'certificate_id',
+        'certificate_code',
         'diamond_purchase_location',
         'category',
-        'diamond_shape',
+        'diamond_type',         // DB original
+        'diamond_shape',        // normalized alias
         'clarity',
         'color',
         'cut',
-        'valuation',
-        'certificate_code',
         'diamond_image',
 
-        // 🔹 Merchant Relationship (optional)
+        // 🔹 Valuation & Pricing
+        'valuation',
+        'price',
+        'discount',
+        'final_price',
+
+        // 🔹 Merchant / Customer
         'merchant_id',
+        'customer_id',
     ];
 
-    // 🔹 Attribute casting for numeric fields
     protected $casts = [
-        'invoice_date' => 'date',
-        'quantity' => 'decimal:2',
-        'gold_rate' => 'decimal:2',
+        // Dates
+        'date' => 'date',
+
+        // Weights
         'gross_weight' => 'decimal:3',
         'stone_weight' => 'decimal:3',
         'diamond_weight' => 'decimal:3',
         'net_weight' => 'decimal:3',
-        'stone_amount' => 'decimal:2',
+
+        // Rates & Charges
+        'gold_rate' => 'decimal:2',
         'diamond_rate' => 'decimal:2',
+        'stone_amount' => 'decimal:2',
         'making_charge' => 'decimal:2',
         'card_charge' => 'decimal:2',
         'other_charge' => 'decimal:2',
-        'total_amount' => 'decimal:2',
-        'landing_cost' => 'decimal:2',
-        'retail_percent' => 'decimal:2',
+
+        // Retail / MRP
+        'retail_cost_percent' => 'decimal:2',
         'retail_cost' => 'decimal:2',
-        'mrp_percent' => 'decimal:2',
+        'mrp_cost_percent' => 'decimal:2',
         'mrp_cost' => 'decimal:2',
+
+        // Pricing
         'valuation' => 'decimal:2',
+        'price' => 'decimal:2',
+        'discount' => 'decimal:2',
+        'final_price' => 'decimal:2',
     ];
 
-    // 🔹 Relationships
-    public function merchant()
+    /* ---------------------------------------------
+     | 🧩 Normalized Attribute Aliases (So UI can use modern names)
+     ----------------------------------------------*/
+
+    // UI uses: invoice_date → DB field: date
+    public function getInvoiceDateAttribute()
     {
-        return $this->belongsTo(User::class, 'merchant_id')
-            ->where('role', 'merchant');
+        return $this->date;
     }
 
-    public function invoice()
+    public function setInvoiceDateAttribute($value)
+    {
+        $this->date = $value;
+    }
+
+    // UI uses: diamond_shape → maps to diamond_type if empty
+    public function getDiamondShapeAttribute()
+    {
+        return $this->attributes['diamond_shape'] ?? $this->attributes['diamond_type'] ?? null;
+    }
+
+    public function setDiamondShapeAttribute($value)
+    {
+        $this->attributes['diamond_type'] = $value;
+        $this->attributes['diamond_shape'] = $value;
+    }
+
+    /* ---------------------------------------------
+     |  🔹 Relationships
+     ----------------------------------------------*/
+
+    public function merchant(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'merchant_id');
+    }
+
+    public function supplier(): BelongsTo
+    {
+        return $this->belongsTo(Supplier::class);
+    }
+
+    public function invoice(): BelongsTo
     {
         return $this->belongsTo(Invoice::class);
     }
 
-    public function supplier()
+    public function staff(): BelongsTo
     {
-        return $this->belongsTo(Supplier::class);
+        return $this->belongsTo(User::class, 'staff_id');
+    }
+
+    public function customer(): BelongsTo
+    {
+        return $this->belongsTo(Customer::class);
     }
 }

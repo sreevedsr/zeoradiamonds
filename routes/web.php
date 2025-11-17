@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CustomerController;
 use App\Models\TempPurchaseItem;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -107,7 +108,7 @@ Route::middleware('auth')->group(function () {
             Route::get('/assign', [CardsController::class, 'showAssignPage'])->name('assign');
             Route::post('/assign', [CardsController::class, 'assignCard'])->name('assign');
             Route::get('/lookup', [CardsController::class, 'lookup'])->name('lookup');
-            Route::get('/requests', [DashboardController::class, 'customerRequests'])->name('requests');
+            Route::get('/requests', [CustomerController::class, 'customerRequests'])->name('requests');
 
             Route::get('/{id}', [CardsController::class, 'show'])->name('show');
             Route::get('/{id}/edit', [CardsController::class, 'edit'])->name('edit');
@@ -178,7 +179,7 @@ Route::middleware('auth')->group(function () {
         // Customers management
         Route::prefix('customers')->name('customers.')->group(function () {
             Route::get('/', [MerchantController::class, 'customers'])->name('index');
-            Route::get('/create', [DashboardController::class, 'createCustomer'])->name('create');
+            Route::get('/create', [CustomerController::class, 'createCustomer'])->name('create');
             Route::post('/', [MerchantController::class, 'storeCustomer'])->name('store');
         });
         Route::prefix('cards')->name('cards.')->group(function () {
@@ -200,8 +201,8 @@ Route::middleware('auth')->group(function () {
         });
 
         // Requests management
-        Route::get('/requests', [DashboardController::class, 'merchantRequests'])->name('merchant.requests');
-        Route::post('/requests', [DashboardController::class, 'storeRequest'])->name('merchant.requests.store');
+        Route::get('/requests', [MerchantRequestController::class, 'merchantRequests'])->name('merchant.requests');
+        Route::post('/requests', [MerchantRequestController::class, 'storeRequest'])->name('merchant.requests.store');
         Route::delete('/unassign-card/{id}', [AdminController::class, 'unassignCard'])->name('unassignCard');
 
     });

@@ -9,19 +9,21 @@ use Illuminate\Support\Facades\Auth;
 
 class MerchantRequestController extends Controller
 {
-    // Show all requests for cards posted by the current admin
-    public function index()
+    public function requests()
     {
-        // $adminId = Auth::id(); // currently logged-in admin
+        return view('admin.cards.requests'); // Blade
+    }
+    public function merchantRequests()
+    {
+        return view('dashboard.merchant-requests'); // Blade
+    }
 
-        // // Fetch all requests for cards that this admin has posted
-        // $requests = MerchantRequest::with('merchant', 'card')
-        //     ->whereHas('card', function ($query) use ($adminId) {
-        //         $query->where('admin_id', $adminId);
-        //     })
-        //     ->get();
-        // , compact('requests')
-
-        return view('merchants.requests');
+    /**
+     * Merchant-only: store new request.
+     */
+    public function storeRequest(Request $request)
+    {
+        // Logic to store merchant request
+        return redirect()->route('merchant.requests');
     }
 }
