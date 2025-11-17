@@ -27,11 +27,11 @@ class DashboardController extends Controller
 
         $cacheKey = 'dashboard_v4_' . ($isAdmin ? 'admin' : 'merchant_' . $merchantId);
 
-        $metrics = Cache::remember($cacheKey, now()->addMinutes(10), function () use ($merchantScope, $isAdmin) {
+        $metrics = Cache::remember($cacheKey, now()->addMinutes(10), function () use ($merchantScope, $isAdmin, $merchantId) {
 
             /** -------------------------------------
              * SALES STATISTICS (same for admin/merchant, but merchant-scoped)
-             --------------------------------------*/
+             * --------------------------------------*/
             $months = collect();
             $values = collect();
 
@@ -40,10 +40,10 @@ class DashboardController extends Controller
                 $label = $dt->format('M Y');
 
                 $sum = $merchantScope(Card::query())
-                    ->whereBetween('invoice_date', [
-                        $dt->startOfMonth(),
-                        $dt->endOfMonth()
-                    ])
+                    ->whereBetween('date', [
+                            $dt->startOfMonth(),
+                            $dt->endOfMonth()
+                        ])
                     ->sum('total_amount');
 
                 $months->push($label);
@@ -51,17 +51,17 @@ class DashboardController extends Controller
             }
 
             $salesThisMonth = $merchantScope(Card::query())
-                ->whereBetween('invoice_date', [
-                    Carbon::now()->startOfMonth(),
-                    Carbon::now()->endOfMonth()
-                ])
+                ->whereBetween('date', [
+                        Carbon::now()->startOfMonth(),
+                        Carbon::now()->endOfMonth()
+                    ])
                 ->sum('total_amount');
 
             $salesLastMonth = $merchantScope(Card::query())
-                ->whereBetween('invoice_date', [
-                    Carbon::now()->subMonth()->startOfMonth(),
-                    Carbon::now()->subMonth()->endOfMonth()
-                ])
+                ->whereBetween('date', [
+                        Carbon::now()->subMonth()->startOfMonth(),
+                        Carbon::now()->subMonth()->endOfMonth()
+                    ])
                 ->sum('total_amount');
 
             $salesDiff = $salesThisMonth - $salesLastMonth;
@@ -71,7 +71,7 @@ class DashboardController extends Controller
 
             /** -------------------------------------
              * IF ADMIN → SHOW MERCHANT ANALYTICS
-             --------------------------------------*/
+             * --------------------------------------*/
             if ($isAdmin) {
 
                 // Total merchants
@@ -80,17 +80,17 @@ class DashboardController extends Controller
                 // New merchants this month
                 $newMerchantsThisMonth = User::where('role', 'merchant')
                     ->whereBetween('created_at', [
-                        Carbon::now()->startOfMonth(),
-                        Carbon::now()->endOfMonth()
-                    ])
+                            Carbon::now()->startOfMonth(),
+                            Carbon::now()->endOfMonth()
+                        ])
                     ->count();
 
                 // Last month merchants
                 $last = User::where('role', 'merchant')
                     ->whereBetween('created_at', [
-                        Carbon::now()->subMonth()->startOfMonth(),
-                        Carbon::now()->subMonth()->endOfMonth()
-                    ])
+                            Carbon::now()->subMonth()->startOfMonth(),
+                            Carbon::now()->subMonth()->endOfMonth()
+                        ])
                     ->count();
 
                 $newMerchantsDiffPercent = $last > 0
@@ -129,22 +129,22 @@ class DashboardController extends Controller
 
             /** -------------------------------------
              * IF MERCHANT → SHOW CUSTOMER ANALYTICS
-             --------------------------------------*/
+             * --------------------------------------*/
 
             $totalCustomers = Customer::where('merchant_id', $merchantId)->count();
 
             $newCustomersThisMonth = Customer::where('merchant_id', $merchantId)
                 ->whereBetween('created_at', [
-                    Carbon::now()->startOfMonth(),
-                    Carbon::now()->endOfMonth()
-                ])
+                        Carbon::now()->startOfMonth(),
+                        Carbon::now()->endOfMonth()
+                    ])
                 ->count();
 
             $last = Customer::where('merchant_id', $merchantId)
                 ->whereBetween('created_at', [
-                    Carbon::now()->subMonth()->startOfMonth(),
-                    Carbon::now()->subMonth()->endOfMonth()
-                ])
+                        Carbon::now()->subMonth()->startOfMonth(),
+                        Carbon::now()->subMonth()->endOfMonth()
+                    ])
                 ->count();
 
             $newCustomersDiffPercent = $last > 0

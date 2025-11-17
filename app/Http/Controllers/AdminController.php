@@ -11,36 +11,28 @@ class AdminController extends Controller
 {
     public function index()
     {
-        $perPage = 10; // Number of merchants per page
-        $page = request()->get('page', 1); // Get current page number
-
-        // Query total merchants and paginated data
         $total = User::where('role', 'merchant')->count();
+
+        $perPage = 10;
+        $page = request('page', 1);
 
         $merchants = User::where('role', 'merchant')
             ->skip(($page - 1) * $perPage)
             ->take($perPage)
             ->get();
 
-        // Calculate range for display
-        $from = ($page - 1) * $perPage + 1;
-        $to = min($from + $perPage - 1, $total);
-        $totalPages = ceil($total / $perPage);
-
-        $pages = range(1, $totalPages);
-
-        // Send merchants and pagination data to view
         return view('admin.merchants.index', [
             'merchants' => $merchants,
             'pagination' => [
-                'from' => $from,
-                'to' => $to,
+                'from' => ($page - 1) * $perPage + 1,
+                'to' => min($page * $perPage, $total),
                 'total' => $total,
-                'pages' => $pages,
+                'pages' => range(1, ceil($total / $perPage)),
                 'current' => $page,
             ],
         ]);
     }
+
 
     public function create()
     {
@@ -84,7 +76,7 @@ class AdminController extends Controller
         $merchant = User::findOrFail($id);
 
         $request->validate([
-            'merchant_code' => 'required|string|max:100',
+            'merchant_code' => 'required|string|max:100|unique:users,merchant_code,' . $merchant->id,
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $merchant->id,
             'phone' => 'required|string|max:20',

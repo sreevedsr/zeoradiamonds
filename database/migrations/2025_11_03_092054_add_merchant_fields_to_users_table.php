@@ -16,6 +16,10 @@ return new class extends Migration
             $table->string('state_code')->nullable();
             $table->string('state')->nullable();
             $table->string('gst_no')->nullable()->unique();
+
+            // New fields
+            $table->string('phone')->nullable();
+            $table->text('address')->nullable();
         });
     }
 
@@ -25,7 +29,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            //
+            // Remove added fields only
+            $table->dropColumn(['merchant_code', 'state_code', 'state', 'gst_no', 'phone', 'address']);
         });
     }
 };

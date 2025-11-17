@@ -58,7 +58,13 @@ class SupplierController extends Controller
         ]);
 
         Supplier::create($request->only([
-            'supplier_code', 'name', 'address', 'phone', 'state_code', 'state', 'gst_no',
+            'supplier_code',
+            'name',
+            'address',
+            'phone',
+            'state_code',
+            'state',
+            'gst_no',
         ]));
 
         return redirect()->route('admin.suppliers.create')
@@ -79,7 +85,7 @@ class SupplierController extends Controller
         $supplier = Supplier::findOrFail($id);
 
         $request->validate([
-            'supplier_code' => 'required|string|max:50',
+            'supplier_code' => 'required|string|max:50|unique:suppliers,supplier_code,' . $supplier->id,
             'name' => 'required|string|max:255',
             'address' => 'required|string',
             'phone' => 'required|string|max:15',

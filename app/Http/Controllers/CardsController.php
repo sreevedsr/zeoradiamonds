@@ -90,8 +90,6 @@ class CardsController extends Controller
         foreach ($tempItems as $item) {
             Card::create($item->only([
                 'invoice_no',
-                'invoice_date',
-                'supplier_id',
                 'product_code',
                 'item_code',
                 'item_name',
@@ -119,7 +117,7 @@ class CardsController extends Controller
                 'clarity',
                 'cut',
                 'certificate_code',
-                'diamond_image',
+                'certificate_image',
                 'product_image'
             ]));
         }
@@ -176,7 +174,7 @@ class CardsController extends Controller
             'clarity' => 'nullable|string|max:50',
             'cut' => 'nullable|string|max:100',
             'valuation' => 'nullable|numeric|min:0',
-            'diamond_image' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:10240',
+            'certificate_image' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:10240',
         ]);
 
         $card = Card::findOrFail($id);

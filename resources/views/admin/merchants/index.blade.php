@@ -1,5 +1,6 @@
 <x-app-layout>
     @slot('title', 'Merchants')
+    
 
     <div class="bg-white px-6 py-2 shadow dark:bg-gray-800 rounded-lg ">
         <div class="mx-auto  text-gray-900 dark:text-gray-100">
@@ -15,8 +16,9 @@
                 'GST No',
                 'Created At',
                 'Actions',
-            ]" :from="$pagination['from'] ?? 1" :to="$pagination['to'] ?? 10" :total="$pagination['total'] ?? count($merchants)" :pages="$pagination['pages'] ?? [1]"
-                :current="$pagination['current'] ?? 1">
+            ]" :from="$pagination['from']" :to="$pagination['to']" :total="$pagination['total']" :pages="$pagination['pages']"
+                :current="$pagination['current']">
+
 
                 @foreach ($merchants as $index => $merchant)
                     <tr
@@ -35,22 +37,24 @@
                         <td class="px-4 py-3 text-sm">
                             <div class="flex items-center space-x-3">
                                 <!-- Edit Button -->
-                                <a href="{{ route('admin.merchants.edit', $merchant->id) }}">
-                                    <x-secondary-button type="button" x-data
-                                        x-on:click.prevent="$dispatch('open-modal', 'edit-merchant-modal');
-                                    setTimeout(() => {
-                                    document.getElementById('edit_merchant_code').value = '{{ $merchant->merchant_code }}';
-                                    document.getElementById('edit_name').value = '{{ $merchant->name }}';
-                                    document.getElementById('edit_email').value = '{{ $merchant->email }}';
-                                    document.getElementById('edit_phone').value = '{{ $merchant->phone }}';
-                                    document.getElementById('edit_address').value = '{{ $merchant->address }}';
-                                    document.getElementById('edit_state_code').value = '{{ $merchant->state_code }}';
-                                    document.getElementById('edit_state').value = '{{ $merchant->state }}';
-                                    document.getElementById('edit_gst_no').value = '{{ $merchant->gst_no }}';
-                                    document.getElementById('editMerchantForm').action = '{{ route('admin.merchants.update', $merchant->id) }}';}, 100);">
-                                        {{ __('Edit') }}
-                                    </x-secondary-button>
-                                </a>
+                                <x-secondary-button type="button" x-data
+                                    x-on:click.prevent="
+        $dispatch('open-modal', 'edit-merchant-modal');
+        setTimeout(() => {
+            document.getElementById('edit_merchant_code').value = '{{ $merchant->merchant_code }}';
+            document.getElementById('edit_name').value = '{{ $merchant->name }}';
+            document.getElementById('edit_email').value = '{{ $merchant->email }}';
+            document.getElementById('edit_phone').value = '{{ $merchant->phone }}';
+            document.getElementById('edit_address').value = '{{ $merchant->address }}';
+            document.getElementById('edit_state_code').value = '{{ $merchant->state_code }}';
+            document.getElementById('edit_state').value = '{{ $merchant->state }}';
+            document.getElementById('edit_gst_no').value = '{{ $merchant->gst_no }}';
+            document.getElementById('editMerchantForm').action = '{{ route('admin.merchants.update', $merchant->id) }}';
+        }, 100);
+    ">
+                                    {{ __('Edit') }}
+                                </x-secondary-button>
+
 
                                 <!-- Delete Button -->
                                 <form action="{{ route('admin.merchants.destroy', $merchant->id) }}" method="POST"
@@ -68,6 +72,9 @@
                             </div>
                         </td>
                     </tr>
+                    <x-confirm-delete-modal name="confirm-delete-modal-{{ $merchant->id }}" :action="route('admin.merchants.destroy', $merchant->id)"
+                        title="Confirm Merchant Deletion"
+                        message="Are you sure you want to delete this merchant? This action cannot be undone." />
                 @endforeach
             </x-table>
 
@@ -153,9 +160,9 @@
 
 
 
-            <!-- Delete Confirmation Modal -->
+            {{-- <!-- Delete Confirmation Modal -->
             <x-confirm-delete-modal :action="route('admin.merchants.destroy', $merchant->id)" title="Confirm Merchant Deletion"
-                message="Are you sure you want to delete this merchant? This action cannot be undone." />
+                message="Are you sure you want to delete this merchant? This action cannot be undone." /> --}}
 
         </div>
     </div>

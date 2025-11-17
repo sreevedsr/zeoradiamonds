@@ -50,15 +50,17 @@
                                     @method('DELETE')
                                     <x-danger-button type="button" x-data
                                         x-on:click.prevent="
-                                            $dispatch('open-modal', 'confirm-delete-modal');
-                                            document.getElementById('deleteSupplierForm').action = '{{ route('admin.suppliers.destroy', $supplier->id) }}';
-                                        ">
+                                    $dispatch('open-modal', 'confirm-delete-modal');
+                                    document.getElementById('deleteSupplierForm').action = '{{ route('admin.suppliers.destroy', $supplier->id) }}';
+                                    ">
                                         {{ __('Delete') }}
                                     </x-danger-button>
                                 </form>
                             </div>
                         </td>
                     </tr>
+                    <x-confirm-delete-modal :action="route('admin.suppliers.destroy', $supplier->id)" title="Confirm Deletion"
+                        message="Are you sure you want to delete this supplier? This action cannot be undone." />
                 @endforeach
             </x-table>
 
@@ -135,8 +137,6 @@
             </x-modal>
 
             <!-- Delete Confirmation Modal -->
-            <x-confirm-delete-modal :action="route('admin.suppliers.destroy', $supplier->id)" title="Confirm Deletion"
-                message="Are you sure you want to delete this supplier? This action cannot be undone." />
 
         </div>
     </div>

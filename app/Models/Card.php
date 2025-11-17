@@ -50,12 +50,11 @@ class Card extends Model
         'certificate_code',
         'diamond_purchase_location',
         'category',
-        'diamond_type',         // DB original
         'diamond_shape',        // normalized alias
         'clarity',
         'color',
         'cut',
-        'diamond_image',
+        'certificate_image',
 
         // 🔹 Valuation & Pricing
         'valuation',
@@ -114,17 +113,6 @@ class Card extends Model
         $this->date = $value;
     }
 
-    // UI uses: diamond_shape → maps to diamond_type if empty
-    public function getDiamondShapeAttribute()
-    {
-        return $this->attributes['diamond_shape'] ?? $this->attributes['diamond_type'] ?? null;
-    }
-
-    public function setDiamondShapeAttribute($value)
-    {
-        $this->attributes['diamond_type'] = $value;
-        $this->attributes['diamond_shape'] = $value;
-    }
 
     /* ---------------------------------------------
      |  🔹 Relationships
