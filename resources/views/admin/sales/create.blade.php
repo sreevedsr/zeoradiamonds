@@ -1,8 +1,8 @@
 <x-app-layout>
     @slot('title', 'Upload Sales Details (B2B)')
-    <!-- top of form: remove purchaseForm() store usage -->
-    <form method="POST" action="{{ route('admin.products.assign') }}" enctype="multipart/form-data" x-data
-        x-init="enableSequentialInput(document, '#add-sale-item-btn');
+    <form method="POST" action="{{ route('admin.products.assign') }}" enctype="multipart/form-data" x-data="saleForm()"
+        x-init="init();
+        enableSequentialInput(document, '#add-sale-item-btn');
         focusFirstInput();">
         @csrf
 
@@ -31,7 +31,7 @@
                 <!-- Invoice No -->
                 <div>
                     <label class="text-sm font-medium">Invoice No.</label>
-                    <x-input.text type="text" name="invoice_no" placeholder="Enter Invoice No"
+                    <x-input.text type="text" name="invoice_no" placeholder="Enter Invoice No" required
                         class="input-field w-full rounded-md border border-gray-300 px-3 py-2
                        focus:ring-2 focus:ring-purple-500" />
                 </div>
@@ -218,23 +218,24 @@
                         </tr>
                     </thead>
 
-                    <!-- DB-driven table uses salesTable() -->
-                    <tbody x-data="salesTable()" x-init="init()"
-                        class="divide-y divide-gray-100 dark:divide-gray-700">
+                    <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
+
+                        <!-- If items available -->
                         <template x-if="items.length > 0">
-                            <template x-for="(item, index) in items" :key="item.id">
+                            <template x-for="(row, index) in items" :key="row.id">
                                 <tr class="hover:bg-gray-50 dark:hover:bg-gray-800 transition">
                                     <td class="px-4 py-2 text-sm" x-text="index + 1"></td>
-                                    <td class="px-4 py-2 text-sm" x-text="item.barcode"></td>
-                                    <td class="px-4 py-2 text-sm" x-text="item.item_name"></td>
-                                    <td class="px-4 py-2 text-sm" x-text="item.quantity"></td>
-                                    <td class="px-4 py-2 text-sm" x-text="item.net_weight"></td>
-                                    <td class="px-4 py-2 text-sm" x-text="item.net_amount"></td>
-                                    <td class="px-4 py-2 text-right text-sm" x-text="item.total_amount"></td>
+                                    <td class="px-4 py-2 text-sm" x-text="row.barcode"></td>
+                                    <td class="px-4 py-2 text-sm" x-text="row.item_name"></td>
+                                    <td class="px-4 py-2 text-sm" x-text="row.quantity"></td>
+                                    <td class="px-4 py-2 text-sm" x-text="row.net_weight"></td>
+                                    <td class="px-4 py-2 text-sm" x-text="row.net_amount"></td>
+                                    <td class="px-4 py-2 text-right text-sm" x-text="row.total_amount"></td>
                                 </tr>
                             </template>
                         </template>
 
+                        <!-- No items -->
                         <template x-if="items.length === 0">
                             <tr>
                                 <td colspan="7"
@@ -244,11 +245,12 @@
                             </tr>
                         </template>
                     </tbody>
+
                 </table>
             </div>
 
             <!-- Totals (use an instance to show count) -->
-            <div class="flex justify-between items-center mt-6" x-data="salesTable()" x-init="init()">
+            <div class="flex justify-between items-center mt-6">
                 <div class="text-gray-700 dark:text-gray-200 text-sm">
                     <span>Total Items:</span>
                     <span x-text="items.length"></span>
@@ -259,7 +261,6 @@
         </div>
     </form>
 
-    {{-- Include the modal partial as-is (we'll update it next) --}}
     @include('admin.sales.partials.add-item-modal')
 
 </x-app-layout>

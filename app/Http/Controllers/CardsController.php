@@ -289,7 +289,9 @@ class CardsController extends Controller
             $items = TempSale::where('created_by', auth()->id())->get();
 
             if ($items->isEmpty()) {
-                throw new \Exception("No sale items found.");
+                return back()
+                    ->withErrors(['items' => 'Please add at least one sale item before submitting.'])
+                    ->withInput();
             }
 
             foreach ($items as $saleItem) {

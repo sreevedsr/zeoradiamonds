@@ -1,4 +1,4 @@
-<!-- Add Sale Item Modal (DB-driven, event-open) -->
+<!-- Add Sale Item Modal -->
 <div x-data="{ open: false }" x-show="open" x-transition.opacity.duration.200ms
     class="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-black/40 dark:bg-black/70"
     @open-sale-modal.window="open = true" @close-sale-modal.window="open = false" @click.self="open = false"
@@ -10,17 +10,17 @@
         class="relative w-full max-w-5xl bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border overflow-hidden"
         role="dialog">
 
+        <!-- Header -->
         <div class="flex items-center justify-between px-6 py-4 border-b">
             <h2 class="text-lg font-semibold">Add Sale Item</h2>
-            <button type="button" @click="open = false" class="p-2 rounded-full">
-                <!-- X icon -->
-            </button>
+            <button type="button" @click="open = false" class="p-2 rounded-full">✕</button>
         </div>
 
-        <form x-ref="saleForm" x-data="saleItemForm()" @submit.prevent="addItem(); open = false"
+        <form x-ref="saleForm" x-data="saleForm()" @submit.prevent="addItem(); open = false"
             class="p-6 space-y-6 overflow-y-auto max-h-[75vh]">
-
+            <!-- GRID -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+
                 <?php if (isset($component)) { $__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8 = $attributes; } ?>
 <?php $component = App\View\Components\Input\Text::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
@@ -30,7 +30,7 @@
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\App\View\Components\Input\Text::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['label' => 'SI. No.','model' => 'si_no','readonly' => true]); ?>
+<?php $component->withAttributes(['label' => 'SI. No.','model' => 'item.si_no','readonly' => true]); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8)): ?>
@@ -50,7 +50,7 @@
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\App\View\Components\Input\Text::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['label' => 'Barcode','model' => 'barcode','placeholder' => 'Scan barcode']); ?>
+<?php $component->withAttributes(['label' => 'Barcode','model' => 'item.barcode','placeholder' => 'Scan barcode']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8)): ?>
@@ -62,7 +62,7 @@
 <?php unset($__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8); ?>
 <?php endif; ?>
 
-                <!-- Product Lookup -->
+                              <!-- Product Lookup -->
                 <div x-data="searchableDropdown({
                     apiUrl: '<?php echo e(route('admin.products.lookup')); ?>',
                     optionLabel: 'product_code',
@@ -93,6 +93,67 @@
                         </template>
                     </div>
                 </div>
+                <!-- All fields now correctly read from item -->
+                <?php if (isset($component)) { $__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8 = $attributes; } ?>
+<?php $component = App\View\Components\Input\Text::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('input.text'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\App\View\Components\Input\Text::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['label' => 'Item Code','model' => 'item.item_code','readonly' => true]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8)): ?>
+<?php $attributes = $__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8; ?>
+<?php unset($__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8)): ?>
+<?php $component = $__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8; ?>
+<?php unset($__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8); ?>
+<?php endif; ?>
+                <?php if (isset($component)) { $__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8 = $attributes; } ?>
+<?php $component = App\View\Components\Input\Text::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('input.text'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\App\View\Components\Input\Text::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['label' => 'Item Name','model' => 'item.item_name','readonly' => true]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8)): ?>
+<?php $attributes = $__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8; ?>
+<?php unset($__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8)): ?>
+<?php $component = $__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8; ?>
+<?php unset($__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8); ?>
+<?php endif; ?>
+                <?php if (isset($component)) { $__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8 = $attributes; } ?>
+<?php $component = App\View\Components\Input\Text::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('input.text'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\App\View\Components\Input\Text::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['label' => 'HSN Code','model' => 'item.hsn','readonly' => true]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8)): ?>
+<?php $attributes = $__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8; ?>
+<?php unset($__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8)): ?>
+<?php $component = $__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8; ?>
+<?php unset($__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8); ?>
+<?php endif; ?>
 
                 <?php if (isset($component)) { $__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8 = $attributes; } ?>
@@ -103,7 +164,7 @@
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\App\View\Components\Input\Text::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['label' => 'Item Code','model' => 'item_code','readonly' => true]); ?>
+<?php $component->withAttributes(['label' => 'Quantity','model' => 'item.quantity','readonly' => true]); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8)): ?>
@@ -123,7 +184,7 @@
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\App\View\Components\Input\Text::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['label' => 'Item Name','model' => 'item_name','readonly' => true]); ?>
+<?php $component->withAttributes(['label' => 'Gross Weight (g)','model' => 'item.gross_weight','readonly' => true]); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8)): ?>
@@ -143,28 +204,7 @@
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\App\View\Components\Input\Text::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['label' => 'HSN Code','model' => 'hsn','readonly' => true]); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8)): ?>
-<?php $attributes = $__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8; ?>
-<?php unset($__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8)): ?>
-<?php $component = $__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8; ?>
-<?php unset($__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8); ?>
-<?php endif; ?>
-
-                <?php if (isset($component)) { $__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8 = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8 = $attributes; } ?>
-<?php $component = App\View\Components\Input\Text::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('input.text'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\App\View\Components\Input\Text::ignoredParameterNames()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['label' => 'Quantity','model' => 'quantity','readonly' => true]); ?>
+<?php $component->withAttributes(['label' => 'Stone Weight (g)','model' => 'item.stone_weight','readonly' => true]); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8)): ?>
@@ -184,7 +224,7 @@
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\App\View\Components\Input\Text::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['label' => 'Gross Weight (g)','model' => 'gross_weight','readonly' => true]); ?>
+<?php $component->withAttributes(['label' => 'Diamond Weight (g)','model' => 'item.diamond_weight','readonly' => true]); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8)): ?>
@@ -204,7 +244,7 @@
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\App\View\Components\Input\Text::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['label' => 'Stone Weight (g)','model' => 'stone_weight','readonly' => true]); ?>
+<?php $component->withAttributes(['label' => 'Net Weight (g)','model' => 'item.net_weight','readonly' => true]); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8)): ?>
@@ -224,7 +264,7 @@
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\App\View\Components\Input\Text::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['label' => 'Diamond Weight (g)','model' => 'diamond_weight','readonly' => true]); ?>
+<?php $component->withAttributes(['label' => 'Net Amount (₹)','model' => 'item.net_amount','readonly' => true]); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8)): ?>
@@ -244,47 +284,7 @@
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\App\View\Components\Input\Text::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['label' => 'Net Weight (g)','model' => 'net_weight','readonly' => true]); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8)): ?>
-<?php $attributes = $__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8; ?>
-<?php unset($__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8)): ?>
-<?php $component = $__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8; ?>
-<?php unset($__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8); ?>
-<?php endif; ?>
-                <?php if (isset($component)) { $__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8 = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8 = $attributes; } ?>
-<?php $component = App\View\Components\Input\Text::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('input.text'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\App\View\Components\Input\Text::ignoredParameterNames()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['label' => 'Net Amount (₹)','model' => 'net_amount','readonly' => true]); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8)): ?>
-<?php $attributes = $__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8; ?>
-<?php unset($__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8)): ?>
-<?php $component = $__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8; ?>
-<?php unset($__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8); ?>
-<?php endif; ?>
-                <?php if (isset($component)) { $__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8 = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8 = $attributes; } ?>
-<?php $component = App\View\Components\Input\Text::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('input.text'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\App\View\Components\Input\Text::ignoredParameterNames()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['label' => 'Total Amount (₹)','model' => 'total_amount_display','readonly' => true]); ?>
+<?php $component->withAttributes(['label' => 'Total Amount (₹)','model' => 'item.total_amount','readonly' => true]); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8)): ?>
@@ -297,25 +297,25 @@
 <?php endif; ?>
             </div>
 
-            <!-- Tax summary (uses intraState etc) -->
+            <!-- Taxes -->
             <div class="border-t pt-4 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                <template x-if="intraState">
+                <template x-if="item.intraState">
                     <div class="grid grid-cols-2 gap-3 col-span-full">
                         <div>
-                            <div class="text-xs">CGST (1.5%)</div>
-                            <div x-text="formatMoney(cgst_amount)"></div>
+                            <div class="text-xs">CGST</div>
+                            <div x-text="item.cgst"></div>
                         </div>
                         <div>
-                            <div class="text-xs">SGST (1.5%)</div>
-                            <div x-text="formatMoney(sgst_amount)"></div>
+                            <div class="text-xs">SGST</div>
+                            <div x-text="item.sgst"></div>
                         </div>
                     </div>
                 </template>
 
-                <template x-if="!intraState">
+                <template x-if="!item.intraState">
                     <div>
-                        <div class="text-xs">IGST (3%)</div>
-                        <div x-text="formatMoney(igst_amount)"></div>
+                        <div class="text-xs">IGST</div>
+                        <div x-text="item.igst"></div>
                     </div>
                 </template>
             </div>
@@ -342,7 +342,10 @@
 <?php endif; ?>
                 <button type="submit" class="rounded-md bg-purple-600 px-4 py-2 text-white">Add to Sales</button>
             </div>
+
         </form>
+
     </div>
+
 </div>
 <?php /**PATH C:\xampp\htdocs\Zeeyame\resources\views/admin/sales/partials/add-item-modal.blade.php ENDPATH**/ ?>
