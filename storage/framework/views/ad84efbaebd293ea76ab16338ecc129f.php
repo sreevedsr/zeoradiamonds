@@ -36,7 +36,7 @@
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\App\View\Components\Input\Text::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['type' => 'number','label' => 'Diamond Rate (per carat)','name' => 'diamond_rate','model' => 'item.diamond_rate','min' => '0','step' => '0.01','x-init' => 'fetchDiamondRate()','required' => true,'x-bind:class' => 'errors.diamond_rate ? \'border-red-500\' : \'\'']); ?>
+<?php $component->withAttributes(['type' => 'number','label' => 'Diamond Rate (per carat)','name' => 'diamond_rate','x-model' => 'diamond_rate','min' => '0','step' => '0.01','required' => true,'x-bind:class' => 'errors.diamond_rate ? \'border-red-500\' : \'\'']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8)): ?>

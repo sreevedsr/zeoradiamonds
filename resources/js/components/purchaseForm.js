@@ -6,6 +6,10 @@ export default function purchaseForm(globalGoldRate, globalDiamondRate) {
         validateItem() {
             this.errors = {};
 
+            // Sync global values into item before validating
+            this.item.gold_rate = this.gold_rate;
+            this.item.diamond_rate = this.diamond_rate;
+
             // Required text fields
             const requiredText = [
                 "product_code",
@@ -23,13 +27,15 @@ export default function purchaseForm(globalGoldRate, globalDiamondRate) {
                 }
             });
 
-            // Required numeric fields (must be > 0)
+            // Required numbers (must be > 0)
             const requiredNumbers = [
                 "quantity",
                 "gross_weight",
+                "stone_weight",
                 "gold_rate",
                 "total_amount",
                 "landing_cost",
+                "diamond_weight", // added
             ];
 
             requiredNumbers.forEach((field) => {
@@ -39,10 +45,8 @@ export default function purchaseForm(globalGoldRate, globalDiamondRate) {
                 }
             });
 
-            // Optional numeric fields (must be >= 0)
+            // Optional numeric fields (can be 0 but not negative)
             const optionalNumbers = [
-                "stone_weight",
-                "diamond_weight",
                 "stone_amount",
                 "diamond_rate",
                 "making_charge",
@@ -54,13 +58,19 @@ export default function purchaseForm(globalGoldRate, globalDiamondRate) {
 
             optionalNumbers.forEach((field) => {
                 const value = parseFloat(this.item[field]);
-                if (value < 0) {
+                if (!isNaN(value) && value < 0) {
                     this.errors[field] = "Value cannot be negative.";
                 }
             });
 
+            // Extra: ensure net weight auto-calculated value is not invalid
+            // if (parseFloat(this.item.net_weight) <= 0) {
+            //     this.errors.net_weight = "Net weight must be greater than 0.";
+            // }
+
             return Object.keys(this.errors).length === 0;
         },
+
         // --- Accordion UI State ---
         accordion: {
             purchaseOpen: true,
@@ -121,8 +131,8 @@ export default function purchaseForm(globalGoldRate, globalDiamondRate) {
                 "item.stone_weight",
                 "item.diamond_weight",
                 "item.stone_amount",
-                "item.gold_rate",
-                "item.diamond_rate",
+                "gold_rate",
+                "diamond_rate",
                 "item.making_charge",
                 "item.card_charge",
                 "item.other_charge",
@@ -183,7 +193,7 @@ export default function purchaseForm(globalGoldRate, globalDiamondRate) {
 
         calculateGoldComponent(netWeight = this.item.net_weight) {
             const net = this.safeNumber(netWeight);
-            const rate = this.safeNumber(this.item.gold_rate);
+            const rate = this.safeNumber(this.gold_rate);
             console.log("Gold " + (net * rate).toFixed(2));
             return +(net * rate).toFixed(2);
         },
@@ -213,7 +223,7 @@ export default function purchaseForm(globalGoldRate, globalDiamondRate) {
         calculateTotalAmount(goldComponent = this.item.gold_component) {
             const gold = this.safeNumber(goldComponent);
             const stone = this.safeNumber(this.item.stone_amount);
-            const diamond = this.safeNumber(this.item.diamond_rate);
+            const diamond = this.safeNumber(this.diamond_rate);
             const charges =
                 this.safeNumber(this.item.making_charge) +
                 this.safeNumber(this.item.card_charge) +
@@ -257,7 +267,7 @@ export default function purchaseForm(globalGoldRate, globalDiamondRate) {
             return JSON.stringify({
                 pc: this.item.product_code,
                 mrp: this.item.mrp_cost,
-                gr: this.item.gold_rate,
+                gr: this.gold_rate,
             });
         },
         formatCurrency(value) {

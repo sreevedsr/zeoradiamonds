@@ -8,7 +8,7 @@
     'route' => null,
 ])
 
-<div class="w-full overflow-hidden rounded-lg bg-white dark:bg-gray-800">
+<div class="w-full overflow-hidden rounded-t-lg rounded-b-none bg-white dark:bg-gray-800">
     <div x-data="{
         query: '{{ $searchQuery }}',
         timeout: null,

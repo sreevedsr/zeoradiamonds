@@ -12,6 +12,36 @@ import collapsibleMenu from './components/collapsibleMenu.js';
 import searchableDropdown from './components/searchableDropdown.js';
 import { enableSequentialInput, focusFirstInput } from './utils/formNavigation.js';
 
+function globalRates() {
+    return {
+        gold_rate: 0,
+        diamond_rate: 0,
+
+        init() {
+            this.fetchGoldRate();
+            this.fetchDiamondRate();
+        },
+
+        async fetchGoldRate() {
+            try {
+                const res = await fetch('/admin/api/latest-gold-rate');
+                this.gold_rate = (await res.json()).rate ?? 0;
+            } catch (e) {
+                console.error("Failed gold rate", e);
+            }
+        },
+
+        async fetchDiamondRate() {
+            try {
+                const res = await fetch('/admin/api/latest-diamond-rate');
+                this.diamond_rate = (await res.json()).rate ?? 0;
+            } catch (e) {
+                console.error("Failed diamond rate", e);
+            }
+        }
+    }
+}
+
 window.Alpine = Alpine;
 
 // 🧰 Attach helpers globally (so Blade can use them)
@@ -19,6 +49,7 @@ window.enableSequentialInput = enableSequentialInput;
 window.focusFirstInput = focusFirstInput;
 window.searchableDropdown = searchableDropdown;
 
+Alpine.data('globalRates', globalRates);
 Alpine.data('stateCode', stateCode);
 Alpine.data('pageTransition', pageTransition);
 Alpine.data('purchaseForm', purchaseForm);

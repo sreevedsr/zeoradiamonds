@@ -44,7 +44,7 @@ foreach ($attributes->all() as $__key => $__value) {
 
 unset($__defined_vars, $__key, $__value); ?>
 
-<div class="w-full overflow-hidden rounded-lg bg-white dark:bg-gray-800">
+<div class="w-full overflow-hidden rounded-t-lg rounded-b-none bg-white dark:bg-gray-800">
     <div x-data="{
         query: '<?php echo e($searchQuery); ?>',
         timeout: null,

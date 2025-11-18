@@ -12,11 +12,7 @@ class Card extends Model
 
     protected $fillable = [
         // 🔹 Invoice / Sale Information
-        'invoice_id',
-        'invoice_no',
-        'date',                 // DB column (invoice_date in UI)
-        'supplier_id',
-        'staff_id',
+        'purchase_invoice_id',
 
         // 🔹 Product / Item Details
         'product_code',

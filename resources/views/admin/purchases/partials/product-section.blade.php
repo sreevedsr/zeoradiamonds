@@ -6,38 +6,24 @@
 
     <!-- Product Code -->
     <div>
-        <x-input.text
-            label="Product Code"
-            name="product_code"
-            model="item.product_code"
-            placeholder="Enter Product Code"
-            required
-            x-bind:class="errors.product_code ? 'border-red-500' : ''"
-        />
+        <x-input.text label="Product Code" name="product_code" model="item.product_code" placeholder="Enter Product Code"
+            required x-bind:class="errors.product_code ? 'border-red-500' : ''" />
         <p class="text-red-500 text-xs mt-1" x-text="errors.product_code" x-show="errors.product_code"></p>
     </div>
 
     <!-- Item Code Dropdown -->
-    <div
-        x-data="searchableDropdown({
-            apiUrl: '{{ route('admin.dropdown.fetch', ['type' => 'products']) }}',
-            optionLabel: 'item_code',
-            optionValue: 'id'
-        })"
-        x-init="init()"
-        class="relative mt-1"
-        @click.outside="open = false">
+    <div x-data="searchableDropdown({
+        apiUrl: '{{ route('admin.dropdown.fetch', ['type' => 'products']) }}',
+        optionLabel: 'item_code',
+        optionValue: 'id'
+    })" x-init="init()" class="relative mt-1" @click.outside="open = false">
 
         <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
             Item Code <span class="text-red-500">*</span>
         </label>
 
         <!-- Search Input -->
-        <input type="text"
-            x-model="searchQuery"
-            placeholder="Search Item Code"
-            required
-            @focus="open = true"
+        <input type="text" x-model="searchQuery" placeholder="Search Item Code" required @focus="open = true"
             @input="filterOptions()"
             @keydown.enter.prevent="
                 if (filteredOptions.length > 0) {
@@ -48,8 +34,7 @@
             class="input-field w-full rounded-md border border-gray-300 px-3 py-2
                 focus:outline-none focus:ring-2 focus:ring-purple-600
                 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100
-                hover:border-purple-400 transition duration-150"
-        />
+                hover:border-purple-400 transition duration-150" />
 
         <!-- Dropdown List -->
         <div x-show="open" x-transition
@@ -86,45 +71,22 @@
 
     <!-- Item Name -->
     <div>
-        <x-input.text
-            label="Item Name"
-            name="item_name"
-            model="item.item_name"
-            placeholder="Auto-filled"
-            required
-            x-bind:class="errors.item_name ? 'border-red-500' : ''"
-        />
+        <x-input.text label="Item Name" name="item_name" model="item.item_name" placeholder="Auto-filled" required
+            x-bind:class="errors.item_name ? 'border-red-500' : ''" />
         <p class="text-red-500 text-xs mt-1" x-text="errors.item_name" x-show="errors.item_name"></p>
     </div>
 
     <!-- Quantity -->
     <div>
-        <x-input.text
-            type="number"
-            label="Quantity"
-            name="quantity"
-            model="item.quantity"
-            placeholder="Enter Quantity"
-            min="1"
-            required
-            x-bind:class="errors.quantity ? 'border-red-500' : ''"
-        />
+        <x-input.text type="number" label="Quantity" name="quantity" model="item.quantity" placeholder="Enter Quantity"
+            min="1" required x-bind:class="errors.quantity ? 'border-red-500' : ''" />
         <p class="text-red-500 text-xs mt-1" x-text="errors.quantity" x-show="errors.quantity"></p>
     </div>
 
     <!-- Gold Rate -->
     <div>
-        <x-input.text
-            type="number"
-            label="Gold Rate (per unit)"
-            name="gold_rate"
-            model="item.gold_rate"
-            step="0.01"
-            placeholder="Auto-filled"
-            x-init="fetchGoldRate()"
-            required
-            x-bind:class="errors.gold_rate ? 'border-red-500' : ''"
-        />
+        <x-input.text type="number" label="Gold Rate (per unit)" name="gold_rate" x-model="gold_rate" step="0.01"
+            placeholder="Auto-filled" required x-bind:class="errors.gold_rate ? 'border-red-500' : ''" />
         <p class="text-red-500 text-xs mt-1" x-text="errors.gold_rate" x-show="errors.gold_rate"></p>
 
         <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
@@ -134,59 +96,32 @@
 
     <!-- Gross Weight -->
     <div>
-        <x-input.text
-            type="number"
-            label="Gross Weight (g)"
-            name="gross_weight"
-            model="item.gross_weight"
-            step="0.001"
-            placeholder="Enter Gross Weight"
-            required
-            x-bind:class="errors.gross_weight ? 'border-red-500' : ''"
-        />
+        <x-input.text type="number" label="Gross Weight (g)" name="gross_weight" model="item.gross_weight"
+            step="0.001" placeholder="Enter Gross Weight" required
+            x-bind:class="errors.gross_weight ? 'border-red-500' : ''" />
         <p class="text-red-500 text-xs mt-1" x-text="errors.gross_weight" x-show="errors.gross_weight"></p>
     </div>
 
     <!-- Stone Weight -->
     <div>
-        <x-input.text
-            type="number"
-            label="Stone Weight (g)"
-            name="stone_weight"
-            model="item.stone_weight"
-            step="0.001"
-            placeholder="Enter Stone Weight"
-            required
-            x-bind:class="errors.stone_weight ? 'border-red-500' : ''"
-        />
+        <x-input.text type="number" label="Stone Weight (g)" name="stone_weight" model="item.stone_weight"
+            step="0.001" placeholder="Enter Stone Weight" required
+            x-bind:class="errors.stone_weight ? 'border-red-500' : ''" />
         <p class="text-red-500 text-xs mt-1" x-text="errors.stone_weight" x-show="errors.stone_weight"></p>
     </div>
 
     <!-- Diamond Weight -->
     <div>
-        <x-input.text
-            type="number"
-            label="Diamond Weight (ct)"
-            name="diamond_weight"
-            model="item.diamond_weight"
-            step="0.001"
-            placeholder="Enter Diamond Weight"
-            required
-            x-bind:class="errors.diamond_weight ? 'border-red-500' : ''"
-        />
+        <x-input.text type="number" label="Diamond Weight (ct)" name="diamond_weight" model="item.diamond_weight"
+            step="0.001" placeholder="Enter Diamond Weight" required
+            x-bind:class="errors.diamond_weight ? 'border-red-500' : ''" />
         <p class="text-red-500 text-xs mt-1" x-text="errors.diamond_weight" x-show="errors.diamond_weight"></p>
     </div>
 
     <!-- Net Weight -->
     <div>
-        <x-input.text
-            type="number"
-            label="Net Weight (g)"
-            name="net_weight"
-            model="item.net_weight"
-            readonly
-            placeholder="Auto-calculated"
-        />
+        <x-input.text type="number" label="Net Weight (g)" name="net_weight" model="item.net_weight" readonly
+            placeholder="Auto-calculated" />
     </div>
 
 </div>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Card;
+use App\Models\PurchaseInvoice;
 use App\Models\Staff;
 use App\Models\Invoice;
 use App\Models\GoldRate;
@@ -67,7 +68,7 @@ class CardsController extends Controller
 
         // Validate the top-level invoice fields
         $validated = $request->validate([
-            'invoice_no' => 'required|string|max:100|unique:invoices,invoice_no',
+            'invoice_no' => 'required|string|max:100|unique:purchase_invoices,invoice_no',
             'invoice_date' => 'required|date',
             'supplier_id' => 'required|exists:suppliers,id',
         ]);
@@ -80,7 +81,7 @@ class CardsController extends Controller
         }
 
         // Create Invoice
-        $invoice = Invoice::create([
+        $invoice = PurchaseInvoice::create([
             'invoice_no' => $validated['invoice_no'],
             'invoice_date' => $validated['invoice_date'],
             'supplier_id' => $validated['supplier_id'],
@@ -89,7 +90,7 @@ class CardsController extends Controller
         // Loop through each temp item and move to cards table
         foreach ($tempItems as $item) {
             Card::create($item->only([
-                'invoice_no',
+                'purchase_invoice_id',
                 'product_code',
                 'item_code',
                 'item_name',
@@ -126,7 +127,7 @@ class CardsController extends Controller
         TempPurchaseItem::where('user_id', auth()->id())->delete();
 
         return redirect()
-            ->back()
+            ->route('admin.products.create')
             ->with('success', "Invoice #{$invoice->invoice_no} saved and all product items added successfully.")
             ->with('clear_items', true);
     }
@@ -278,7 +279,7 @@ class CardsController extends Controller
     {
         $request->validate([
             'merchant_id' => 'required|exists:users,id',
-            'invoice_no' => 'nullable|string',
+            'purchase_invoice_id' => 'nullable|string',
         ]);
 
         DB::transaction(function () use ($request) {

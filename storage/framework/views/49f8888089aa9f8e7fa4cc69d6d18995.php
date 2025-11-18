@@ -30,26 +30,18 @@
     </div>
 
     <!-- Item Code Dropdown -->
-    <div
-        x-data="searchableDropdown({
-            apiUrl: '<?php echo e(route('admin.dropdown.fetch', ['type' => 'products'])); ?>',
-            optionLabel: 'item_code',
-            optionValue: 'id'
-        })"
-        x-init="init()"
-        class="relative mt-1"
-        @click.outside="open = false">
+    <div x-data="searchableDropdown({
+        apiUrl: '<?php echo e(route('admin.dropdown.fetch', ['type' => 'products'])); ?>',
+        optionLabel: 'item_code',
+        optionValue: 'id'
+    })" x-init="init()" class="relative mt-1" @click.outside="open = false">
 
         <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
             Item Code <span class="text-red-500">*</span>
         </label>
 
         <!-- Search Input -->
-        <input type="text"
-            x-model="searchQuery"
-            placeholder="Search Item Code"
-            required
-            @focus="open = true"
+        <input type="text" x-model="searchQuery" placeholder="Search Item Code" required @focus="open = true"
             @input="filterOptions()"
             @keydown.enter.prevent="
                 if (filteredOptions.length > 0) {
@@ -60,8 +52,7 @@
             class="input-field w-full rounded-md border border-gray-300 px-3 py-2
                 focus:outline-none focus:ring-2 focus:ring-purple-600
                 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100
-                hover:border-purple-400 transition duration-150"
-        />
+                hover:border-purple-400 transition duration-150" />
 
         <!-- Dropdown List -->
         <div x-show="open" x-transition
@@ -157,7 +148,7 @@
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\App\View\Components\Input\Text::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['type' => 'number','label' => 'Gold Rate (per unit)','name' => 'gold_rate','model' => 'item.gold_rate','step' => '0.01','placeholder' => 'Auto-filled','x-init' => 'fetchGoldRate()','required' => true,'x-bind:class' => 'errors.gold_rate ? \'border-red-500\' : \'\'']); ?>
+<?php $component->withAttributes(['type' => 'number','label' => 'Gold Rate (per unit)','name' => 'gold_rate','x-model' => 'gold_rate','step' => '0.01','placeholder' => 'Auto-filled','required' => true,'x-bind:class' => 'errors.gold_rate ? \'border-red-500\' : \'\'']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8)): ?>

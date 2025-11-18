@@ -222,7 +222,7 @@
                                 : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>
 
                 block rounded-md px-2 py-1 text-sm font-medium">
-                            View Products
+                            View Certificates
                         </a>
                     </li>
                     <li>
@@ -232,7 +232,7 @@
                                 : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>
 
                 block rounded-md px-2 py-1 text-sm font-medium">
-                            Assign Products
+                            Assign Certificates
                         </a>
                     </li>
                     <li>
@@ -242,7 +242,7 @@
                                 : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>
 
                 block rounded-md px-2 py-1 text-sm font-medium">
-                            View Card Requests
+                            View Certificate Requests
                         </a>
                     </li>
                 </ul>

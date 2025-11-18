@@ -110,7 +110,7 @@ Route::middleware('auth')->group(function () {
             Route::get('/lookup', [CardsController::class, 'lookup'])->name('lookup');
             Route::get('/requests', [CustomerController::class, 'customerRequests'])->name('requests');
 
-            Route::get('/{id}', [CardsController::class, 'show'])->name('show');
+            // Route::get('/{id}', [CardsController::class, 'show'])->name('show');
             Route::get('/{id}/edit', [CardsController::class, 'edit'])->name('edit');
             Route::put('/{id}', [CardsController::class, 'update'])->name('update');
             Route::delete('/{id}', [CardsController::class, 'destroy'])->name('destroy');
