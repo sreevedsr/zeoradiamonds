@@ -8,7 +8,7 @@
         :class="isSidebarCollapsed ? 'pointer-events-none select-none' : 'pointer-events-auto select-auto'">
         <!-- Logo -->
         <template x-if="!isSidebarCollapsed">
-            <a class="ml-6 mt-4 text-lg font-bold text-gray-800 dark:text-gray-200 block" href="#">
+            <a class="ml-6 mt-4 text-lg font-bold text-gray-800 dark:text-gray-200 block" href="<?php echo e(route('dashboard')); ?>">
                 Zeora Diamonds
             </a>
         </template>
@@ -40,7 +40,7 @@
     @keydown.escape="closeSideMenu" x-init="$watch('isSideMenuOpen', value => document.body.classList.toggle('overflow-hidden', value))">
     <div class="flex-1 overflow-y-auto py-4">
         <!-- Logo -->
-        <a class="ml-6 text-lg font-bold text-gray-800 dark:text-gray-200" href="#">
+        <a class="ml-6 text-lg font-bold text-gray-800 dark:text-gray-200" href="<?php echo e(route('dashboard')); ?>">
             Zeora Diamonds
         </a>
 

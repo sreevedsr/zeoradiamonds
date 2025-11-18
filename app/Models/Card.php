@@ -128,10 +128,11 @@ class Card extends Model
         return $this->belongsTo(Supplier::class);
     }
 
-    public function invoice(): BelongsTo
+    public function purchaseInvoice()
     {
-        return $this->belongsTo(Invoice::class);
+        return $this->belongsTo(PurchaseInvoice::class, 'purchase_invoice_id');
     }
+
 
     public function staff(): BelongsTo
     {

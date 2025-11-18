@@ -51,4 +51,9 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+    public function adminSalesInvoices()
+    {
+        return $this->hasMany(AdminSalesInvoice::class, 'merchant_id');
+    }
+
 }

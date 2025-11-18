@@ -14,45 +14,6 @@ return new class extends Migration
             $table->id();
 
             /* --------------------------------------------------------------
-             |  Foreign Keys
-             --------------------------------------------------------------*/
-            // $table->unsignedBigInteger('supplier_id')->nullable();
-            // $table->unsignedBigInteger('staff_id')->nullable();
-            // $table->unsignedBigInteger('merchant_id')->nullable();
-            // $table->unsignedBigInteger('customer_id')->nullable();
-            // $table->unsignedBigInteger('invoice_id')->nullable();
-
-            // $table->foreign('supplier_id')
-            //     ->references('id')
-            //     ->on('suppliers')
-            //     ->onDelete('set null');
-
-            // $table->foreign('staff_id')
-            //     ->references('id')
-            //     ->on('users')
-            //     ->onDelete('set null');
-
-            // $table->foreign('merchant_id')
-            //     ->references('id')
-            //     ->on('users')
-            //     ->onDelete('cascade');
-
-            // $table->foreign('customer_id')
-            //     ->references('id')
-            //     ->on('customers')
-            //     ->onDelete('set null');
-
-            // $table->foreign('invoice_id')
-            //     ->references('id')
-            //     ->on('invoices')
-            //     ->onDelete('set null');
-
-            /* --------------------------------------------------------------
-             |  Invoice Info
-             --------------------------------------------------------------*/
-            $table->string('invoice_no')->nullable();
-
-            /* --------------------------------------------------------------
              |  Product Details
              --------------------------------------------------------------*/
             $table->string('product_code')->nullable();
