@@ -166,7 +166,7 @@ Route::middleware('auth')->group(function () {
         });
         Route::get('/api/dropdown/{type}', [DropdownController::class, 'fetch'])->name('dropdown.fetch');
         Route::get('/api/dropdown/combined', [DropdownController::class, 'combined'])->name('dropdown.combined');
-        Route::get('/api/card/{id}', [CardController::class, 'show'])->name('card.show');
+        Route::get('/card/{id}', [CardController::class, 'show'])->name('card.show');
 
         Route::get('/generate-qr/{data}', function ($data) {
             return QrCode::format('svg')->size(200)->generate($data);

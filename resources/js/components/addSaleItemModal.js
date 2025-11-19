@@ -1,40 +1,40 @@
-export default function addSaleItemModal({ lookupUrl }) {
+export default function addSaleItemModal() {
     return {
-        lookupUrl: null,
         item: {
             si_no: "",
             barcode: "",
             item_code: "",
             item_name: "",
             hsn: "",
-            quantity: 1,
-            gross_weight: 0,
-            stone_weight: 0,
-            diamond_weight: 0,
-            net_weight: 0,
-            net_amount: 0,
-            total_amount: 0,
-
-            intraState: true,
-            cgst: 0,
-            sgst: 0,
-            igst: 0,
+            quantity: "",
+            gross_weight: "",
+            stone_weight: "",
+            diamond_weight: "",
+            net_weight: "",
+            net_amount: "",
+            total_amount: "",
         },
 
-        product: null,
-        merchantState: null,
-
         init() {
-            window.addEventListener("product-selected", (e) => {
-                const p = e.detail.product;
-                this.product = p;
+            window.addEventListener("card-loaded", (e) => {
+                const c = e.detail.card;
 
-                this.fetchCardByProductCode(p.product_code);
-            });
+                this.item.card_id = c.id;
+                this.item.barcode = c.product_code;
 
-            window.addEventListener("merchant-state", (e) => {
-                this.merchantState = e.detail.state;
-                this.recalculateTaxes();
+                // MAP FIELDS
+                this.item.item_code = c.item_code;
+                this.item.item_name = c.item_name;
+                this.item.hsn = c.hsn ?? c.hsn_code ?? "";
+                this.item.quantity = c.quantity;
+                this.item.gross_weight = c.gross_weight;
+                this.item.stone_weight = c.stone_weight;
+                this.item.diamond_weight = c.diamond_weight;
+                this.item.net_weight = c.net_weight;
+
+                // Net Amount and Total Amount
+                this.item.net_amount = c.total_amount; // based on your earlier mapping
+                this.item.total_amount = c.total_amount;
             });
         },
 
@@ -108,10 +108,9 @@ export default function addSaleItemModal({ lookupUrl }) {
             }
         },
         async addItem() {
+            // 1. Save to backend (minimal fields)
             const form = new FormData();
-
-            form.append("barcode", this.item.barcode);
-            form.append("product_code", this.item.item_code);
+            form.append("product_code", this.item.barcode);
 
             const res = await fetch("/admin/temp-sales", {
                 method: "POST",
@@ -128,7 +127,21 @@ export default function addSaleItemModal({ lookupUrl }) {
                 return;
             }
 
-            window.dispatchEvent(new CustomEvent("refresh-sale-items"));
+            // 2. Push the full card details into the main saleForm() items array
+            window.dispatchEvent(
+                new CustomEvent("add-sale-item", {
+                    detail: {
+                        item: {
+                            barcode: this.item.barcode,
+                            item_name: this.item.item_name,
+                            quantity: this.item.quantity,
+                            net_weight: this.item.net_weight,
+                            net_amount: this.item.net_amount,
+                            total_amount: this.item.total_amount,
+                        },
+                    },
+                }),
+            );
         },
     };
 }

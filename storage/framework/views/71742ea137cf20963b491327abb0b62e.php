@@ -63,36 +63,43 @@
 <?php endif; ?>
 
                 <!-- Product Lookup -->
-                <div x-data="searchableDropdown({
-                    apiUrl: '<?php echo e(route('admin.products.lookup')); ?>',
-                    optionLabel: 'product_code',
-                    optionValue: 'id'
-                })" x-init="init()" class="relative" @click.outside="open = false">
+                <div x-data="productSelector()" x-init="init()" class="relative" @click.outside="open = false">
+
                     <label class="text-sm font-medium text-gray-700 dark:text-gray-200">Product</label>
 
                     <input type="text" x-model="searchQuery" placeholder="Search Product" @focus="open = true"
                         @input="filterOptions()"
                         @keydown.enter.prevent="
-                            if (filteredOptions.length > 0) {
-                                select(filteredOptions[0]);
-                                $dispatch('product-selected', { product: filteredOptions[0] });
-                            }
-                        "
+            if (filteredOptions.length > 0) {
+                select(filteredOptions[0]);
+            }
+        "
                         class="input-field w-full rounded-md border border-gray-300 px-3 py-2
-                            focus:ring-2 focus:ring-purple-600 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100" />
+            focus:ring-2 focus:ring-purple-600 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100" />
 
+                    <!-- Dropdown -->
                     <div x-show="open" x-transition
                         class="absolute z-10 mt-1 w-full max-h-60 overflow-y-auto rounded-md
-                            bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700">
-                        <template x-for="option in filteredOptions" :key="option.id">
-                            <div @click="select(option); $dispatch('product-selected', { product: option })"
-                                class="px-3 py-2 cursor-pointer text-sm hover:bg-purple-100 dark:hover:bg-purple-700/40">
-                                <span x-text="option.product_code"></span> —
-                                <span class="text-gray-500 text-xs" x-text="option.item_name"></span>
+            bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700">
+
+                        <template x-if="filteredOptions.length > 0">
+                            <template x-for="option in filteredOptions" :key="option.id">
+                                <div @click="select(option)"
+                                    class="px-3 py-2 cursor-pointer text-sm hover:bg-purple-100 dark:hover:bg-purple-700/40">
+                                    <span x-text="option.item_code"></span> —
+                                    <span class="text-gray-500 text-xs" x-text="option.item_name"></span>
+                                </div>
+                            </template>
+                        </template>
+
+                        <template x-if="filteredOptions.length === 0">
+                            <div class="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">
+                                No results found
                             </div>
                         </template>
                     </div>
                 </div>
+
                 <!-- All fields now correctly read from item -->
                 <?php if (isset($component)) { $__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8 = $attributes; } ?>
@@ -348,4 +355,50 @@
     </div>
 
 </div>
+
+<script>
+function productSelector() {
+    return {
+        open: false,
+        searchQuery: "",
+        options: [],
+        filteredOptions: [],
+        selected: null,
+
+        init() {
+            // Load lightweight product list from cards table
+            fetch("<?php echo e(route('admin.dropdown.fetch', ['type' => 'products'])); ?>")
+                .then(res => res.json())
+                .then(data => {
+                    this.options = data;
+                    this.filteredOptions = data;
+                });
+        },
+
+        filterOptions() {
+            const q = this.searchQuery.toLowerCase().trim();
+            this.filteredOptions = this.options.filter(o =>
+                o.item_code.toLowerCase().includes(q) ||
+                o.item_name.toLowerCase().includes(q)
+            );
+        },
+
+        select(option) {
+            this.selected = option;
+            this.searchQuery = option.item_code + " - " + option.item_name;
+            this.open = false;
+
+            // Fetch full details from cards table
+            fetch("/admin/card/" + option.id)
+                .then(res => res.json())
+                .then(card => {
+                    // Update parent modal's item
+                    const event = new CustomEvent("card-loaded", { detail: { card }});
+                    window.dispatchEvent(event);
+                });
+        }
+    };
+}
+</script>
+
 <?php /**PATH C:\xampp\htdocs\zeoradiamonds\resources\views/admin/sales/partials/add-item-modal.blade.php ENDPATH**/ ?>

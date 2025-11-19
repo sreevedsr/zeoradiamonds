@@ -42,7 +42,7 @@ class CardsController extends Controller
 
         $merchants = User::where('role', 'merchant')->orderBy('name')->get();
 
-        return view('admin.cards.index', compact('cards', 'merchants'));
+        return view('admin.purchases.index', compact('cards', 'merchants'));
     }
 
     public function createCard()

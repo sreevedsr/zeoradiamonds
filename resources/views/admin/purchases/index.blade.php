@@ -3,7 +3,7 @@
 
     <div class="bg-white px-6 py-2 shadow dark:bg-gray-800 rounded-lg">
         <div class="mx-auto max-w-7xl text-gray-900 dark:text-gray-100">
-            <x-table :headers="['#', 'Certificate ID', 'Diamond Shape', 'Carat Weight', 'Clarity', 'Color', 'Cut', 'Actions']" :from="1" :to="$cards->count()" :total="$cards->count()" :pages="[1]"
+            <x-table :headers="['#', 'Certificate ID', 'Carat Weight', 'Clarity', 'Color', 'Cut', 'Actions']" :from="1" :to="$cards->count()" :total="$cards->count()" :pages="[1]"
                 :current="1" :route="route('admin.products.index')" :searchQuery="request('search', '')">
                 @foreach ($cards as $index => $card)
                     <tr class="text-gray-700 dark:text-gray-400">
@@ -25,7 +25,7 @@
                                 <x-danger-button type="button" x-data
                                     x-on:click.prevent="
                                         $dispatch('open-modal', 'confirm-delete-modal');
-                                        document.getElementById('deleteForm').action = '{{ route('admin.products.destroy', $card->id) }}';
+                                        document.getElementById('deleteMerchantForm').action = '{{ route('admin.products.destroy', $card->id) }}';
                                     ">
                                     {{ __('Delete') }}
                                 </x-danger-button>
