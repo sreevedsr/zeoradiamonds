@@ -9,11 +9,10 @@
 <?php endif; ?>
 <?php $component->withAttributes([]); ?>
     <?php $__env->slot('title', 'Merchants'); ?>
-    
+
 
     <div class="bg-white px-6 py-2 shadow dark:bg-gray-800 rounded-lg ">
         <div class="mx-auto  text-gray-900 dark:text-gray-100">
-
             <!-- Merchants Table -->
             <?php if (isset($component)) { $__componentOriginal7d9f6e0b9001f5841f72577781b2d17f = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal7d9f6e0b9001f5841f72577781b2d17f = $attributes; } ?>
@@ -34,7 +33,7 @@
                 'GST No',
                 'Created At',
                 'Actions',
-            ]),'from' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($pagination['from']),'to' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($pagination['to']),'total' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($pagination['total']),'pages' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($pagination['pages']),'current' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($pagination['current'])]); ?>
+            ]),'collection' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($merchants),'route' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(route('admin.merchants.index'))]); ?>
 
 
                 <?php $__currentLoopData = $merchants; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $merchant): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>

@@ -13,50 +13,28 @@ class TempSaleController extends Controller
 
 
     // store one item into temp_sales
-    public function store(Request $request)
-    {
-        $data = $request->only([
-            'card_id',
-            'barcode',
-            'product_code',
-            'item_code',
-            'item_name',
-            'hsn',
-            'quantity',
-            'gross_weight',
-            'stone_weight',
-            'diamond_weight',
-            'net_weight',
-            'net_amount',
-            'cgst',
-            'sgst',
-            'igst',
-            'total_amount',
-        ]);
+public function store(Request $request)
+{
+    $request->validate([
+        'product_code' => 'required|string|exists:cards,product_code',
+    ]);
 
-        $validator = Validator::make($data, [
-            'card_id' => 'nullable|integer|exists:cards,id',
-            // 'merchant_id' => 'required|integer|exists:users,id',
-            'quantity' => 'required|numeric|min:0.01',
-            'net_amount' => 'required|numeric|min:0',
-            'total_amount' => 'required|numeric|min:0',
-            'product_code' => 'nullable|string|max:100',
-        ]);
+    $cardId = \App\Models\Card::where('product_code', $request->product_code)->value('id');
 
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
-
-        $data['created_by'] = Auth::id();
-
-        $temp = TempSale::create($data);
-
-        // broadcast or return the created resource
-        return response()->json([
-            'success' => true,
-            'temp_sale' => $temp
-        ]);
+    // Safety check
+    if (!$cardId) {
+        return response()->json(['error' => 'Card not found for this product code'], 422);
     }
+
+    $temp = TempSale::create([
+        'product_code' => $request->product_code,
+        'card_id' => $cardId,
+        'created_by' => auth()->id(),
+    ]);
+
+    return response()->json(['success' => true, 'temp_sale' => $temp]);
+}
+
 
     // list items for the current session/user (or for a merchant)
     public function index(Request $request)

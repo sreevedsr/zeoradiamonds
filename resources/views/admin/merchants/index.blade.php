@@ -1,10 +1,9 @@
 <x-app-layout>
     @slot('title', 'Merchants')
-    
+
 
     <div class="bg-white px-6 py-2 shadow dark:bg-gray-800 rounded-lg ">
         <div class="mx-auto  text-gray-900 dark:text-gray-100">
-
             <!-- Merchants Table -->
             <x-table :headers="[
                 '#',
@@ -16,8 +15,7 @@
                 'GST No',
                 'Created At',
                 'Actions',
-            ]" :from="$pagination['from']" :to="$pagination['to']" :total="$pagination['total']" :pages="$pagination['pages']"
-                :current="$pagination['current']">
+            ]" :collection="$merchants" :route="route('admin.merchants.index')">
 
 
                 @foreach ($merchants as $index => $merchant)

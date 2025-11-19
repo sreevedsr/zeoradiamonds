@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Card;
 use App\Models\PurchaseInvoice;
 use App\Models\Staff;
-use App\Models\Invoice;
 use App\Models\GoldRate;
 use App\Models\Supplier;
 use App\Models\TempSale;
@@ -15,6 +14,8 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\Auth;
+use App\Models\CardOwnership;
+use App\Models\CardOwnershipHistory;
 
 class CardsController extends Controller
 {
@@ -27,8 +28,6 @@ class CardsController extends Controller
                 $query->where(function ($q) use ($search) {
                     $q->where('certificate_id', 'like', "%{$search}%")
                         ->orWhere('diamond_purchase_location', 'like', "%{$search}%")
-                        ->orWhere('category', 'like', "%{$search}%")
-                        ->orWhere('diamond_shape', 'like', "%{$search}%")
                         ->orWhere('carat_weight', 'like', "%{$search}%")
                         ->orWhere('clarity', 'like', "%{$search}%")
                         ->orWhere('color', 'like', "%{$search}%")
@@ -51,7 +50,7 @@ class CardsController extends Controller
         $suppliers = Supplier::orderBy('name')->get();
         $staff = Staff::orderBy('name')->get();
 
-        $lastInvoice = Invoice::latest('id')->first();
+        $lastInvoice = PurchaseInvoice::latest('id')->first();
         $nextInvoiceNo = 'INV-' . str_pad(($lastInvoice?->id ?? 0) + 1, 5, '0', STR_PAD_LEFT);
         $latestGoldRate = GoldRate::latest()->value('rate') ?? 0;
 
@@ -66,66 +65,91 @@ class CardsController extends Controller
             abort(403, 'Unauthorized access');
         }
 
-        // Validate the top-level invoice fields
+        // Validate top-level invoice fields
         $validated = $request->validate([
             'invoice_no' => 'required|string|max:100|unique:purchase_invoices,invoice_no',
             'invoice_date' => 'required|date',
             'supplier_id' => 'required|exists:suppliers,id',
         ]);
 
-        // Fetch temp items for the logged-in admin
+        // Fetch temp items
         $tempItems = TempPurchaseItem::where('user_id', auth()->id())->get();
 
         if ($tempItems->isEmpty()) {
             return back()->withErrors(['items' => 'You must add at least one item before submitting the invoice.']);
         }
 
-        // Create Invoice
-        $invoice = PurchaseInvoice::create([
-            'invoice_no' => $validated['invoice_no'],
-            'invoice_date' => $validated['invoice_date'],
-            'supplier_id' => $validated['supplier_id'],
-        ]);
+        // ----------------------------------------------------
+        // 🔒 TRANSACTION STARTS HERE
+        // ----------------------------------------------------
+        try {
+            DB::beginTransaction();
 
-        // Loop through each temp item and move to cards table
-        foreach ($tempItems as $item) {
-            Card::create($item->only([
-                'purchase_invoice_id',
-                'product_code',
-                'item_code',
-                'item_name',
-                'quantity',
-                'gold_rate',
-                'gross_weight',
-                'stone_weight',
-                'diamond_weight',
-                'net_weight',
-                'stone_amount',
-                'diamond_rate',
-                'making_charge',
-                'card_charge',
-                'other_charge',
-                'total_amount',
-                'landing_cost',
-                'retail_percent',
-                'retail_cost',
-                'mrp_percent',
-                'mrp_cost',
-                'certificate_id',
-                'category',
-                'diamond_shape',
-                'color',
-                'clarity',
-                'cut',
-                'certificate_code',
-                'certificate_image',
-                'product_image'
-            ]));
+            // Create Invoice
+            $invoice = PurchaseInvoice::create([
+                'invoice_no' => $validated['invoice_no'],
+                'invoice_date' => $validated['invoice_date'],
+                'supplier_id' => $validated['supplier_id'],
+            ]);
+
+            foreach ($tempItems as $item) {
+
+                $card = Card::create([
+                    'purchase_invoice_id' => $invoice->id,
+                    'product_code' => $item->product_code,
+                    'item_code' => $item->item_code,
+                    'item_name' => $item->item_name,
+                    'quantity' => $item->quantity,
+                    'gold_rate' => $item->gold_rate,
+                    'gross_weight' => $item->gross_weight,
+                    'stone_weight' => $item->stone_weight,
+                    'diamond_weight' => $item->diamond_weight,
+                    'net_weight' => $item->net_weight,
+                    'stone_amount' => $item->stone_amount,
+                    'diamond_rate' => $item->diamond_rate,
+                    'making_charge' => $item->making_charge,
+                    'card_charge' => $item->card_charge,
+                    'other_charge' => $item->other_charge,
+                    'total_amount' => $item->total_amount,
+                    'landing_cost' => $item->landing_cost,
+                    'retail_percent' => $item->retail_percent,
+                    'retail_cost' => $item->retail_cost,
+                    'mrp_percent' => $item->mrp_percent,
+                    'mrp_cost' => $item->mrp_cost,
+                    'certificate_id' => $item->certificate_id,
+                    'color' => $item->color,
+                    'clarity' => $item->clarity,
+                    'cut' => $item->cut,
+                    'certificate_code' => $item->certificate_code,
+                    'certificate_image' => $item->certificate_image,
+                    'product_image' => $item->product_image,
+                ]);
+
+                CardOwnership::create([
+                    'card_id' => $card->id,
+                    'owner_type' => 'admin',
+                    'owner_id' => null,
+                ]);
+            }
+
+            // Delete temp items only if everything succeeded
+            TempPurchaseItem::where('user_id', auth()->id())->delete();
+
+            DB::commit(); // ✅ All good: commit the transaction
+
+        } catch (\Throwable $e) {
+
+            DB::rollBack(); // ❌ Something failed: rollback everything
+
+            return back()->withErrors([
+                'error' => 'Failed to save invoice. Please try again.',
+                'exception' => $e->getMessage(),
+                'line' => $e->getLine(),
+                'file' => $e->getFile(),
+            ]);
         }
 
-        // Delete temp items after move
-        TempPurchaseItem::where('user_id', auth()->id())->delete();
-
+        // Success Redirect
         return redirect()
             ->route('admin.products.create')
             ->with('success', "Invoice #{$invoice->invoice_no} saved and all product items added successfully.")
@@ -169,8 +193,6 @@ class CardsController extends Controller
             // Certification
             'certificate_id' => 'required|string|max:255',
             'diamond_purchase_location' => 'nullable|string|max:255',
-            'category' => 'nullable|string|max:100',
-            'diamond_shape' => 'nullable|string|max:100',
             'color' => 'nullable|string|max:10',
             'clarity' => 'nullable|string|max:50',
             'cut' => 'nullable|string|max:100',
@@ -223,22 +245,35 @@ class CardsController extends Controller
 
     public function showAssignPage(Request $request)
     {
-        $query = Card::with('merchant'); // eager load merchant
+        $search = $request->input('search');
 
-        // Search logic
-        if ($search = $request->input('search')) {
-            $query->where('card_number', 'like', "%{$search}%")
-                ->orWhereHas('merchant', function ($q) use ($search) {
-                    $q->where('name', 'like', "%{$search}%")
-                        ->orWhere('business_name', 'like', "%{$search}%");
-                });
+        // eager load ownership and owner resolution where helpful
+        $query = Card::query()
+            ->with(['ownership', 'ownership.card']);
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('certificate_id', 'like', "%{$search}%")
+                    ->orWhere('item_name', 'like', "%{$search}%")
+                    ->orWhereHas('ownership', function ($oq) use ($search) {
+                        // search merchants by name/business (join users)
+                        $oq->where(function ($oq2) use ($search) {
+                            $oq2->where('owner_type', 'merchant')
+                                ->whereIn('owner_id', function ($sub) use ($search) {
+                                    $sub->select('id')->from('users')->where('name', 'like', "%{$search}%")
+                                        ->orWhere('business_name', 'like', "%{$search}%");
+                                });
+                        });
+                    });
+            });
         }
 
         $cards = $query->orderBy('created_at', 'desc')->paginate(10);
-        $merchants = User::where('role', 'merchant')->orderBy('name')->get();
+        $merchants = \App\Models\User::where('role', 'merchant')->orderBy('name')->get();
 
         return view('admin.sales.create', compact('cards', 'merchants', 'search'));
     }
+
 
     public function lookup(Request $request)
     {
@@ -274,40 +309,43 @@ class CardsController extends Controller
         return response()->json($products);
     }
 
-    // Handle card assignment
     public function assignCard(Request $request)
     {
         $request->validate([
-            'merchant_id' => 'required|exists:users,id',
-            'purchase_invoice_id' => 'nullable|string',
+            'merchant_id' => 'required|exists:users,id'
         ]);
 
         DB::transaction(function () use ($request) {
 
-            // Fetch temp sales for this user only
             $items = TempSale::where('created_by', auth()->id())->get();
 
-            if ($items->isEmpty()) {
-                return back()
-                    ->withErrors(['items' => 'Please add at least one sale item before submitting.'])
-                    ->withInput();
+            foreach ($items as $item) {
+
+                $ownership = CardOwnership::where('card_id', $item->card_id)
+                    ->lockForUpdate()
+                    ->first();
+
+                if (!$ownership) {
+                    CardOwnership::create([
+                        'card_id' => $item->card_id,
+                        'owner_type' => 'merchant',
+                        'owner_id' => $request->merchant_id
+                    ]);
+
+                    CardOwnershipHistory::create([
+                        'card_id' => $item->card_id,
+                        'previous_owner_type' => 'admin',
+                        'new_owner_type' => 'merchant',
+                        'new_owner_id' => $request->merchant_id
+                    ]);
+                }
             }
 
-            foreach ($items as $saleItem) {
-
-                Card::where('id', $saleItem->card_id)->update([
-                    'merchant_id' => $request->merchant_id
-                ]);
-            }
-
-            // Clear temp items
             TempSale::where('created_by', auth()->id())->delete();
         });
 
-        return redirect()->back()->with('success', 'Sales assigned successfully.');
-
+        return back()->with('success', 'Cards assigned to merchant successfully.');
     }
-
 
     public function edit($id)
     {

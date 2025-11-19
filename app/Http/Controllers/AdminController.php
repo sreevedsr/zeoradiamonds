@@ -9,28 +9,22 @@ use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $total = User::where('role', 'merchant')->count();
+        $query = User::where('role', 'merchant');
 
-        $perPage = 10;
-        $page = request('page', 1);
+        if ($request->has('search') && $request->search !== '') {
+            $query->where(function ($q) use ($request) {
+                $q->where('merchant_code', 'like', '%' . $request->search . '%')
+                    ->orWhere('name', 'like', '%' . $request->search . '%')
+                    ->orWhere('email', 'like', '%' . $request->search . '%')
+                    ->orWhere('phone', 'like', '%' . $request->search . '%');
+            });
+        }
 
-        $merchants = User::where('role', 'merchant')
-            ->skip(($page - 1) * $perPage)
-            ->take($perPage)
-            ->get();
+        $merchants = $query->paginate(10)->withQueryString();
 
-        return view('admin.merchants.index', [
-            'merchants' => $merchants,
-            'pagination' => [
-                'from' => ($page - 1) * $perPage + 1,
-                'to' => min($page * $perPage, $total),
-                'total' => $total,
-                'pages' => range(1, ceil($total / $perPage)),
-                'current' => $page,
-            ],
-        ]);
+        return view('admin.merchants.index', compact('merchants'));
     }
 
 

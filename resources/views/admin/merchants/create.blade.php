@@ -4,7 +4,7 @@
     <div class="mx-auto">
         <div class="p-6 sm:p-8 bg-white dark:bg-gray-800 shadow-md rounded-lg">
 
-            <form action="{{ route('admin.merchants.store') }}" method="POST" x-data="purchaseForm()"
+            <form action="{{ route('admin.merchants.store') }}" method="POST"
                 x-init="init();
                 enableSequentialInput();
                 $nextTick(() => focusFirstInput());">

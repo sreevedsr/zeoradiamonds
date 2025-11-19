@@ -34,4 +34,5 @@ unset($__defined_vars, $__key, $__value); ?>
     <?php echo e($value ?? $slot); ?>
 
 </label>
+
 <?php /**PATH C:\xampp\htdocs\zeoradiamonds\resources\views/components/input-label.blade.php ENDPATH**/ ?>

@@ -6,16 +6,21 @@ export default function purchaseForm(globalGoldRate, globalDiamondRate) {
         validateItem() {
             this.errors = {};
 
-            // Sync global values into item before validating
+            // Sync auto fields
             this.item.gold_rate = this.gold_rate;
             this.item.diamond_rate = this.diamond_rate;
 
-            // Required text fields
+            /* ------------------------------
+             * REQUIRED TEXT FIELDS
+             * ------------------------------ */
             const requiredText = [
                 "product_code",
                 "item_code",
                 "item_name",
                 "certificate_id",
+                "color",
+                "clarity",
+                "cut",
             ];
 
             requiredText.forEach((field) => {
@@ -27,15 +32,22 @@ export default function purchaseForm(globalGoldRate, globalDiamondRate) {
                 }
             });
 
-            // Required numbers (must be > 0)
+            /* ------------------------------
+             * REQUIRED NUMERIC FIELDS (> 0)
+             * ------------------------------ */
             const requiredNumbers = [
                 "quantity",
                 "gross_weight",
                 "stone_weight",
+                "diamond_weight",
                 "gold_rate",
                 "total_amount",
                 "landing_cost",
-                "diamond_weight", // added
+                "stone_amount",
+                "diamond_rate",
+                "making_charge",
+                "card_charge",
+                "other_charge",
             ];
 
             requiredNumbers.forEach((field) => {
@@ -45,16 +57,11 @@ export default function purchaseForm(globalGoldRate, globalDiamondRate) {
                 }
             });
 
-            // Optional numeric fields (can be 0 but not negative)
-            const optionalNumbers = [
-                "stone_amount",
-                "diamond_rate",
-                "making_charge",
-                "card_charge",
-                "other_charge",
-                "retail_percent",
-                "mrp_percent",
-            ];
+            /* ------------------------------
+             * OPTIONAL NUMERIC FIELDS
+             * (CAN BE 0 BUT NOT NEGATIVE)
+             * ------------------------------ */
+            const optionalNumbers = ["retail_percent", "mrp_percent",];
 
             optionalNumbers.forEach((field) => {
                 const value = parseFloat(this.item[field]);
@@ -63,11 +70,54 @@ export default function purchaseForm(globalGoldRate, globalDiamondRate) {
                 }
             });
 
-            // Extra: ensure net weight auto-calculated value is not invalid
-            // if (parseFloat(this.item.net_weight) <= 0) {
-            //     this.errors.net_weight = "Net weight must be greater than 0.";
-            // }
+            /* ------------------------------
+             * IMAGE VALIDATION
+             * ------------------------------ */
+            if (
+                this.item.certificate_image &&
+                !(this.item.certificate_image instanceof File)
+            ) {
+                this.errors.certificate_image = "Invalid certificate image.";
+            }
 
+            if (
+                this.item.product_image &&
+                !(this.item.product_image instanceof File)
+            ) {
+                this.errors.product_image = "Invalid product image.";
+            }
+
+            /* ------------------------------
+             * SPECIAL CASES
+             * ------------------------------ */
+
+            // Net Weight: Must be > 0
+            const netWeight = parseFloat(this.item.net_weight);
+            if (isNaN(netWeight) || netWeight <= 0) {
+                this.errors.net_weight = "Net weight must be greater than 0.";
+            }
+
+            // Retail % → retail_cost must match formula if value exists
+            if (this.item.retail_percent && this.item.landing_cost > 0) {
+                const expected =
+                    (this.item.landing_cost * this.item.retail_percent) / 100;
+                if (expected <= 0) {
+                    this.errors.retail_percent = "Invalid retail percentage.";
+                }
+            }
+
+            // MRP % → mrp_cost must match formula if value exists
+            if (this.item.mrp_percent && this.item.landing_cost > 0) {
+                const expected =
+                    (this.item.landing_cost * this.item.mrp_percent) / 100;
+                if (expected <= 0) {
+                    this.errors.mrp_percent = "Invalid MRP percentage.";
+                }
+            }
+
+            /* ------------------------------
+             * RETURN
+             * ------------------------------ */
             return Object.keys(this.errors).length === 0;
         },
 

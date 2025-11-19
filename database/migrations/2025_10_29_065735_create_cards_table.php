@@ -56,8 +56,6 @@ return new class extends Migration
              |  Certification
              --------------------------------------------------------------*/
             $table->string('certificate_id')->nullable();
-            $table->string('category')->nullable();
-            $table->string('diamond_shape')->nullable();
             $table->string('color', 10)->nullable();
             $table->string('clarity', 50)->nullable();
             $table->string('cut', 100)->nullable();

@@ -1,29 +1,12 @@
 export default function saleForm() {
     return {
         errors: {},
-        items: [], // Shared table items (same as purchase)
+        items: [],            // temp_sales table rows
+        merchantState: null,  // only for IGST/CGST if needed later
 
-        // Single item structure
-        item: {
-            id: null,
-            si_no: "",
-            barcode: "",
-            product_code: "",
-            item_code: "",
-            item_name: "",
-            hsn: "",
-            gross_weight: 0,
-            stone_weight: 0,
-            diamond_weight: 0,
-            net_weight: 0,
-            quantity: 1,
-            net_amount: 0,
-            cgst: 0,
-            sgst: 0,
-            igst: 0,
-            total_amount: 0,
-            intraState: true,
-        },
+        // Card modal state
+        modalCard: null,
+        showCardModal: false,
 
         // -------------------------------------------------------
         // INIT
@@ -35,81 +18,59 @@ export default function saleForm() {
                 this.loadItems();
             });
 
-            // When selecting a product from dropdown
-            window.addEventListener("product-selected", (e) => {
-                const p = e.detail.product;
-
-                this.item.id = p.id ?? null;
-                this.item.product_code = p.product_code ?? "";
-                this.item.item_code = p.item_code ?? "";
-                this.item.item_name = p.item_name ?? "";
-                this.item.hsn = p.hsn ?? "";
-                this.item.barcode = p.barcode ?? "";
-
-                this.item.quantity = Number(p.quantity ?? 1);
-                this.item.gross_weight = +p.gross_weight || 0;
-                this.item.stone_weight = +p.stone_weight || 0;
-                this.item.diamond_weight = +p.diamond_weight || 0;
-                this.item.net_weight = +p.net_weight || 0;
-
-                this.item.net_amount = +p.total_amount || 0;
-
-                this.computeTaxes();
+            // Card selected from dropdown or search
+            window.addEventListener("card-selected", (e) => {
+                const c = e.detail.card;
+                this.openCardModal(c);
             });
         },
 
         // -------------------------------------------------------
-        // LOAD TABLE ITEMS
+        // LOAD TEMP SALE ITEMS
         // -------------------------------------------------------
         async loadItems() {
             try {
                 const res = await fetch("/admin/temp-sales");
                 if (res.ok) {
                     const data = await res.json();
-                    this.items = data.items ?? []; // <-- FIX
+                    this.items = data.items ?? [];
                 }
             } catch (e) {
-                console.error("Load sale items failed:", e);
+                console.error("Failed to load temp sale items:", e);
             }
         },
-        // -------------------------------------------------------
-        // TAX COMPUTATION
-        // -------------------------------------------------------
-        computeTaxes() {
-            const net = +this.item.net_amount || 0;
 
-            if (this.item.intraState) {
-                this.item.cgst = +(net * 0.015).toFixed(2);
-                this.item.sgst = +(net * 0.015).toFixed(2);
-                this.item.igst = 0;
-            } else {
-                this.item.cgst = 0;
-                this.item.sgst = 0;
-                this.item.igst = +(net * 0.03).toFixed(2);
-            }
+        // -------------------------------------------------------
+        // OPEN/CLOSE CARD MODAL
+        // -------------------------------------------------------
+        openCardModal(card) {
+            this.modalCard = {
+                id: card.id,
+                card_number: card.card_number,
+                certificate_id: card.certificate_id,
+                product_code: card.product_code,
+            };
+            this.showCardModal = true;
+        },
 
-            this.item.total_amount = +(
-                net +
-                this.item.cgst +
-                this.item.sgst +
-                this.item.igst
-            ).toFixed(2);
+        closeCardModal() {
+            this.showCardModal = false;
+            this.modalCard = null;
         },
 
         // -------------------------------------------------------
-        // ADD ITEM
+        // ADD CARD → TEMP_SALES
         // -------------------------------------------------------
-        async addItem() {
+        async addCardToItems() {
+            if (!this.modalCard?.id) return;
+
             const form = new FormData();
-
-            Object.keys(this.item).forEach((k) => {
-                form.append(k, this.item[k]);
-            });
+            form.append("card_id", this.modalCard.id);
 
             const res = await fetch("/admin/temp-sales", {
                 method: "POST",
                 headers: {
-                    "X-CSRF-TOKEN": document.querySelector("meta[name=csrf-token]").content,
+                    "X-CSRF-TOKEN": document.querySelector("meta[name=csrf-token]").content
                 },
                 body: form,
             });
@@ -119,37 +80,26 @@ export default function saleForm() {
                 return;
             }
 
+            this.showCardModal = false;
+            this.modalCard = null;
+
             window.dispatchEvent(new CustomEvent("refresh-sale-items"));
-
-            this.resetItem();
-
-            this.$dispatch("close-sale-modal");
         },
 
         // -------------------------------------------------------
-        // RESET FORM
+        // REMOVE ITEM FROM TEMP_SALES
         // -------------------------------------------------------
-        resetItem() {
-            this.item = {
-                id: null,
-                si_no: "",
-                barcode: "",
-                product_code: "",
-                item_code: "",
-                item_name: "",
-                hsn: "",
-                gross_weight: 0,
-                stone_weight: 0,
-                diamond_weight: 0,
-                net_weight: 0,
-                quantity: 1,
-                net_amount: 0,
-                cgst: 0,
-                sgst: 0,
-                igst: 0,
-                total_amount: 0,
-                intraState: true,
-            };
-        },
+        async removeItem(id) {
+            const res = await fetch(`/admin/temp-sales/${id}`, {
+                method: "DELETE",
+                headers: {
+                    "X-CSRF-TOKEN": document.querySelector("meta[name=csrf-token]").content
+                },
+            });
+
+            if (res.ok) {
+                this.loadItems();
+            }
+        }
     };
 }
