@@ -1,11 +1,14 @@
 <?php
 
+// app/Http/Controllers/DropdownController.php
+
 namespace App\Http\Controllers;
 
 use App\Models\Supplier;
 use App\Models\Product;
 use App\Models\Staff;
 use App\Models\User;
+use App\Models\Card; // <- added
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
@@ -27,7 +30,8 @@ class DropdownController extends Controller
                     'id', 'name', 'code', 'phone_no', 'address'
                 )->get(),
 
-                'products' => Product::select(
+                // switched to Card model for product dropdowns (lightweight)
+                'products' => Card::select(
                     'id', 'item_code', 'item_name'
                 )->get(),
 
@@ -49,7 +53,7 @@ class DropdownController extends Controller
             return [
                 'suppliers' => Supplier::select('id', 'name', 'supplier_code')->get(),
                 'staff'     => Staff::select('id', 'name', 'code')->get(),
-                'products'  => Product::select('id', 'item_code', 'item_name')->get(),
+                'products'  => Card::select('id', 'item_code', 'item_name')->get(), // updated
                 'merchants' => User::where('role', 'merchant')->select('id', 'name', 'merchant_code')->get(),
             ];
         });

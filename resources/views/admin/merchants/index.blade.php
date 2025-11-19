@@ -54,26 +54,21 @@
                                 </x-secondary-button>
 
 
-                                <!-- Delete Button -->
-                                <form action="{{ route('admin.merchants.destroy', $merchant->id) }}" method="POST"
-                                    class="inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <x-danger-button type="button" x-data
-                                        x-on:click.prevent="
-                                $dispatch('open-modal', 'confirm-delete-modal');
-                                document.getElementById('deleteMerchantForm').action = '{{ route('admin.merchants.destroy', $merchant->id) }}';
-                            ">
-                                        {{ __('Delete') }}
-                                    </x-danger-button>
-                                </form>
+                                <x-danger-button type="button" x-data
+                                    x-on:click.prevent="
+        $dispatch('open-modal', 'confirm-delete-modal');
+        document.getElementById('deleteMerchantForm').action = '{{ route('admin.merchants.destroy', $merchant->id) }}';
+    ">
+                                    Delete
+                                </x-danger-button>
+
                             </div>
                         </td>
                     </tr>
-                    <x-confirm-delete-modal name="confirm-delete-modal-{{ $merchant->id }}" :action="route('admin.merchants.destroy', $merchant->id)"
-                        title="Confirm Merchant Deletion"
-                        message="Are you sure you want to delete this merchant? This action cannot be undone." />
                 @endforeach
+                <x-confirm-delete-modal name="confirm-delete-modal" :action="''" title="Confirm Merchant Deletion"
+                    message="Are you sure you want to delete this merchant? This action cannot be undone." />
+
             </x-table>
 
             <!-- Edit Merchant Modal -->

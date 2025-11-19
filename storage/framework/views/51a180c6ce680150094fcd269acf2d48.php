@@ -9,7 +9,7 @@
 <?php endif; ?>
 <?php $component->withAttributes(['name' => 'confirm-delete-modal','focusable' => true]); ?>
     <div class="p-6">
-        <form method="POST" action="<?php echo e($action); ?>" id="deleteForm">
+<form method="POST" action="<?php echo e($action); ?>" id="deleteMerchantForm">
             <?php echo csrf_field(); ?>
             <?php echo method_field('DELETE'); ?>
             <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">

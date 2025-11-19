@@ -1,9 +1,9 @@
 <?php
 
-use App\Http\Controllers\CustomerController;
 use App\Models\TempPurchaseItem;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CardController;
 use App\Http\Controllers\RateController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CardsController;
@@ -11,15 +11,16 @@ use App\Http\Controllers\StaffController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DropdownController;
 use App\Http\Controllers\GoldRateController;
 use App\Http\Controllers\MerchantController;
 use App\Http\Controllers\SupplierController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\TempPurchaseController;
 use App\Http\Controllers\TempSaleController;
-use App\Http\Controllers\MerchantRequestController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\SaleAssignController;
+use App\Http\Controllers\TempPurchaseController;
+use App\Http\Controllers\MerchantRequestController;
 use App\Http\Controllers\TempPurchaseItemController;
 
 
@@ -165,6 +166,8 @@ Route::middleware('auth')->group(function () {
         });
         Route::get('/api/dropdown/{type}', [DropdownController::class, 'fetch'])->name('dropdown.fetch');
         Route::get('/api/dropdown/combined', [DropdownController::class, 'combined'])->name('dropdown.combined');
+        Route::get('/api/card/{id}', [CardController::class, 'show'])->name('card.show');
+
         Route::get('/generate-qr/{data}', function ($data) {
             return QrCode::format('svg')->size(200)->generate($data);
         });

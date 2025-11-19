@@ -103,17 +103,12 @@
 <?php endif; ?>
 
 
-                                <!-- Delete Button -->
-                                <form action="<?php echo e(route('admin.merchants.destroy', $merchant->id)); ?>" method="POST"
-                                    class="inline">
-                                    <?php echo csrf_field(); ?>
-                                    <?php echo method_field('DELETE'); ?>
-                                    <?php if (isset($component)) { $__componentOriginal656e8c5ea4d9a4fa173298297bfe3f11 = $component; } ?>
+                                <?php if (isset($component)) { $__componentOriginal656e8c5ea4d9a4fa173298297bfe3f11 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal656e8c5ea4d9a4fa173298297bfe3f11 = $attributes; } ?>
 <?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.danger-button','data' => ['type' => 'button','xData' => true,'xOn:click.prevent' => '
-                                $dispatch(\'open-modal\', \'confirm-delete-modal\');
-                                document.getElementById(\'deleteMerchantForm\').action = \''.e(route('admin.merchants.destroy', $merchant->id)).'\';
-                            ']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+        $dispatch(\'open-modal\', \'confirm-delete-modal\');
+        document.getElementById(\'deleteMerchantForm\').action = \''.e(route('admin.merchants.destroy', $merchant->id)).'\';
+    ']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('danger-button'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
@@ -121,12 +116,11 @@
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
 <?php $component->withAttributes(['type' => 'button','x-data' => true,'x-on:click.prevent' => '
-                                $dispatch(\'open-modal\', \'confirm-delete-modal\');
-                                document.getElementById(\'deleteMerchantForm\').action = \''.e(route('admin.merchants.destroy', $merchant->id)).'\';
-                            ']); ?>
-                                        <?php echo e(__('Delete')); ?>
-
-                                     <?php echo $__env->renderComponent(); ?>
+        $dispatch(\'open-modal\', \'confirm-delete-modal\');
+        document.getElementById(\'deleteMerchantForm\').action = \''.e(route('admin.merchants.destroy', $merchant->id)).'\';
+    ']); ?>
+                                    Delete
+                                 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal656e8c5ea4d9a4fa173298297bfe3f11)): ?>
 <?php $attributes = $__attributesOriginal656e8c5ea4d9a4fa173298297bfe3f11; ?>
@@ -136,20 +130,21 @@
 <?php $component = $__componentOriginal656e8c5ea4d9a4fa173298297bfe3f11; ?>
 <?php unset($__componentOriginal656e8c5ea4d9a4fa173298297bfe3f11); ?>
 <?php endif; ?>
-                                </form>
+
                             </div>
                         </td>
                     </tr>
-                    <?php if (isset($component)) { $__componentOriginale40048ea38c0c52002bb582aed451504 = $component; } ?>
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                <?php if (isset($component)) { $__componentOriginale40048ea38c0c52002bb582aed451504 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginale40048ea38c0c52002bb582aed451504 = $attributes; } ?>
-<?php $component = App\View\Components\ConfirmDeleteModal::resolve(['action' => route('admin.merchants.destroy', $merchant->id),'title' => 'Confirm Merchant Deletion','message' => 'Are you sure you want to delete this merchant? This action cannot be undone.'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = App\View\Components\ConfirmDeleteModal::resolve(['action' => '','title' => 'Confirm Merchant Deletion','message' => 'Are you sure you want to delete this merchant? This action cannot be undone.'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('confirm-delete-modal'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\App\View\Components\ConfirmDeleteModal::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['name' => 'confirm-delete-modal-'.e($merchant->id).'']); ?>
+<?php $component->withAttributes(['name' => 'confirm-delete-modal']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginale40048ea38c0c52002bb582aed451504)): ?>
@@ -160,7 +155,7 @@
 <?php $component = $__componentOriginale40048ea38c0c52002bb582aed451504; ?>
 <?php unset($__componentOriginale40048ea38c0c52002bb582aed451504); ?>
 <?php endif; ?>
-                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+
              <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal7d9f6e0b9001f5841f72577781b2d17f)): ?>

@@ -41,8 +41,7 @@
             <div x-data="searchableDropdown({
                 apiUrl: '{{ route('admin.dropdown.fetch', ['type' => 'merchants']) }}',
                 optionLabel: 'name',
-                optionValue: 'id'
-            })" x-init="init()" class="relative mt-8" @click.outside="open = false">
+                optionValue: 'id'})" x-init="init()" class="relative mt-8" @click.outside="open = false">
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
                     Select Merchant (Name / Code)
                 </label>

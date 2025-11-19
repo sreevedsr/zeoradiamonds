@@ -16,15 +16,15 @@
             <button type="button" @click="open = false" class="p-2 rounded-full">✕</button>
         </div>
 
-        <form x-ref="saleForm" x-data="saleForm()" @submit.prevent="addItem(); open = false"
-            class="p-6 space-y-6 overflow-y-auto max-h-[75vh]">
+        <form x-ref="saleItemForm" x-data="addSaleItemModal()" x-init="lookupUrl = '{{ route('admin.products.lookup') }}'"
+            @submit.prevent="addItem(); open = false" class="p-6 space-y-6 overflow-y-auto max-h-[75vh]">
             <!-- GRID -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
 
                 <x-input.text label="SI. No." model="item.si_no" readonly />
                 <x-input.text label="Barcode" model="item.barcode" placeholder="Scan barcode" />
 
-                              <!-- Product Lookup -->
+                <!-- Product Lookup -->
                 <div x-data="searchableDropdown({
                     apiUrl: '{{ route('admin.products.lookup') }}',
                     optionLabel: 'product_code',

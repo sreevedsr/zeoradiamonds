@@ -8,6 +8,7 @@ import stateCode from './components/stateCode.js';
 import pageTransition from './components/pageTransition.js';
 import purchaseForm from './components/purchaseForm.js';
 import saleForm from './components/saleForm.js';
+import addSaleItemModal from './components/addSaleItemModal.js';
 import collapsibleMenu from './components/collapsibleMenu.js';
 import searchableDropdown from './components/searchableDropdown.js';
 import { enableSequentialInput, focusFirstInput } from './utils/formNavigation.js';
@@ -54,6 +55,7 @@ Alpine.data('stateCode', stateCode);
 Alpine.data('pageTransition', pageTransition);
 Alpine.data('purchaseForm', purchaseForm);
 Alpine.data('saleForm', saleForm);
+Alpine.data('addSaleItemModal', addSaleItemModal);
 Alpine.data('collapsibleMenu', collapsibleMenu);
 
 Alpine.start();

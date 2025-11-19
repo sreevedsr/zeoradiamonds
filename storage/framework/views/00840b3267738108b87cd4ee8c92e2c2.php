@@ -15,7 +15,7 @@
 
 
             <!-- Supplier Registration Form -->
-            <form method="POST" action="<?php echo e(route('admin.suppliers.store')); ?>" x-data="purchaseForm()"
+            <form method="POST" action="<?php echo e(route('admin.suppliers.store')); ?>"
                 x-init="init();
                 enableSequentialInput();
                 $nextTick(() => focusFirstInput());">

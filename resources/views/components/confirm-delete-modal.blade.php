@@ -1,6 +1,6 @@
 <x-modal name="confirm-delete-modal" focusable>
     <div class="p-6">
-        <form method="POST" action="{{ $action }}" id="deleteForm">
+<form method="POST" action="{{ $action }}" id="deleteMerchantForm">
             @csrf
             @method('DELETE')
             <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
