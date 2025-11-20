@@ -6,14 +6,15 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CardController;
 use App\Http\Controllers\RateController;
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\CardsController;
+use App\Http\Controllers\PurchasesController;
+use App\Http\Controllers\Cards\CardsController;
+use App\Http\Controllers\Cards\CardAssignmentController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DropdownController;
-use App\Http\Controllers\GoldRateController;
 use App\Http\Controllers\MerchantController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\TempSaleController;
@@ -102,19 +103,28 @@ Route::middleware('auth')->group(function () {
 
 
 
-            // Cards management
+            // =====================
+// Product / Card routes
+// =====================
             Route::get('/', [CardsController::class, 'index'])->name('index');
-            Route::get('/create', [CardsController::class, 'createCard'])->name('create');
-            Route::post('/store', [CardsController::class, 'storeCard'])->name('store');
-            Route::get('/assign', [CardsController::class, 'showAssignPage'])->name('assign');
-            Route::post('/assign', [CardsController::class, 'assignCard'])->name('assign');
-            Route::get('/lookup', [CardsController::class, 'lookup'])->name('lookup');
-            Route::get('/requests', [CustomerController::class, 'customerRequests'])->name('requests');
 
-            // Route::get('/{id}', [CardsController::class, 'show'])->name('show');
+            // Purchase creation (moved to PurchasesController)
+            Route::get('/create', [PurchasesController::class, 'create'])->name('create');
+            Route::post('/store', [PurchasesController::class, 'store'])->name('store');
+
+            // Lookup endpoint
+            Route::get('/lookup', [CardsController::class, 'lookup'])->name('lookup');
+
+            // Assignment
+            Route::get('/assign', [CardAssignmentController::class, 'showAssignPage'])->name('assign');
+            Route::post('/assign', [CardAssignmentController::class, 'assignCard'])->name('assign');
+
+            // Edit/update/delete card
             Route::get('/{id}/edit', [CardsController::class, 'edit'])->name('edit');
             Route::put('/{id}', [CardsController::class, 'update'])->name('update');
             Route::delete('/{id}', [CardsController::class, 'destroy'])->name('destroy');
+
+            Route::get('/requests', [CustomerController::class, 'customerRequests'])->name('requests');
         });
 
         Route::middleware(['auth', 'can:view-suppliers'])->prefix('suppliers')->name('suppliers.')->group(function () {
