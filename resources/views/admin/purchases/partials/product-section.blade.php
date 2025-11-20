@@ -121,7 +121,12 @@
     <!-- Net Weight -->
     <div>
         <x-input.text type="number" label="Net Weight (g)" name="net_weight" model="item.net_weight" readonly
-            placeholder="Auto-calculated" />
+            placeholder="Auto-calculated" x-bind:class="errors.net_weight ? 'border-red-500' : ''" />
+
+        <!-- Error message -->
+        <p class="text-red-500 text-xs mt-1" x-text="errors.net_weight" x-show="errors.net_weight">
+        </p>
     </div>
+
 
 </div>

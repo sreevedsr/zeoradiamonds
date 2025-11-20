@@ -34,8 +34,12 @@ export default (isOpen = false) => ({
 
     init() {
         this.$nextTick(() => {
-            if (this.open) this.setMeasured();
-
+            if (this.open) {
+                this.setMeasured();
+                this.$nextTick(() => {
+                    this.height = "auto";
+                });
+            }
             const resizeHandler = () => {
                 if (this.open) this.setMeasured();
             };
@@ -54,7 +58,10 @@ export default (isOpen = false) => ({
             Alpine.effect(() => {
                 return () => {
                     window.removeEventListener("resize", resizeHandler);
-                    document.removeEventListener("sidebar:collapse", collapseHandler);
+                    document.removeEventListener(
+                        "sidebar:collapse",
+                        collapseHandler,
+                    );
                 };
             });
         });

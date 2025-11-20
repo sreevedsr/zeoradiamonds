@@ -26,7 +26,7 @@
     <div class="space-y-10">
 
         <!-- KPI Cards -->
-        <div class="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
+        <div class="grid gap-6 grid-cols-2 xl:grid-cols-4">
 
             <!-- Total Merchants / Customers -->
             <div

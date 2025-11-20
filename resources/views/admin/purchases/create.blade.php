@@ -1,5 +1,5 @@
 <x-app-layout>
-    @slot('title', 'Upload Product Purchase Details')
+    @slot('title', 'Upload Purchase Details')
 
     <div x-data="globalRates()">
         <div x-data="{ showModal: false }" @close-purchase-modal.window="showModal = false">

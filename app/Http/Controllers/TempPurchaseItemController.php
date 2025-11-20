@@ -17,6 +17,27 @@ class TempPurchaseItemController extends Controller
     // Store one item
     public function store(Request $request)
     {
+        $request->validate([
+            'product_code' => 'required|string',
+        ]);
+
+        $productCode = $request->product_code;
+
+        // Check duplicate in temp items (current user)
+        $existsInTemp = TempPurchaseItem::where('user_id', Auth::id())
+            ->where('product_code', $productCode)
+            ->exists();
+
+        // Check duplicate in cards table (global)
+        $existsInCards = \App\Models\Card::where('product_code', $productCode)->exists();
+
+        if ($existsInTemp || $existsInCards) {
+            return response()->json([
+                'error' => 'Product code already exists.'
+            ], 422);
+        }
+
+        // Store item
         $data = $request->all();
         $data['user_id'] = Auth::id();
 
@@ -24,6 +45,8 @@ class TempPurchaseItemController extends Controller
 
         return response()->json(['status' => 'success']);
     }
+
+
 
     public function update(Request $request, $id)
     {

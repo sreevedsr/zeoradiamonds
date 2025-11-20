@@ -1,5 +1,5 @@
 @can('view-customers')
-    <li class="relative px-6 py-3" x-data="collapsibleMenu({{ request()->routeIs('merchant.customers.*') ? 'true' : 'false' }})">
+    <li class="relative px-6 py-3" x-data="collapsibleMenu({{ request()->routeIs('merchant.customers.*') ? true : false }})">
 
         <!-- Highlight bar -->
         <span
@@ -72,7 +72,7 @@
 @endcan
 
 @can('view-cards')
-    <li class="relative px-6 py-3" x-data="collapsibleMenu({{ request()->routeIs('merchant.cards.*') ? 'true' : 'false' }})">
+    <li class="relative px-6 py-3" x-data="collapsibleMenu({{ request()->routeIs('merchant.cards.*') ? true : false }})">
 
         <!-- Active Highlight -->
         <span
@@ -145,7 +145,7 @@
 @endcan
 
 @can('view-market')
-    <li class="relative px-6 py-3" x-data="collapsibleMenu({{ request()->routeIs('merchant.marketplace.*') ? 'true' : 'false' }})">
+    <li class="relative px-6 py-3" x-data="collapsibleMenu({{ request()->routeIs('merchant.marketplace.*') ? true : false }})">
 
         <!-- Active indicator -->
         <span

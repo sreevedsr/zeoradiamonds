@@ -61,7 +61,7 @@ export default function purchaseForm(globalGoldRate, globalDiamondRate) {
              * OPTIONAL NUMERIC FIELDS
              * (CAN BE 0 BUT NOT NEGATIVE)
              * ------------------------------ */
-            const optionalNumbers = ["retail_percent", "mrp_percent",];
+            const optionalNumbers = ["retail_percent", "mrp_percent"];
 
             optionalNumbers.forEach((field) => {
                 const value = parseFloat(this.item[field]);
@@ -352,14 +352,27 @@ export default function purchaseForm(globalGoldRate, globalDiamondRate) {
                     body: JSON.stringify(this.item),
                 });
 
-                const result = await response.text();
+                // 422 → Validation failed (show inline error, not alert)
+                if (response.status === 422) {
+                    const result = await response.json();
 
+                    // Backend unique check message
+                    if (result.error) {
+                        this.$nextTick(() => {
+                            this.errors.product_code = result.error;
+                        });
+                    }
+
+                    return; // stop, no alert, no modal close
+                }
+
+                // Non-validation errors → optional logging
                 if (!response.ok) {
-                    console.error("Server Response:", result);
-                    alert("Failed to save item.");
+                    console.error("Server Response:", await response.text());
                     return;
                 }
 
+                // Success
                 window.dispatchEvent(new CustomEvent("refresh-temp-items"));
                 this.resetItem();
                 this.$nextTick(() => {
@@ -369,7 +382,6 @@ export default function purchaseForm(globalGoldRate, globalDiamondRate) {
                 console.error("Add Item Error:", error);
             }
         },
-
         resetItem() {
             Object.keys(this.item).forEach((key) => {
                 this.item[key] = typeof this.item[key] === "number" ? 0 : "";

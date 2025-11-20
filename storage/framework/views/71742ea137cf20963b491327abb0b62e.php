@@ -357,48 +357,56 @@
 </div>
 
 <script>
-function productSelector() {
-    return {
-        open: false,
-        searchQuery: "",
-        options: [],
-        filteredOptions: [],
-        selected: null,
+    function productSelector() {
+        return {
+            open: false,
+            searchQuery: "",
+            options: [],
+            filteredOptions: [],
+            selected: null,
 
-        init() {
-            // Load lightweight product list from cards table
-            fetch("<?php echo e(route('admin.dropdown.fetch', ['type' => 'products'])); ?>")
-                .then(res => res.json())
-                .then(data => {
-                    this.options = data;
-                    this.filteredOptions = data;
-                });
-        },
+            init() {
+                console.log("SENDING PRODUCT CODE:", this.item.barcode);
 
-        filterOptions() {
-            const q = this.searchQuery.toLowerCase().trim();
-            this.filteredOptions = this.options.filter(o =>
-                o.item_code.toLowerCase().includes(q) ||
-                o.item_name.toLowerCase().includes(q)
-            );
-        },
+                // Load lightweight product list from cards table
+                fetch("<?php echo e(route('admin.dropdown.fetch', ['type' => 'products'])); ?>")
+                    .then(res => res.json())
+                    .then(data => {
+                        this.options = data;
+                        this.filteredOptions = data;
+                    });
+            },
 
-        select(option) {
-            this.selected = option;
-            this.searchQuery = option.item_code + " - " + option.item_name;
-            this.open = false;
+            filterOptions() {
+                const q = this.searchQuery.toLowerCase().trim();
+                this.filteredOptions = this.options.filter(o =>
+                    o.item_code.toLowerCase().includes(q) ||
+                    o.item_name.toLowerCase().includes(q)
+                );
+            },
 
-            // Fetch full details from cards table
-            fetch("/admin/card/" + option.id)
-                .then(res => res.json())
-                .then(card => {
-                    // Update parent modal's item
-                    const event = new CustomEvent("card-loaded", { detail: { card }});
-                    window.dispatchEvent(event);
-                });
-        }
-    };
-}
+            select(option) {
+                this.selected = option;
+                this.searchQuery = option.item_code + " - " + option.item_name; // display only
+
+                // Store the REAL product code separately
+                this.selectedProductCode = option.product_code;
+                this.open = false;
+
+                // Fetch full details from cards table
+                fetch("/admin/card/" + option.id)
+                    .then(res => res.json())
+                    .then(card => {
+                        // Update parent modal's item
+                        const event = new CustomEvent("card-loaded", {
+                            detail: {
+                                card
+                            }
+                        });
+                        window.dispatchEvent(event);
+                    });
+            }
+        };
+    }
 </script>
-
 <?php /**PATH C:\xampp\htdocs\zeoradiamonds\resources\views/admin/sales/partials/add-item-modal.blade.php ENDPATH**/ ?>

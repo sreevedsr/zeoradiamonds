@@ -101,7 +101,7 @@
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\App\View\Components\Input\Text::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['name' => 'phone_no','placeholder' => 'Enter phone number','pattern' => '[0-9+\-\s]{7,15}','title' => 'Please enter a valid phone number','required' => true,'class' => 'w-full hover:border-purple-400 transition duration-150']); ?>
+<?php $component->withAttributes(['name' => 'phone_no','placeholder' => 'Enter phone number','pattern' => '[0-9]{10,15}','title' => 'Please enter a valid phone number','required' => true,'class' => 'w-full hover:border-purple-400 transition duration-150']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8)): ?>

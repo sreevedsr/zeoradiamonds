@@ -13,27 +13,29 @@ class TempSaleController extends Controller
 
 
     // store one item into temp_sales
-public function store(Request $request)
-{
-    $request->validate([
-        'product_code' => 'required|string|exists:cards,product_code',
-    ]);
+    public function store(Request $request)
+    {
+        // dd($request->input('product_code'));
 
-    $cardId = \App\Models\Card::where('product_code', $request->product_code)->value('id');
+        $request->validate([
+            'product_code' => 'required|string|exists:cards,product_code',
+        ]);
 
-    // Safety check
-    if (!$cardId) {
-        return response()->json(['error' => 'Card not found for this product code'], 422);
+        $cardId = \App\Models\Card::where('product_code', $request->product_code)->value('id');
+
+        // Safety check
+        if (!$cardId) {
+            return response()->json(['error' => 'Card not found for this product code'], 422);
+        }
+
+        $temp = TempSale::create([
+            'product_code' => $request->product_code,
+            'card_id' => $cardId,
+            'created_by' => auth()->id(),
+        ]);
+
+        return response()->json(['success' => true, 'temp_sale' => $temp]);
     }
-
-    $temp = TempSale::create([
-        'product_code' => $request->product_code,
-        'card_id' => $cardId,
-        'created_by' => auth()->id(),
-    ]);
-
-    return response()->json(['success' => true, 'temp_sale' => $temp]);
-}
 
 
     // list items for the current session/user (or for a merchant)

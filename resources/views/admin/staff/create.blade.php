@@ -47,7 +47,7 @@
                         <label for="phone_no" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-200">
                             Phone No. <span class="text-red-500">*</span>
                         </label>
-                        <x-input.text name="phone_no" placeholder="Enter phone number" pattern="[0-9+\-\s]{7,15}"
+                        <x-input.text name="phone_no" placeholder="Enter phone number" pattern="[0-9]{10,15}"
                             title="Please enter a valid phone number" required
                             class="w-full hover:border-purple-400 transition duration-150" />
                     </div>

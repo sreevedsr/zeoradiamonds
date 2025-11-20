@@ -1,5 +1,5 @@
 <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('edit-merchants')): ?>
-            <li class="relative px-6 py-3" x-data="collapsibleMenu(<?php echo e(request()->routeIs('admin.merchants.*') ? 'true' : 'false'); ?>)">
+            <li class="relative px-6 py-3" x-data="collapsibleMenu(<?php echo e(request()->routeIs('admin.merchants.*') ? true : false); ?>)">
 
                 <span
                     class="<?php echo e(request()->routeIs('admin.merchants.*')
@@ -72,7 +72,7 @@
         <?php endif; ?>
 
          <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('view-suppliers')): ?>
-            <li class="relative px-6 py-3" x-data="collapsibleMenu(<?php echo e(request()->routeIs('admin.suppliers.*') ? 'true' : 'false'); ?>)">
+            <li class="relative px-6 py-3" x-data="collapsibleMenu(<?php echo e(request()->routeIs('admin.suppliers.*') ? true : false); ?>)">
 
                 <!-- Highlight Bar -->
                 <span
@@ -146,7 +146,7 @@
         <?php endif; ?>
 
         <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('edit-cards')): ?>
-            <li class="relative px-6 py-3" x-data="collapsibleMenu(<?php echo e(request()->routeIs('admin.products.*') ? 'true' : 'false'); ?>)">
+            <li class="relative px-6 py-3" x-data="collapsibleMenu(<?php echo e(request()->routeIs('admin.products.*') ? true : false); ?>)">
 
                 <!-- Active Bar -->
                 <span
@@ -286,7 +286,7 @@
         <?php endif; ?>
 
         <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('manage-staff')): ?>
-            <li class="relative px-6 py-3" x-data="collapsibleMenu(<?php echo e(request()->routeIs('admin.staff.*') ? 'true' : 'false'); ?>)">
+            <li class="relative px-6 py-3" x-data="collapsibleMenu(<?php echo e(request()->routeIs('admin.staff.*') ? true : false); ?>)">
 
                 <!-- Active Bar -->
                 <span

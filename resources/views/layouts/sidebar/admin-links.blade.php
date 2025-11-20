@@ -1,5 +1,5 @@
 @can('edit-merchants')
-            <li class="relative px-6 py-3" x-data="collapsibleMenu({{ request()->routeIs('admin.merchants.*') ? 'true' : 'false' }})">
+            <li class="relative px-6 py-3" x-data="collapsibleMenu({{ request()->routeIs('admin.merchants.*') ? true : false }})">
 
                 <span
                     class="{{ request()->routeIs('admin.merchants.*')
@@ -69,7 +69,7 @@
         @endcan
 
          @can('view-suppliers')
-            <li class="relative px-6 py-3" x-data="collapsibleMenu({{ request()->routeIs('admin.suppliers.*') ? 'true' : 'false' }})">
+            <li class="relative px-6 py-3" x-data="collapsibleMenu({{ request()->routeIs('admin.suppliers.*') ? true : false }})">
 
                 <!-- Highlight Bar -->
                 <span
@@ -140,7 +140,7 @@
         @endcan
 
         @can('edit-cards')
-            <li class="relative px-6 py-3" x-data="collapsibleMenu({{ request()->routeIs('admin.products.*') ? 'true' : 'false' }})">
+            <li class="relative px-6 py-3" x-data="collapsibleMenu({{ request()->routeIs('admin.products.*') ? true : false }})">
 
                 <!-- Active Bar -->
                 <span
@@ -273,7 +273,7 @@
         @endcan
 
         @can('manage-staff')
-            <li class="relative px-6 py-3" x-data="collapsibleMenu({{ request()->routeIs('admin.staff.*') ? 'true' : 'false' }})">
+            <li class="relative px-6 py-3" x-data="collapsibleMenu({{ request()->routeIs('admin.staff.*') ? true : false }})">
 
                 <!-- Active Bar -->
                 <span

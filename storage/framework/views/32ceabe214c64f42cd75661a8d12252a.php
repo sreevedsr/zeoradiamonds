@@ -8,7 +8,7 @@
 <?php $attributes = $attributes->except(\App\View\Components\AppLayout::ignoredParameterNames()); ?>
 <?php endif; ?>
 <?php $component->withAttributes([]); ?>
-    <?php $__env->slot('title', 'Upload Product Purchase Details'); ?>
+    <?php $__env->slot('title', 'Upload Purchase Details'); ?>
 
     <div x-data="globalRates()">
         <div x-data="{ showModal: false }" @close-purchase-modal.window="showModal = false">

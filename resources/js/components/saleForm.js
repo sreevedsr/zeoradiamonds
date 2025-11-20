@@ -2,14 +2,18 @@ export default function saleForm() {
     return {
         items: [],
 
-        init() {
-            // Listen for item added from modal
+        async init() {
+            // Load items from backend
+            const res = await fetch("/admin/temp-sales");
+            const data = await res.json();
+            this.items = data.items;
+
+            // Listen for new item
             window.addEventListener("add-sale-item", (e) => {
-                this.items.push(e.detail.item);
+                this.items.push(e.detail.temp_sale);
             });
         },
 
-        // Optional - If you want delete functionality later
         async removeItem(id) {
             const res = await fetch(`/admin/temp-sales/${id}`, {
                 method: "DELETE",

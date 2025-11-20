@@ -31,7 +31,7 @@ class DropdownController extends Controller
                 )->get(),
 
                 // switched to Card model for product dropdowns (lightweight)
-                'products' => Card::select(
+                'products' => Product::select(
                     'id', 'item_code', 'item_name'
                 )->get(),
 

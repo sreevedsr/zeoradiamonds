@@ -203,7 +203,7 @@
             </div>
 
             <!-- Items Table (DB-driven) -->
-            <div class="overflow-x-auto rounded-lg border ...">
+            <div class="overflow-x-auto rounded-lg ">
                 <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                     <thead class="bg-gray-50 dark:bg-gray-700">
                         <tr>
