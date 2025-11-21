@@ -1,34 +1,27 @@
 export default function addSaleItemModal() {
     return {
-        item: {
-            si_no: "",
-            barcode: "",
-            item_code: "",
-            item_name: "",
-            hsn: "",
-            quantity: "",
-            gross_weight: "",
-            stone_weight: "",
-            diamond_weight: "",
-            net_weight: "",
-            net_amount: "",
-            total_amount: "",
-        },
+        item: {},
 
         init() {
-              window.addEventListener("open-sale-modal", () => {
+            window.addEventListener("open-sale-modal", () => {
                 this.resetItem();
             });
+
             window.handleProductSelect = (e) => {
                 const c = e.detail.selected;
 
-                // CORE FIELD MAPPING
+                // Core mapping
                 this.item.card_id = c.id;
                 this.item.barcode = c.product_code;
+                this.item.product_code = c.product_code;
 
                 this.item.item_code = c.item_code;
+
+                // NEW → Item name from products table
                 this.item.item_name = c.item_name;
-                this.item.hsn = c.hsn_code ?? "";
+
+                // NEW → HSN code from products table
+                this.item.hsn = c.hsn_code;
 
                 this.item.quantity = 1;
                 this.item.gross_weight = c.gross_weight;
@@ -43,7 +36,7 @@ export default function addSaleItemModal() {
 
         async addItem() {
             const form = new FormData();
-            form.append("product_code", this.item.barcode);
+            form.append("product_code", this.item.product_code);
 
             const res = await fetch("/admin/temp-sales", {
                 method: "POST",
@@ -61,42 +54,23 @@ export default function addSaleItemModal() {
                 return;
             }
 
-            // Add final item to main grid
-            window.dispatchEvent(
+            // This already contains the FLAT joined card data
+            const temp = await res.json();
+
+            // Dispatch final structure directly (no remapping)
+            document.dispatchEvent(
                 new CustomEvent("add-sale-item", {
-                    detail: {
-                        temp_sale: {
-                            barcode: this.item.barcode,
-                            item_name: this.item.item_name,
-                            quantity: 1,
-                            net_weight: this.item.net_weight,
-                            net_amount: this.item.net_amount,
-                            total_amount: this.item.total_amount,
-                        },
-                    },
+                    bubbles: true,
+                    detail: { temp_sale: temp },
                 }),
             );
+
+            // Refresh dropdown
+            document.dispatchEvent(new CustomEvent("refresh-sale-products"));
         },
+
         resetItem() {
-            this.item = {
-                si_no: "",
-                barcode: "",
-                product_code: "",
-                item_code: "",
-                item_name: "",
-                hsn: "",
-                quantity: "",
-                gross_weight: "",
-                stone_weight: "",
-                diamond_weight: "",
-                net_weight: "",
-                net_amount: "",
-                total_amount: "",
-                cgst: "",
-                sgst: "",
-                igst: "",
-                intraState: true,
-            };
+            this.item = {};
         },
     };
 }

@@ -63,13 +63,12 @@
 <?php unset($__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8); ?>
 <?php endif; ?>
 
-                <!-- Product Dropdown -->
-                <div x-data="searchableDropdown({
-                    apiUrl: '<?php echo e(route('admin.dropdown.fetch', ['type' => 'sale_products'])); ?>',
-                    optionLabel: 'item_name',
-                    optionValue: 'id'
-                })" @dropdown-selected.window="handleProductSelect" class="relative"
-                    @click.outside="open = false">
+               <div x-data="searchableProductDropdown({
+    apiUrl: '<?php echo e(route('admin.dropdown.fetch', ['type' => 'sale_products'])); ?>'
+})"
+@dropdown-selected.window="handleProductSelect"
+class="relative"
+@click.outside="open = false">
 
                     <label class="text-sm font-medium text-gray-700 dark:text-gray-200">
                         Product
@@ -311,7 +310,31 @@
 
             </div>
 
+            <!-- Taxes -->
+            <div class="border-t pt-4 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
 
+                <template x-if="item.intraState">
+                    <div class="grid grid-cols-2 gap-3 col-span-full">
+                        <div>
+                            <div class="text-xs">CGST</div>
+                            <div x-text="item.cgst"></div>
+                        </div>
+
+                        <div>
+                            <div class="text-xs">SGST</div>
+                            <div x-text="item.sgst"></div>
+                        </div>
+                    </div>
+                </template>
+
+                <template x-if="!item.intraState">
+                    <div>
+                        <div class="text-xs">IGST</div>
+                        <div x-text="item.igst"></div>
+                    </div>
+                </template>
+
+            </div>
 
             <div class="flex justify-end gap-3 pt-4 border-t">
                 <?php if (isset($component)) { $__componentOriginal3b0e04e43cf890250cc4d85cff4d94af = $component; } ?>

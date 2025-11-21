@@ -14,43 +14,55 @@ class TempSaleController extends Controller
     // list items for the current session/user (or for a merchant)
     public function index(Request $request)
     {
-        // Only fetch current user's temp sales (adjust auth rule as needed)
-        $items = TempSale::with('card')
-            ->where('created_by', auth()->id())
+        $items = TempSale::query()
+            ->join('cards', 'temp_sales.card_id', '=', 'cards.id')
+            ->join('products', 'cards.item_code', '=', 'products.item_code')
+            ->where('temp_sales.created_by', auth()->id())
+            ->select([
+                'temp_sales.id',
+
+                // From cards table
+                'cards.product_code',
+                'cards.net_weight',
+                'cards.total_amount as net_amount',
+                'cards.total_amount as total_amount',
+
+                // From products table
+                'products.item_name',
+                'products.hsn_code',
+            ])
+            ->orderBy('temp_sales.id')
             ->get();
 
-        // Optional: transform if you want to remove sensitive fields
-        $payload = $items->map(function ($t) {
-            return [
-                'id' => $t->id,
-                'card_id' => $t->card_id,
-                'quantity' => $t->quantity,
-                'net_weight' => $t->net_weight,
-                'net_amount' => $t->net_amount,
-                'total_amount' => $t->total_amount,
-                // include whole card object for expanded view
-                'card' => $t->card ? $t->card->toArray() : null,
-            ];
-        });
-
-        return response()->json(['items' => $payload]);
+        return response()->json([
+            'items' => $items
+        ]);
     }
+
+
+
 
     // store one item into temp_sales
     public function store(Request $request)
     {
-        // dd($request->input('product_code'));
-
         $request->validate([
             'product_code' => 'required|string|exists:cards,product_code',
         ]);
 
-        $cardId = \App\Models\Card::where('product_code', $request->product_code)->value('id');
+        $card = \App\Models\Card::where('product_code', $request->product_code)->first();
 
-        // Safety check
-        if (!$cardId) {
-            return response()->json(['error' => 'Card not found for this product code'], 422);
+        if (!$card) {
+            return response()->json(['error' => 'Card not found'], 404);
         }
+
+        // Fetch related product using item_code
+        $product = \App\Models\Product::where('item_code', $card->item_code)->first();
+
+        if (!$product) {
+            return response()->json(['error' => 'Related product not found'], 404);
+        }
+
+        // Prevent duplicates for this user
         if (
             TempSale::where('product_code', $request->product_code)
                 ->where('created_by', auth()->id())
@@ -59,17 +71,27 @@ class TempSaleController extends Controller
             return response()->json(['duplicate' => true]);
         }
 
-
-
         $temp = TempSale::create([
-            'product_code' => $request->product_code,
-            'card_id' => $cardId,
+            'product_code' => $card->product_code,
+            'card_id' => $card->id,
             'created_by' => auth()->id(),
         ]);
 
-        return response()->json(['success' => true, 'temp_sale' => $temp]);
-    }
+        // Return flattened data exactly like index()
+        return response()->json([
+            'id' => $temp->id,
 
+            // cards fields
+            'product_code' => $card->product_code,
+            'net_weight' => $card->net_weight,
+            'net_amount' => $card->total_amount,
+            'total_amount' => $card->total_amount,
+
+            // products fields
+            'item_name' => $product->item_name,
+            'hsn_code' => $product->hsn_code,
+        ]);
+    }
 
 
     // delete a temp sale item

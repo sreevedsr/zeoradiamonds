@@ -25,11 +25,8 @@
                 <x-input.text label="SI. No." model="item.si_no" readonly />
                 <x-input.text label="Barcode" model="item.barcode" readonly />
 
-                <!-- Product Dropdown -->
-                <div x-data="searchableDropdown({
-                    apiUrl: '{{ route('admin.dropdown.fetch', ['type' => 'sale_products']) }}',
-                    optionLabel: 'item_name',
-                    optionValue: 'id'
+                <div x-data="searchableProductDropdown({
+                    apiUrl: '{{ route('admin.dropdown.fetch', ['type' => 'sale_products']) }}'
                 })" @dropdown-selected.window="handleProductSelect" class="relative"
                     @click.outside="open = false">
 
@@ -83,7 +80,31 @@
 
             </div>
 
+            <!-- Taxes -->
+            <div class="border-t pt-4 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
 
+                <template x-if="item.intraState">
+                    <div class="grid grid-cols-2 gap-3 col-span-full">
+                        <div>
+                            <div class="text-xs">CGST</div>
+                            <div x-text="item.cgst"></div>
+                        </div>
+
+                        <div>
+                            <div class="text-xs">SGST</div>
+                            <div x-text="item.sgst"></div>
+                        </div>
+                    </div>
+                </template>
+
+                <template x-if="!item.intraState">
+                    <div>
+                        <div class="text-xs">IGST</div>
+                        <div x-text="item.igst"></div>
+                    </div>
+                </template>
+
+            </div>
 
             <div class="flex justify-end gap-3 pt-4 border-t">
                 <x-secondary-button type="button" @click="open = false">Cancel</x-secondary-button>

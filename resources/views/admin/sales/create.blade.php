@@ -187,7 +187,9 @@
         </div>
 
         {{-- Sales Items Section --}}
-        <div class="rounded-lg bg-white dark:bg-gray-800 p-8 ...">
+        <div
+            class="rounded-lg bg-white dark:bg-gray-800 p-8 border border-gray-200 dark:border-transparent
+           text-gray-900 dark:text-gray-100 shadow-sm dark:shadow-md dark:shadow-gray-900/50 mb-6">
 
             <!-- Section Header -->
             <div class="flex items-center justify-between mb-4 ...">
@@ -209,12 +211,14 @@
                     <thead class="bg-gray-50 dark:bg-gray-700">
                         <tr>
                             <th class="px-4 py-2 text-left text-sm font-medium">#</th>
-                            <th class="px-4 py-2 text-left text-sm font-medium">Barcode</th>
-                            <th class="px-4 py-2 text-left text-sm font-medium">Item Name</th>
+                            {{-- <th class="px-4 py-2 text-left text-sm font-medium">Barcode</th> --}}
+                            <th class="px-4 py-2 text-left text-sm font-medium">Product Code</th>
                             <th class="px-4 py-2 text-sm font-medium">Qty</th>
                             <th class="px-4 py-2 text-sm font-medium">Net Wt</th>
                             <th class="px-4 py-2 text-sm font-medium">Net Amount</th>
                             <th class="px-4 py-2 text-right text-sm font-medium">Total</th>
+                            <th class="px-4 py-2 text-right text-sm font-medium">Action</th>
+
                         </tr>
                     </thead>
 
@@ -226,11 +230,16 @@
                                 <tr class="hover:bg-gray-50 dark:hover:bg-gray-800 transition">
                                     <td class="px-4 py-2 text-sm" x-text="index + 1"></td>
                                     <td x-text="row.product_code"></td>
-                                    <td x-text="row.card?.item_name"></td>
+                                    {{-- <td x-text="row.product?.item_name"></td> --}}
                                     <td class="px-4 py-2 text-sm" x-text="row.quantity"></td>
                                     <td class="px-4 py-2 text-sm" x-text="row.net_weight"></td>
                                     <td class="px-4 py-2 text-sm" x-text="row.net_amount"></td>
                                     <td class="px-4 py-2 text-right text-sm" x-text="row.total_amount"></td>
+                                    <td class="px-4 py-2 text-right">
+                                        <x-danger-button type="button" @click="openDeleteModal(row.id)">
+                                            Delete
+                                        </x-danger-button>
+                                    </td>
                                 </tr>
                             </template>
                         </template>
@@ -243,35 +252,11 @@
                                     No items added yet. Click “Add Item” to begin.
                                 </td>
                             </tr>
+
                         </template>
                     </tbody>
 
                 </table>
-            </div>
-                        <!-- Taxes -->
-            <div class="border-t pt-4 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-
-                <template x-if="item.intraState">
-                    <div class="grid grid-cols-2 gap-3 col-span-full">
-                        <div>
-                            <div class="text-xs">CGST</div>
-                            <div x-text="item.cgst"></div>
-                        </div>
-
-                        <div>
-                            <div class="text-xs">SGST</div>
-                            <div x-text="item.sgst"></div>
-                        </div>
-                    </div>
-                </template>
-
-                <template x-if="!item.intraState">
-                    <div>
-                        <div class="text-xs">IGST</div>
-                        <div x-text="item.igst"></div>
-                    </div>
-                </template>
-
             </div>
 
             <!-- Totals (use an instance to show count) -->
@@ -287,5 +272,28 @@
     </form>
 
     @include('admin.sales.partials.add-item-modal')
+    {{-- Reusable Delete Confirmation Modal --}}
+    <x-modal name="confirm-delete-modal" focusable>
+        <div class="p-6" x-data>
+            <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
+                Confirm Delete
+            </h2>
+
+            <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                Are you sure you want to delete this item?
+            </p>
+
+            <div class="mt-6 flex justify-end space-x-3">
+                <x-secondary-button type="button" x-on:click="$dispatch('close')">
+                    {{ __('Cancel') }}
+                </x-secondary-button>
+
+                <x-danger-button x-on:click="$dispatch('confirm-delete')">
+                    {{ __('Yes, Delete') }}
+                </x-danger-button>
+            </div>
+        </div>
+    </x-modal>
+
 
 </x-app-layout>

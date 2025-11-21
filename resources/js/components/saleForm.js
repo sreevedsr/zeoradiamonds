@@ -2,25 +2,18 @@ export default function saleForm() {
     return {
         items: [],
         errorMessage: null,
+        deleteId: null,
 
         async init() {
-            // Load existing TempSale items from backend
+            // Load items from backend (already flat structure)
             const res = await fetch("/admin/temp-sales");
             const data = await res.json();
 
-            this.items = (data.items || []).map((item) => ({
-                id: item.id,
-                product_code: item.card?.product_code,
-                item_name: item.card?.item_name,
-                quantity: item.card?.quantity ?? 1,
-                net_weight: item.card?.net_weight,
-                net_amount: item.card?.total_amount,
-                total_amount: item.card?.total_amount,
-                open: false,
-            }));
+            this.items = data.items || [];
+            this.updateBlockedProducts();
 
-            // Listen for event from modal
-            window.addEventListener("add-sale-item", (e) => {
+            // Listen for add-sale-item event
+            document.addEventListener("add-sale-item", (e) => {
                 const temp = e.detail.temp_sale;
 
                 // Prevent duplicates
@@ -31,18 +24,45 @@ export default function saleForm() {
                     return;
                 }
 
-                // Add normalized entry
+                // Push flat item
                 this.items.push({
                     id: temp.id,
                     product_code: temp.product_code,
-                    quantity: temp.quantity,
+                    item_name: temp.item_name,
+                    hsn_code: temp.hsn_code,
                     net_weight: temp.net_weight,
                     net_amount: temp.net_amount,
                     total_amount: temp.total_amount,
-                    card: temp.card || {},
-                    open: false,
                 });
+
+                this.updateBlockedProducts();
+
+                window.dispatchEvent(new CustomEvent("refresh-sale-products"));
             });
+
+            // Delete confirmation listener
+            window.addEventListener("confirm-delete", () => {
+                if (this.deleteId) {
+                    this.removeItem(this.deleteId);
+                    window.dispatchEvent(new CustomEvent("refresh-sale-products"));
+                    this.deleteId = null;
+                }
+
+                window.dispatchEvent(
+                    new CustomEvent("close-modal", {
+                        detail: "confirm-delete-modal",
+                    }),
+                );
+            });
+        },
+
+        openDeleteModal(id) {
+            this.deleteId = id;
+            window.dispatchEvent(
+                new CustomEvent("open-modal", {
+                    detail: "confirm-delete-modal",
+                }),
+            );
         },
 
         async removeItem(id) {
@@ -57,11 +77,18 @@ export default function saleForm() {
 
             if (res.ok) {
                 this.items = this.items.filter((i) => i.id !== id);
+                this.updateBlockedProducts();
             }
         },
 
-        toggleRow(index) {
-            this.items[index].open = !this.items[index].open;
+        updateBlockedProducts() {
+            const blocked = this.items.map((i) => i.product_code);
+
+            window.dispatchEvent(
+                new CustomEvent("block-products", {
+                    detail: { blocked },
+                }),
+            );
         },
     };
 }

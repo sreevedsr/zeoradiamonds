@@ -250,7 +250,9 @@
         </div>
 
         
-        <div class="rounded-lg bg-white dark:bg-gray-800 p-8 ...">
+        <div
+            class="rounded-lg bg-white dark:bg-gray-800 p-8 border border-gray-200 dark:border-transparent
+           text-gray-900 dark:text-gray-100 shadow-sm dark:shadow-md dark:shadow-gray-900/50 mb-6">
 
             <!-- Section Header -->
             <div class="flex items-center justify-between mb-4 ...">
@@ -272,12 +274,14 @@
                     <thead class="bg-gray-50 dark:bg-gray-700">
                         <tr>
                             <th class="px-4 py-2 text-left text-sm font-medium">#</th>
-                            <th class="px-4 py-2 text-left text-sm font-medium">Barcode</th>
-                            <th class="px-4 py-2 text-left text-sm font-medium">Item Name</th>
+                            
+                            <th class="px-4 py-2 text-left text-sm font-medium">Product Code</th>
                             <th class="px-4 py-2 text-sm font-medium">Qty</th>
                             <th class="px-4 py-2 text-sm font-medium">Net Wt</th>
                             <th class="px-4 py-2 text-sm font-medium">Net Amount</th>
                             <th class="px-4 py-2 text-right text-sm font-medium">Total</th>
+                            <th class="px-4 py-2 text-right text-sm font-medium">Action</th>
+
                         </tr>
                     </thead>
 
@@ -289,11 +293,34 @@
                                 <tr class="hover:bg-gray-50 dark:hover:bg-gray-800 transition">
                                     <td class="px-4 py-2 text-sm" x-text="index + 1"></td>
                                     <td x-text="row.product_code"></td>
-                                    <td x-text="row.card?.item_name"></td>
+                                    
                                     <td class="px-4 py-2 text-sm" x-text="row.quantity"></td>
                                     <td class="px-4 py-2 text-sm" x-text="row.net_weight"></td>
                                     <td class="px-4 py-2 text-sm" x-text="row.net_amount"></td>
                                     <td class="px-4 py-2 text-right text-sm" x-text="row.total_amount"></td>
+                                    <td class="px-4 py-2 text-right">
+                                        <?php if (isset($component)) { $__componentOriginal656e8c5ea4d9a4fa173298297bfe3f11 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal656e8c5ea4d9a4fa173298297bfe3f11 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.danger-button','data' => ['type' => 'button','@click' => 'openDeleteModal(row.id)']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('danger-button'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['type' => 'button','@click' => 'openDeleteModal(row.id)']); ?>
+                                            Delete
+                                         <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal656e8c5ea4d9a4fa173298297bfe3f11)): ?>
+<?php $attributes = $__attributesOriginal656e8c5ea4d9a4fa173298297bfe3f11; ?>
+<?php unset($__attributesOriginal656e8c5ea4d9a4fa173298297bfe3f11); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal656e8c5ea4d9a4fa173298297bfe3f11)): ?>
+<?php $component = $__componentOriginal656e8c5ea4d9a4fa173298297bfe3f11; ?>
+<?php unset($__componentOriginal656e8c5ea4d9a4fa173298297bfe3f11); ?>
+<?php endif; ?>
+                                    </td>
                                 </tr>
                             </template>
                         </template>
@@ -306,35 +333,11 @@
                                     No items added yet. Click “Add Item” to begin.
                                 </td>
                             </tr>
+
                         </template>
                     </tbody>
 
                 </table>
-            </div>
-                        <!-- Taxes -->
-            <div class="border-t pt-4 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-
-                <template x-if="item.intraState">
-                    <div class="grid grid-cols-2 gap-3 col-span-full">
-                        <div>
-                            <div class="text-xs">CGST</div>
-                            <div x-text="item.cgst"></div>
-                        </div>
-
-                        <div>
-                            <div class="text-xs">SGST</div>
-                            <div x-text="item.sgst"></div>
-                        </div>
-                    </div>
-                </template>
-
-                <template x-if="!item.intraState">
-                    <div>
-                        <div class="text-xs">IGST</div>
-                        <div x-text="item.igst"></div>
-                    </div>
-                </template>
-
             </div>
 
             <!-- Totals (use an instance to show count) -->
@@ -368,6 +371,85 @@
     </form>
 
     <?php echo $__env->make('admin.sales.partials.add-item-modal', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+    
+    <?php if (isset($component)) { $__componentOriginal9f64f32e90b9102968f2bc548315018c = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal9f64f32e90b9102968f2bc548315018c = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.modal','data' => ['name' => 'confirm-delete-modal','focusable' => true]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('modal'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['name' => 'confirm-delete-modal','focusable' => true]); ?>
+        <div class="p-6" x-data>
+            <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
+                Confirm Delete
+            </h2>
+
+            <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                Are you sure you want to delete this item?
+            </p>
+
+            <div class="mt-6 flex justify-end space-x-3">
+                <?php if (isset($component)) { $__componentOriginal3b0e04e43cf890250cc4d85cff4d94af = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal3b0e04e43cf890250cc4d85cff4d94af = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.secondary-button','data' => ['type' => 'button','xOn:click' => '$dispatch(\'close\')']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('secondary-button'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['type' => 'button','x-on:click' => '$dispatch(\'close\')']); ?>
+                    <?php echo e(__('Cancel')); ?>
+
+                 <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal3b0e04e43cf890250cc4d85cff4d94af)): ?>
+<?php $attributes = $__attributesOriginal3b0e04e43cf890250cc4d85cff4d94af; ?>
+<?php unset($__attributesOriginal3b0e04e43cf890250cc4d85cff4d94af); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal3b0e04e43cf890250cc4d85cff4d94af)): ?>
+<?php $component = $__componentOriginal3b0e04e43cf890250cc4d85cff4d94af; ?>
+<?php unset($__componentOriginal3b0e04e43cf890250cc4d85cff4d94af); ?>
+<?php endif; ?>
+
+                <?php if (isset($component)) { $__componentOriginal656e8c5ea4d9a4fa173298297bfe3f11 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal656e8c5ea4d9a4fa173298297bfe3f11 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.danger-button','data' => ['xOn:click' => '$dispatch(\'confirm-delete\')']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('danger-button'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['x-on:click' => '$dispatch(\'confirm-delete\')']); ?>
+                    <?php echo e(__('Yes, Delete')); ?>
+
+                 <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal656e8c5ea4d9a4fa173298297bfe3f11)): ?>
+<?php $attributes = $__attributesOriginal656e8c5ea4d9a4fa173298297bfe3f11; ?>
+<?php unset($__attributesOriginal656e8c5ea4d9a4fa173298297bfe3f11); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal656e8c5ea4d9a4fa173298297bfe3f11)): ?>
+<?php $component = $__componentOriginal656e8c5ea4d9a4fa173298297bfe3f11; ?>
+<?php unset($__componentOriginal656e8c5ea4d9a4fa173298297bfe3f11); ?>
+<?php endif; ?>
+            </div>
+        </div>
+     <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal9f64f32e90b9102968f2bc548315018c)): ?>
+<?php $attributes = $__attributesOriginal9f64f32e90b9102968f2bc548315018c; ?>
+<?php unset($__attributesOriginal9f64f32e90b9102968f2bc548315018c); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal9f64f32e90b9102968f2bc548315018c)): ?>
+<?php $component = $__componentOriginal9f64f32e90b9102968f2bc548315018c; ?>
+<?php unset($__componentOriginal9f64f32e90b9102968f2bc548315018c); ?>
+<?php endif; ?>
+
 
  <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>

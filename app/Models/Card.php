@@ -92,6 +92,12 @@ class Card extends Model
         return $this->belongsTo(PurchaseInvoice::class, 'purchase_invoice_id');
     }
 
+    public function tempSales()
+    {
+        return $this->hasMany(TempSale::class, 'card_id');
+    }
+
+
     // CURRENT OWNER (only one row in table)
     public function ownership()
     {

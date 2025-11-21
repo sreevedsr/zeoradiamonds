@@ -11,6 +11,7 @@ import saleForm from './components/saleForm.js';
 import addSaleItemModal from './components/addSaleItemModal.js';
 import collapsibleMenu from './components/collapsibleMenu.js';
 import searchableDropdown from './components/searchableDropdown.js';
+import searchableProductDropdown from './components/searchableProductDropdown.js';
 import { enableSequentialInput, focusFirstInput } from './utils/formNavigation.js';
 
 function globalRates() {
@@ -49,6 +50,8 @@ window.Alpine = Alpine;
 window.enableSequentialInput = enableSequentialInput;
 window.focusFirstInput = focusFirstInput;
 window.searchableDropdown = searchableDropdown;
+window.searchableProductDropdown = searchableProductDropdown;
+
 
 Alpine.data('globalRates', globalRates);
 Alpine.data('stateCode', stateCode);

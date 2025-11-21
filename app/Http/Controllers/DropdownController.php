@@ -75,6 +75,9 @@ class DropdownController extends Controller
                         $q->where('owner_type', 'admin')
                             ->whereNull('owner_id');
                     })
+                    ->whereDoesntHave('tempSales', function ($q) {
+                        $q->where('created_by', auth()->id());
+                    })
                     ->get()
                     ->map(function ($card) {
                         return [
