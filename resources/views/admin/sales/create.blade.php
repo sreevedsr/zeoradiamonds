@@ -48,7 +48,7 @@
                 </label>
 
                 <!-- Search Input -->
-                <div class="relative">
+                <div class="relative md:w-1/2">
                     <input type="text" x-model="searchQuery" @input="filterOptions()" @focus="open = true"
                         @keydown.enter.prevent="
                     if (filteredOptions.length > 0) {
@@ -97,88 +97,156 @@
                 <input type="hidden" name="merchant_id" :value="selected ? selected.id : ''">
                 <input type="hidden" name="merchant_state" :value="selected ? selected.state : ''">
 
-                <!-- Merchant Details Card -->
+                <!-- Merchant Details Card (Compact Layout With Dummy SVGs) -->
                 <template x-if="selected">
-                    <div class="mt-6 rounded-2xl border border-gray-200 dark:border-gray-700
-               bg-gradient-to-br from-gray-50 to-white dark:from-gray-800 dark:to-gray-900
-               p-6 dark:shadow-lg dark:shadow-gray-900/40
-               transition-all duration-300 ease-in-out hover:shadow-lg"
-                        x-transition.opacity.duration.300ms>
+                    <div
+                        class="mt-4 rounded-xl border border-gray-200 dark:border-gray-700
+        px-5 py-6 shadow-sm dark:shadow-md
+        transition-all duration-300 space-y-5 ">
+
                         <!-- Header -->
-                        <div
-                            class="flex items-center justify-between mb-5 border-b border-gray-200 dark:border-gray-700 pb-3">
-                            <div class="flex items-center gap-2">
-                                <div
-                                    class="flex items-center justify-center h-8 w-8 rounded-full bg-purple-100 dark:bg-purple-900/40">
-                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                        class="h-4 w-4 text-purple-600 dark:text-purple-400" fill="none"
-                                        viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M5 13l4 4L19 7" />
-                                    </svg>
-                                </div>
-                                <h3 class="font-semibold text-lg text-gray-900 dark:text-gray-100 tracking-tight">
-                                    Merchant Details
-                                </h3>
+                        <div class="flex items-center gap-3 border-b border-gray-200 dark:border-gray-700 pb-3">
+                            <div class="h-8 w-8 flex items-center justify-center text-purple-600 dark:text-purple-400">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round"
+                                    class="lucide lucide-user-round-icon lucide-user-round">
+                                    <circle cx="12" cy="8" r="5" />
+                                    <path d="M20 21a8 8 0 0 0-16 0" />
+                                </svg>
                             </div>
 
-                            <!-- Optional collapse button -->
-                            <button type="button" x-on:click="showDetails = !showDetails" x-data="{ showDetails: true }"
-                                class="text-sm text-purple-600 dark:text-purple-400 hover:underline" x-show="false">
-                                Toggle
-                            </button>
+                            <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 tracking-tight">
+                                Merchant Details
+                            </h3>
                         </div>
 
-                        <!-- Content -->
-                        <div
-                            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-4 text-[15px] text-gray-700 dark:text-gray-300 leading-relaxed">
-                            <div class="flex flex-col">
-                                <span class="font-semibold text-gray-800 dark:text-gray-200">Code</span>
-                                <span class="mt-0.5 text-gray-600 dark:text-gray-400"
-                                    x-text="selected.merchant_code || '-'"></span>
+                        <!-- Details Grid -->
+                        <div class="grid grid-cols-2 gap-x-8 gap-y-5 text-[15px] leading-relaxed">
+
+                            <!-- Code -->
+                            <div class="flex items-between gap-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round"
+                                    class="lucide lucide-tag-icon lucide-tag">
+                                    <path
+                                        d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z" />
+                                    <circle cx="7.5" cy="7.5" r=".5" fill="currentColor" />
+                                </svg>
+
+                                <div>
+                                    <p class="font-semibold text-gray-800 dark:text-gray-200 text-base">Merchant Code
+                                    </p>
+                                    <p class="text-gray-700 dark:text-gray-400 mt-1"
+                                        x-text="selected.merchant_code || '-'"></p>
+                                </div>
                             </div>
 
-                            <div class="flex flex-col">
-                                <span class="font-semibold text-gray-800 dark:text-gray-200">Name</span>
-                                <span class="mt-0.5 text-gray-600 dark:text-gray-400"
-                                    x-text="selected.name || '-'"></span>
+                            <!-- Name -->
+                            <div class="flex items-start gap-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round"
+                                    class="lucide lucide-user-icon lucide-user">
+                                    <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+                                    <circle cx="12" cy="7" r="4" />
+                                </svg>
+
+                                <div>
+                                    <p class="font-semibold text-gray-800 dark:text-gray-200 text-base">Name</p>
+                                    <p class="text-gray-700 dark:text-gray-400 mt-1" x-text="selected.name || '-'">
+                                    </p>
+                                </div>
                             </div>
 
-                            <div class="flex flex-col">
-                                <span class="font-semibold text-gray-800 dark:text-gray-200">Email</span>
-                                <span class="mt-0.5 text-gray-600 dark:text-gray-400 break-all"
-                                    x-text="selected.email || '-'"></span>
+                            <!-- Phone -->
+                            <div class="flex items-start gap-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round"
+                                    class="lucide lucide-phone-icon lucide-phone">
+                                    <path
+                                        d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384" />
+                                </svg>
+
+                                <div>
+                                    <p class="font-semibold text-gray-800 dark:text-gray-200 text-base">Phone</p>
+                                    <p class="text-gray-700 dark:text-gray-400 mt-1" x-text="selected.phone || '-'">
+                                    </p>
+                                </div>
                             </div>
 
-                            <div class="flex flex-col">
-                                <span class="font-semibold text-gray-800 dark:text-gray-200">Phone</span>
-                                <span class="mt-0.5 text-gray-600 dark:text-gray-400"
-                                    x-text="selected.phone || '-'"></span>
+                            <!-- GST -->
+                            <div class="flex items-start gap-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round"
+                                    class="lucide lucide-book-text-icon lucide-book-text">
+                                    <path
+                                        d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20" />
+                                    <path d="M8 11h8" />
+                                    <path d="M8 7h6" />
+                                </svg>
+                                <div>
+                                    <p class="font-semibold text-gray-800 dark:text-gray-200 text-base">GST No.</p>
+                                    <p class="text-gray-700 dark:text-gray-400 mt-1" x-text="selected.gst_no || '-'">
+                                    </p>
+                                </div>
                             </div>
 
-                            <div class="flex flex-col">
-                                <span class="font-semibold text-gray-800 dark:text-gray-200">GST No.</span>
-                                <span class="mt-0.5 text-gray-600 dark:text-gray-400"
-                                    x-text="selected.gst_no || '-'"></span>
+                            <!-- State -->
+                            <div class="flex items-start gap-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round"
+                                    class="lucide lucide-map-icon lucide-map">
+                                    <path
+                                        d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z" />
+                                    <path d="M15 5.764v15" />
+                                    <path d="M9 3.236v15" />
+                                </svg>
+
+                                <div>
+                                    <p class="font-semibold text-gray-800 dark:text-gray-200 text-base">State</p>
+                                    <p class="text-gray-700 dark:text-gray-400 mt-1" x-text="selected.state || '-'">
+                                    </p>
+                                </div>
                             </div>
 
-                            <div class="flex flex-col">
-                                <span class="font-semibold text-gray-800 dark:text-gray-200">State Code</span>
-                                <span class="mt-0.5 text-gray-600 dark:text-gray-400"
-                                    x-text="selected.state_code || '-'"></span>
+                            {{-- <!-- Tax Type -->
+                            <div class="flex items-start gap-3">
+                                <!-- Dummy Percent Icon -->
+                                <svg class="w-5 h-5 mt-1 text-gray-600 dark:text-gray-300" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M5 19l14-14M6 6h.01M18 18h.01" />
+                                </svg>
+
+                                <div>
+                                    <p class="font-semibold text-gray-800 dark:text-gray-200 text-base">Tax Type</p>
+                                    <p class="text-gray-700 dark:text-gray-400 mt-1" x-text="$taxType()"></p>
+                                </div>
+                            </div> --}}
+
+                            <!-- Address -->
+                            <div class=" flex items-start gap-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round"
+                                    class="lucide lucide-house-icon lucide-house">
+                                    <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" />
+                                    <path
+                                        d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                                </svg>
+
+                                <div>
+                                    <p class="font-semibold text-gray-800 dark:text-gray-200 text-base">Address</p>
+                                    <p class="text-gray-700 dark:text-gray-400 mt-1 leading-snug"
+                                        x-text="selected.address || '-'"></p>
+                                </div>
                             </div>
 
-                            <div class="flex flex-col">
-                                <span class="font-semibold text-gray-800 dark:text-gray-200">State</span>
-                                <span class="mt-0.5 text-gray-600 dark:text-gray-400"
-                                    x-text="selected.state || '-'"></span>
-                            </div>
-
-                            <div class="md:col-span-2 lg:col-span-3 flex flex-col">
-                                <span class="font-semibold text-gray-800 dark:text-gray-200">Address</span>
-                                <span class="mt-0.5 text-gray-600 dark:text-gray-400 leading-snug"
-                                    x-text="selected.address || '-'"></span>
-                            </div>
                         </div>
                     </div>
                 </template>

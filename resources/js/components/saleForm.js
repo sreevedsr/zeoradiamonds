@@ -4,6 +4,9 @@ export default function saleForm() {
         errorMessage: null,
         deleteId: null,
 
+        merchantState: null,
+        taxType: null,
+
         async init() {
             // Load items from backend (already flat structure)
             const res = await fetch("/admin/temp-sales");
@@ -12,11 +15,29 @@ export default function saleForm() {
             this.items = data.items || [];
             this.updateBlockedProducts();
 
+            // ⭐ WATCH merchant dropdown selection (no need to edit dropdown!)
+            this.$nextTick(() => {
+                const dropdown = document.querySelector(
+                    '[x-data^="searchableDropdown"]',
+                );
+
+                if (dropdown?._x) {
+                    dropdown._x.$watch("selected", (val) => {
+                        if (val && val.state) {
+                            this.merchantState = val.state;
+                            this.updateTaxType();
+                        } else {
+                            this.merchantState = null;
+                            this.taxType = null;
+                        }
+                    });
+                }
+            });
+
             // Listen for add-sale-item event
             document.addEventListener("add-sale-item", (e) => {
                 const temp = e.detail.temp_sale;
 
-                // Prevent duplicates
                 if (
                     this.items.some((i) => i.product_code === temp.product_code)
                 ) {
@@ -24,7 +45,6 @@ export default function saleForm() {
                     return;
                 }
 
-                // Push flat item
                 this.items.push({
                     id: temp.id,
                     product_code: temp.product_code,
@@ -36,7 +56,6 @@ export default function saleForm() {
                 });
 
                 this.updateBlockedProducts();
-
                 window.dispatchEvent(new CustomEvent("refresh-sale-products"));
             });
 
@@ -44,7 +63,9 @@ export default function saleForm() {
             window.addEventListener("confirm-delete", () => {
                 if (this.deleteId) {
                     this.removeItem(this.deleteId);
-                    window.dispatchEvent(new CustomEvent("refresh-sale-products"));
+                    window.dispatchEvent(
+                        new CustomEvent("refresh-sale-products"),
+                    );
                     this.deleteId = null;
                 }
 
@@ -54,6 +75,18 @@ export default function saleForm() {
                     }),
                 );
             });
+        },
+
+        // ⭐ NEW function
+        updateTaxType() {
+            if (!this.merchantState) {
+                this.taxType = null;
+                return;
+            }
+
+            const st = this.merchantState.trim().toLowerCase();
+
+            this.taxType = st === "telangana" ? "cgst_sgst" : "igst";
         },
 
         openDeleteModal(id) {
@@ -85,9 +118,7 @@ export default function saleForm() {
             const blocked = this.items.map((i) => i.product_code);
 
             window.dispatchEvent(
-                new CustomEvent("block-products", {
-                    detail: { blocked },
-                }),
+                new CustomEvent("block-products", { detail: { blocked } }),
             );
         },
     };
