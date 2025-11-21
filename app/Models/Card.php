@@ -14,7 +14,6 @@ class Card extends Model
         'purchase_invoice_id',
         'product_code',
         'item_code',
-        'item_name',
         'quantity',
         'gold_rate',
         'diamond_rate',
@@ -41,7 +40,6 @@ class Card extends Model
         'product_image',
     ];
 
-
     protected $casts = [
         'gross_weight' => 'decimal:3',
         'stone_weight' => 'decimal:3',
@@ -61,12 +59,10 @@ class Card extends Model
         'total_amount' => 'decimal:2',
     ];
 
+    /*------------------------------------------
+     | Attribute Aliases
+     ------------------------------------------*/
 
-    /* ---------------------------------------------
-     | 🧩 Normalized Attribute Aliases (So UI can use modern names)
-     ----------------------------------------------*/
-
-    // UI uses: invoice_date → DB field: date
     public function getInvoiceDateAttribute()
     {
         return $this->date;
@@ -77,10 +73,9 @@ class Card extends Model
         $this->date = $value;
     }
 
-
-    /* ---------------------------------------------
-     |  🔹 Relationships
-     ----------------------------------------------*/
+    /*------------------------------------------
+     | Relationships
+     ------------------------------------------*/
 
     public function merchant(): BelongsTo
     {
@@ -97,27 +92,61 @@ class Card extends Model
         return $this->belongsTo(PurchaseInvoice::class, 'purchase_invoice_id');
     }
 
+    // CURRENT OWNER (only one row in table)
     public function ownership()
     {
         return $this->hasOne(CardOwnership::class);
     }
 
+    // history table
     public function ownershipHistory()
     {
         return $this->hasMany(CardOwnershipHistory::class);
     }
 
-    // convenience: get current owner model
+    // convenience: returns owner model instance
     public function currentOwnerModel()
     {
-        $ownership = $this->ownership()->first();
-        if (!$ownership)
+        $o = $this->ownership()->first();
+        if (!$o)
             return null;
 
-        return match ($ownership->owner_type) {
-            'merchant' => User::find($ownership->owner_id),
-            'customer' => Customer::find($ownership->owner_id),
-            default => User::find($ownership->owner_id),
+        return match ($o->owner_type) {
+            'merchant' => User::find($o->owner_id),
+            'customer' => Customer::find($o->owner_id),
+            default => User::find($o->owner_id),
         };
+    }
+    public function product()
+    {
+        return $this->belongsTo(Product::class, 'item_code', 'item_code');
+    }
+
+
+    /*------------------------------------------
+     | Ownership Scopes
+     ------------------------------------------*/
+
+    public function scopeOwnedByAdmin($q)
+    {
+        return $q->whereHas('ownership', function ($sub) {
+            $sub->where('owner_type', 'admin');
+        });
+    }
+
+    public function scopeOwnedByMerchant($q, $merchantId)
+    {
+        return $q->whereHas('ownership', function ($sub) use ($merchantId) {
+            $sub->where('owner_type', 'merchant')
+                ->where('owner_id', $merchantId);
+        });
+    }
+
+    public function scopeOwnedByCustomer($q, $customerId)
+    {
+        return $q->whereHas('ownership', function ($sub) use ($customerId) {
+            $sub->where('owner_type', 'customer')
+                ->where('owner_id', $customerId);
+        });
     }
 }

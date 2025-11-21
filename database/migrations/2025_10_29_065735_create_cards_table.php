@@ -17,7 +17,6 @@ return new class extends Migration {
              --------------------------------------------------------------*/
             $table->string('product_code')->unique();
             $table->string('item_code')->nullable();
-            $table->string('item_name')->nullable();
             $table->decimal('quantity', 10, 2)->default(1);
 
             /* --------------------------------------------------------------

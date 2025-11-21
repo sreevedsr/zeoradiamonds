@@ -16,8 +16,9 @@
             <button type="button" @click="open = false" class="p-2 rounded-full">✕</button>
         </div>
 
-        <form x-ref="saleItemForm" x-data="addSaleItemModal()" x-init="lookupUrl = '<?php echo e(route('admin.products.lookup')); ?>'"
-            @submit.prevent="addItem(); open = false" class="p-6 space-y-6 overflow-y-auto max-h-[75vh]">
+        <form x-ref="saleItemForm" x-data="addSaleItemModal()" @submit.prevent="addItem(); open = false"
+            class="p-6 space-y-6 overflow-y-auto max-h-[75vh]">
+
             <!-- GRID -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
 
@@ -50,7 +51,7 @@
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\App\View\Components\Input\Text::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['label' => 'Barcode','model' => 'item.barcode','placeholder' => 'Scan barcode']); ?>
+<?php $component->withAttributes(['label' => 'Barcode','model' => 'item.barcode','readonly' => true]); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8)): ?>
@@ -62,31 +63,35 @@
 <?php unset($__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8); ?>
 <?php endif; ?>
 
-                <!-- Product Lookup -->
-                <div x-data="productSelector()" x-init="init()" class="relative" @click.outside="open = false">
+                <!-- Product Dropdown -->
+                <div x-data="searchableDropdown({
+                    apiUrl: '<?php echo e(route('admin.dropdown.fetch', ['type' => 'sale_products'])); ?>',
+                    optionLabel: 'item_name',
+                    optionValue: 'id'
+                })" @dropdown-selected.window="handleProductSelect" class="relative"
+                    @click.outside="open = false">
 
-                    <label class="text-sm font-medium text-gray-700 dark:text-gray-200">Product</label>
+                    <label class="text-sm font-medium text-gray-700 dark:text-gray-200">
+                        Product
+                    </label>
 
                     <input type="text" x-model="searchQuery" placeholder="Search Product" @focus="open = true"
                         @input="filterOptions()"
-                        @keydown.enter.prevent="
-            if (filteredOptions.length > 0) {
-                select(filteredOptions[0]);
-            }
-        "
+                        @keydown.enter.prevent="filteredOptions.length ? select(filteredOptions[0]) : null"
                         class="input-field w-full rounded-md border border-gray-300 px-3 py-2
-            focus:ring-2 focus:ring-purple-600 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100" />
+                               focus:ring-2 focus:ring-purple-600 dark:border-gray-600
+                               dark:bg-gray-700 dark:text-gray-100" />
 
                     <!-- Dropdown -->
                     <div x-show="open" x-transition
                         class="absolute z-10 mt-1 w-full max-h-60 overflow-y-auto rounded-md
-            bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700">
+                               bg-white dark:bg-gray-800 shadow-lg border dark:border-gray-700">
 
                         <template x-if="filteredOptions.length > 0">
                             <template x-for="option in filteredOptions" :key="option.id">
                                 <div @click="select(option)"
                                     class="px-3 py-2 cursor-pointer text-sm hover:bg-purple-100 dark:hover:bg-purple-700/40">
-                                    <span x-text="option.item_code"></span> —
+                                    <span x-text="option.product_code"></span> —
                                     <span class="text-gray-500 text-xs" x-text="option.item_name"></span>
                                 </div>
                             </template>
@@ -97,10 +102,11 @@
                                 No results found
                             </div>
                         </template>
+
                     </div>
                 </div>
 
-                <!-- All fields now correctly read from item -->
+                <!-- Filled Fields -->
                 <?php if (isset($component)) { $__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8 = $attributes; } ?>
 <?php $component = App\View\Components\Input\Text::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
@@ -302,30 +308,10 @@
 <?php $component = $__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8; ?>
 <?php unset($__componentOriginalc8d1187b2ef4f66f642fdbe432c184c8); ?>
 <?php endif; ?>
+
             </div>
 
-            <!-- Taxes -->
-            <div class="border-t pt-4 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                <template x-if="item.intraState">
-                    <div class="grid grid-cols-2 gap-3 col-span-full">
-                        <div>
-                            <div class="text-xs">CGST</div>
-                            <div x-text="item.cgst"></div>
-                        </div>
-                        <div>
-                            <div class="text-xs">SGST</div>
-                            <div x-text="item.sgst"></div>
-                        </div>
-                    </div>
-                </template>
 
-                <template x-if="!item.intraState">
-                    <div>
-                        <div class="text-xs">IGST</div>
-                        <div x-text="item.igst"></div>
-                    </div>
-                </template>
-            </div>
 
             <div class="flex justify-end gap-3 pt-4 border-t">
                 <?php if (isset($component)) { $__componentOriginal3b0e04e43cf890250cc4d85cff4d94af = $component; } ?>
@@ -355,58 +341,4 @@
     </div>
 
 </div>
-
-<script>
-    function productSelector() {
-        return {
-            open: false,
-            searchQuery: "",
-            options: [],
-            filteredOptions: [],
-            selected: null,
-
-            init() {
-                console.log("SENDING PRODUCT CODE:", this.item.barcode);
-
-                // Load lightweight product list from cards table
-                fetch("<?php echo e(route('admin.dropdown.fetch', ['type' => 'products'])); ?>")
-                    .then(res => res.json())
-                    .then(data => {
-                        this.options = data;
-                        this.filteredOptions = data;
-                    });
-            },
-
-            filterOptions() {
-                const q = this.searchQuery.toLowerCase().trim();
-                this.filteredOptions = this.options.filter(o =>
-                    o.item_code.toLowerCase().includes(q) ||
-                    o.item_name.toLowerCase().includes(q)
-                );
-            },
-
-            select(option) {
-                this.selected = option;
-                this.searchQuery = option.item_code + " - " + option.item_name; // display only
-
-                // Store the REAL product code separately
-                this.selectedProductCode = option.product_code;
-                this.open = false;
-
-                // Fetch full details from cards table
-                fetch("/admin/card/" + option.id)
-                    .then(res => res.json())
-                    .then(card => {
-                        // Update parent modal's item
-                        const event = new CustomEvent("card-loaded", {
-                            detail: {
-                                card
-                            }
-                        });
-                        window.dispatchEvent(event);
-                    });
-            }
-        };
-    }
-</script>
 <?php /**PATH C:\xampp\htdocs\zeoradiamonds\resources\views/admin/sales/partials/add-item-modal.blade.php ENDPATH**/ ?>

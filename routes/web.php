@@ -25,6 +25,13 @@ use App\Http\Controllers\MerchantRequestController;
 use App\Http\Controllers\TempPurchaseItemController;
 
 
+Route::get('/admin/debug/cards', function () {
+    return [
+        'cards' => \App\Models\Card::all(),
+        'ownerships' => \App\Models\CardOwnership::all(),
+        'admin_owned_cards' => \App\Models\Card::ownedByAdmin()->get(),
+    ];
+});
 
 // Redirect root URL to login or dashboard
 Route::get('/', function () {

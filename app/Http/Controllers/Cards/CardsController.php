@@ -26,22 +26,45 @@ class CardsController extends Controller
         return view('admin.purchases.index', compact('cards'));
     }
 
-    public function lookup(Request $request)
-    {
-        $search = $request->get('q');
+public function lookup(Request $request)
+{
+    $search = $request->get('q');
+    $user = Auth::user();
 
-        $products = \DB::table('cards')
-            ->leftJoin('products', 'cards.item_code', 'products.item_code')
-            ->select('cards.*', 'products.hsn_code')
-            ->when($search, function ($q) use ($search) {
-                $q->where('cards.product_code', 'like', "%{$search}%")
-                  ->orWhere('cards.item_name', 'like', "%{$search}%");
-            })
-            ->limit(25)
-            ->get();
+    $query = \DB::table('cards')
+        ->leftJoin('products', 'cards.item_code', 'products.item_code')
+        ->join('card_ownerships', 'cards.id', '=', 'card_ownerships.card_id')
+        ->select('cards.*', 'products.hsn_code');
 
-        return response()->json($products);
+    // -----------------------------
+    //  OWNERSHIP FILTER
+    // -----------------------------
+    if ($user->role === 'admin') {
+
+        // Admin should ONLY see admin-owned cards
+        $query->where('card_ownerships.owner_type', 'admin');
+
+    } else if ($user->role === 'merchant') {
+
+        // Merchant should only see THEIR cards
+        $query->where('card_ownerships.owner_type', 'merchant')
+              ->where('card_ownerships.owner_id', $user->id);
     }
+
+    // -----------------------------
+    //  SEARCH FILTER (safe)
+    // -----------------------------
+    if ($search) {
+        $query->where(function ($q) use ($search) {
+            $q->where('cards.product_code', 'like', "%{$search}%")
+              ->orWhere('cards.item_name', 'like', "%{$search}%");
+        });
+    }
+
+    $products = $query->limit(25)->get();
+
+    return response()->json($products);
+}
 
     public function edit($id)
     {

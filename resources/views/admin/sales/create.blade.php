@@ -41,7 +41,8 @@
             <div x-data="searchableDropdown({
                 apiUrl: '{{ route('admin.dropdown.fetch', ['type' => 'merchants']) }}',
                 optionLabel: 'name',
-                optionValue: 'id'})" x-init="init()" class="relative mt-8" @click.outside="open = false">
+                optionValue: 'id'
+            })" x-init="init()" class="relative mt-8" @click.outside="open = false">
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
                     Select Merchant (Name / Code)
                 </label>
@@ -100,7 +101,7 @@
                 <template x-if="selected">
                     <div class="mt-6 rounded-2xl border border-gray-200 dark:border-gray-700
                bg-gradient-to-br from-gray-50 to-white dark:from-gray-800 dark:to-gray-900
-               p-6 shadow-md dark:shadow-lg dark:shadow-gray-900/40
+               p-6 dark:shadow-lg dark:shadow-gray-900/40
                transition-all duration-300 ease-in-out hover:shadow-lg"
                         x-transition.opacity.duration.300ms>
                         <!-- Header -->
@@ -224,8 +225,8 @@
                             <template x-for="(row, index) in items" :key="row.id">
                                 <tr class="hover:bg-gray-50 dark:hover:bg-gray-800 transition">
                                     <td class="px-4 py-2 text-sm" x-text="index + 1"></td>
-                                    <td class="px-4 py-2 text-sm" x-text="row.barcode"></td>
-                                    <td class="px-4 py-2 text-sm" x-text="row.item_name"></td>
+                                    <td x-text="row.product_code"></td>
+                                    <td x-text="row.card?.item_name"></td>
                                     <td class="px-4 py-2 text-sm" x-text="row.quantity"></td>
                                     <td class="px-4 py-2 text-sm" x-text="row.net_weight"></td>
                                     <td class="px-4 py-2 text-sm" x-text="row.net_amount"></td>
@@ -246,6 +247,31 @@
                     </tbody>
 
                 </table>
+            </div>
+                        <!-- Taxes -->
+            <div class="border-t pt-4 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+
+                <template x-if="item.intraState">
+                    <div class="grid grid-cols-2 gap-3 col-span-full">
+                        <div>
+                            <div class="text-xs">CGST</div>
+                            <div x-text="item.cgst"></div>
+                        </div>
+
+                        <div>
+                            <div class="text-xs">SGST</div>
+                            <div x-text="item.sgst"></div>
+                        </div>
+                    </div>
+                </template>
+
+                <template x-if="!item.intraState">
+                    <div>
+                        <div class="text-xs">IGST</div>
+                        <div x-text="item.igst"></div>
+                    </div>
+                </template>
+
             </div>
 
             <!-- Totals (use an instance to show count) -->
