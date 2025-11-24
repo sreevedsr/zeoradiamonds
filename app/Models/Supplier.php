@@ -18,8 +18,5 @@ class Supplier extends Model
         'state',
         'gst_no',
     ];
-    public function invoices()
-    {
-        return $this->hasMany(Invoice::class);
-    }
+
 }

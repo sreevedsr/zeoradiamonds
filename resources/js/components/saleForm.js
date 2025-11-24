@@ -14,17 +14,22 @@ export default function saleForm() {
 
             // Listen for inserted sale items
             window.addEventListener("add-sale-item", (e) => {
+                console.log("🔥 add-sale-item RECEIVED:", e.detail);
+
                 const item = e.detail;
 
                 // Prevent duplicate
-                if (this.items.some((i) => i.product_code === item.item_code)) {
-                    this.errorMessage = "This item is already added.";
+                if (
+                    this.items.some((i) => i.product_code === item.product_code)
+                ) {                    this.errorMessage = "This item is already added.";
                     return;
                 }
 
+                console.log("📦 Item used for pushing:", item);
+
                 this.items.push({
                     id: item.id || null,
-                    product_code: item.item_code,
+                    product_code: item.product_code,
                     item_name: item.item_name,
                     hsn_code: item.hsn,
                     net_weight: item.net_weight,
@@ -32,6 +37,11 @@ export default function saleForm() {
                     net_amount: item.net_amount,
                     total_amount: item.total_amount,
                 });
+
+                console.log(
+                    "📌 Items after push:",
+                    JSON.parse(JSON.stringify(this.items)),
+                );
 
                 this.updateBlockedProducts();
                 window.dispatchEvent(new CustomEvent("refresh-sale-products"));
@@ -99,12 +109,13 @@ export function inlineSaleItem() {
                 id: option.id,
                 si_no: option.id,
                 barcode: option.product_code,
-                item_code: option.product_code,
-                item_name: option.item_name,
 
+                item_code: option.item_code,
+                product_code: option.product_code,
+
+                item_name: option.item_name,
                 hsn: option.hsn_code,
                 quantity: 1,
-
                 net_weight: option.net_weight,
                 net_amount: option.total_amount,
                 total_amount: option.total_amount,
@@ -113,7 +124,7 @@ export function inlineSaleItem() {
 
         addToParent() {
             const form = new FormData();
-            form.append("product_code", this.item.item_code);
+            form.append("product_code", this.item.product_code);
 
             fetch("/admin/temp-sales", {
                 method: "POST",
@@ -128,11 +139,17 @@ export function inlineSaleItem() {
                 .then((res) => res.json())
                 .then((temp) => {
                     window.dispatchEvent(
-                        new CustomEvent("add-sale-item", { detail: temp }),
+                        new CustomEvent("add-sale-item", {
+                            detail: temp,
+                        }),
                     );
-                    window.dispatchEvent(
-                        new CustomEvent("refresh-sale-products"),
-                    );
+
+                    this.$nextTick(() => {
+                        window.dispatchEvent(
+                            new CustomEvent("refresh-sale-products"),
+                        );
+                    });
+
                     window.dispatchEvent(
                         new CustomEvent("reset-product-dropdown"),
                     );

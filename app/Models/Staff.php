@@ -16,9 +16,5 @@ class Staff extends Model
         'phone_no',
     ];
 
-    public function invoices()
-    {
-        return $this->hasMany(Invoice::class);
-    }
 }
 

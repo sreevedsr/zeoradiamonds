@@ -314,9 +314,7 @@
                 apiUrl: '<?php echo e(route('admin.dropdown.fetch', ['type' => 'sale_products'])); ?>'
             })" @click.outside="open = false" class="relative md:w-1/2 mb-6">
 
-                <label class="text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
-                    Select Product
-                </label>
+                <h3 class="text-lg font-semibold mb-4">Select Product</h3>
 
                 <input type="text" x-model="searchQuery" @focus="open = true" @input="filterOptions()"
                     placeholder="Search product..."
@@ -559,7 +557,7 @@
                             <th class="px-4 py-2 text-left text-sm font-medium">#</th>
                             
                             <th class="px-4 py-2 text-left text-sm font-medium">Product Code</th>
-                            <th class="px-4 py-2 text-sm font-medium">Qty</th>
+                            
                             <th class="px-4 py-2 text-sm font-medium">Net Wt</th>
                             <th class="px-4 py-2 text-sm font-medium">Net Amount</th>
                             <th class="px-4 py-2 text-right text-sm font-medium">Total</th>
@@ -572,12 +570,12 @@
 
                         <!-- If items available -->
                         <template x-if="items.length > 0">
-                            <template x-for="(row, index) in items" :key="row.id">
+                            <template x-for="(row, index) in items" :key="row.id ?? row.product_code ?? index">
                                 <tr class="hover:bg-gray-50 dark:hover:bg-gray-800 transition">
                                     <td class="px-4 py-2 text-sm" x-text="index + 1"></td>
                                     <td x-text="row.product_code"></td>
                                     
-                                    <td class="px-4 py-2 text-sm" x-text="row.quantity"></td>
+                                    
                                     <td class="px-4 py-2 text-sm" x-text="row.net_weight"></td>
                                     <td class="px-4 py-2 text-sm" x-text="row.net_amount"></td>
                                     <td class="px-4 py-2 text-right text-sm" x-text="row.total_amount"></td>

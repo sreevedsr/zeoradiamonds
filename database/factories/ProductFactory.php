@@ -14,4 +14,5 @@ class ProductFactory extends Factory
             'item_name' => $this->faker->word(),
         ];
     }
+
 }

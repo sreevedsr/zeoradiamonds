@@ -10,10 +10,11 @@ class CardFactory extends Factory
 {
     public function definition()
     {
+        $product = Product::factory()->create();
         return [
             'purchase_invoice_id' => PurchaseInvoice::factory(),
             'product_code' => strtoupper($this->faker->unique()->bothify('PRD####')),
-            'item_code' => Product::factory(),
+            'item_code' => $product->item_code,
             'quantity' => 1,
 
             'gross_weight' => $this->faker->randomFloat(3, 1, 50),
