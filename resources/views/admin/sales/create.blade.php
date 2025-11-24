@@ -299,7 +299,7 @@
             </div>
 
             <!-- PRODUCT DETAILS CARD -->
-            <template x-if="selected">
+            <template x-if="selectedProduct">
                 <div class="mt-4 p-5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900">
 
                     <h4 class="text-md font-semibold mb-3 text-gray-900 dark:text-gray-200">

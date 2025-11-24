@@ -138,7 +138,7 @@ export default function saleForm() {
 */
 export function inlineSaleItem() {
     return {
-        selected: null,
+        selectedProduct: null,
         item: {},
 
         handleProduct(option) {

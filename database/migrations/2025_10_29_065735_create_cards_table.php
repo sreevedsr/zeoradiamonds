@@ -57,7 +57,6 @@ return new class extends Migration {
             $table->string('color', 10)->nullable();
             $table->string('clarity', 50)->nullable();
             $table->string('cut', 100)->nullable();
-            $table->string('certificate_code')->nullable();
 
             /* --------------------------------------------------------------
              |  Images

@@ -35,7 +35,6 @@ class Card extends Model
         'color',
         'clarity',
         'cut',
-        'certificate_code',
         'certificate_image',
         'product_image',
     ];
