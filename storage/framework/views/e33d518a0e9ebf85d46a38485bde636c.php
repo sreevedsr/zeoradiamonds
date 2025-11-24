@@ -8,14 +8,14 @@
 
         <?php if (isset($component)) { $__componentOriginald411d1792bd6cc877d687758b753742c = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginald411d1792bd6cc877d687758b753742c = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.primary-button','data' => ['type' => 'button','id' => 'add-item-btn','tabindex' => '5','@click' => 'showModal = true']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.primary-button','data' => ['type' => 'button','id' => 'add-item-btn','tabindex' => '5','@click' => 'showModal = true; window.dispatchEvent(new Event(\'open-purchase-modal\'))']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('primary-button'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['type' => 'button','id' => 'add-item-btn','tabindex' => '5','@click' => 'showModal = true']); ?>
+<?php $component->withAttributes(['type' => 'button','id' => 'add-item-btn','tabindex' => '5','@click' => 'showModal = true; window.dispatchEvent(new Event(\'open-purchase-modal\'))']); ?>
             
             Add Item
          <?php echo $__env->renderComponent(); ?>

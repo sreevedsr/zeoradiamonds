@@ -1,37 +1,34 @@
 export default function addSaleItemModal() {
     return {
         item: {},
+        productSelected: false,
 
         init() {
             window.addEventListener("open-sale-modal", () => {
                 this.resetItem();
             });
+        },
 
-            window.handleProductSelect = (e) => {
-                const c = e.detail.selected;
+        handleProductSelect(event) {
+            const c = event.detail.selected;
 
-                // Core mapping
-                this.item.card_id = c.id;
-                this.item.barcode = c.product_code;
-                this.item.product_code = c.product_code;
-
-                this.item.item_code = c.item_code;
-
-                // NEW → Item name from products table
-                this.item.item_name = c.item_name;
-
-                // NEW → HSN code from products table
-                this.item.hsn = c.hsn_code;
-
-                this.item.quantity = 1;
-                this.item.gross_weight = c.gross_weight;
-                this.item.stone_weight = c.stone_weight;
-                this.item.diamond_weight = c.diamond_weight;
-                this.item.net_weight = c.net_weight;
-
-                this.item.net_amount = c.net_amount ?? c.total_amount;
-                this.item.total_amount = c.total_amount;
+            this.item = {
+                card_id: c.id,
+                barcode: c.product_code,
+                product_code: c.product_code,
+                item_code: c.item_code,
+                item_name: c.item_name,
+                hsn: c.hsn_code,
+                quantity: 1,
+                gross_weight: c.gross_weight,
+                stone_weight: c.stone_weight,
+                diamond_weight: c.diamond_weight,
+                net_weight: c.net_weight,
+                net_amount: c.net_amount ?? c.total_amount,
+                total_amount: c.total_amount,
             };
+
+            this.productSelected = true;
         },
 
         async addItem() {
@@ -54,10 +51,8 @@ export default function addSaleItemModal() {
                 return;
             }
 
-            // This already contains the FLAT joined card data
             const temp = await res.json();
 
-            // Dispatch final structure directly (no remapping)
             document.dispatchEvent(
                 new CustomEvent("add-sale-item", {
                     bubbles: true,
@@ -65,12 +60,12 @@ export default function addSaleItemModal() {
                 }),
             );
 
-            // Refresh dropdown
             document.dispatchEvent(new CustomEvent("refresh-sale-products"));
         },
 
         resetItem() {
             this.item = {};
+            this.productSelected = false;
         },
     };
 }

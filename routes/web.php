@@ -68,6 +68,7 @@ Route::middleware('auth')->group(function () {
             ['Content-Type' => 'image/svg+xml']
         );
     })->where('id', '[0-9]+');
+
     Route::get('/scan/{id}', function ($id) {
 
         $item = TempPurchaseItem::findOrFail($id);
@@ -82,9 +83,6 @@ Route::middleware('auth')->group(function () {
             'gold_rate' => $goldRate, // always LIVE
         ]);
     });
-
-
-
 
     // ================================
     // Admin-only routes
@@ -103,6 +101,18 @@ Route::middleware('auth')->group(function () {
 
         Route::post('sales/finalize', [SaleAssignController::class, 'finalize'])->name('admin.sales.finalize');
 
+        Route::prefix('reports')->name('reports.')->group(function () {
+
+            Route::get('/purchase', [CardsController::class, 'index'])
+                ->name('purchase');
+
+            Route::get('/sales', [\App\Http\Controllers\Admin\Reports\SalesReportController::class, 'index'])
+                ->name('sales');
+
+            Route::get('/salesman', [\App\Http\Controllers\Admin\Reports\SalesmanReportController::class, 'index'])
+                ->name('salesman');
+
+        });
 
         Route::middleware(['auth', 'can:edit-cards'])->prefix('products')->name('products.')->group(function () {
             Route::get('register', [ProductController::class, 'create'])->name('register');

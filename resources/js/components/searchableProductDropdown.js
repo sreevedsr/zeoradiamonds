@@ -20,7 +20,7 @@ export default function searchableProductDropdown(config = {}) {
                 const blocked = e.detail.blocked || [];
 
                 this.filteredOptions = this.options.filter(
-                    (p) => !blocked.includes(p.product_code)
+                    (p) => !blocked.includes(p.product_code),
                 );
             });
         },
@@ -32,7 +32,7 @@ export default function searchableProductDropdown(config = {}) {
 
                 this.options = Array.isArray(data)
                     ? data
-                    : data.data ?? data.results ?? [];
+                    : (data.data ?? data.results ?? []);
 
                 this.filteredOptions = this.options;
             } catch (e) {
@@ -46,14 +46,9 @@ export default function searchableProductDropdown(config = {}) {
             const q = this.searchQuery.toLowerCase();
 
             this.filteredOptions = this.options.filter((p) =>
-                [
-                    p.product_code,
-                    p.item_name,
-                    p.item_code,
-                    p.hsn_code,
-                ]
+                [p.product_code, p.item_name, p.item_code, p.hsn_code]
                     .filter(Boolean)
-                    .some((v) => String(v).toLowerCase().includes(q))
+                    .some((v) => String(v).toLowerCase().includes(q)),
             );
         },
 
@@ -62,7 +57,11 @@ export default function searchableProductDropdown(config = {}) {
             this.searchQuery = option.item_name;
             this.open = false;
 
-            this.$dispatch("dropdown-selected", { selected: option });
+            window.dispatchEvent(
+                new CustomEvent("dropdown-selected", {
+                    detail: { selected: option },
+                }),
+            );
         },
     };
 }

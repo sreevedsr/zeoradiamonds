@@ -3,6 +3,9 @@ export default function purchaseForm(globalGoldRate, globalDiamondRate) {
     return {
         errors: {},
 
+        // -----------------------------
+        // Validation
+        // -----------------------------
         validateItem() {
             this.errors = {};
 
@@ -10,9 +13,7 @@ export default function purchaseForm(globalGoldRate, globalDiamondRate) {
             this.item.gold_rate = this.gold_rate;
             this.item.diamond_rate = this.diamond_rate;
 
-            /* ------------------------------
-             * REQUIRED TEXT FIELDS
-             * ------------------------------ */
+            // Required Text Fields
             const requiredText = [
                 "product_code",
                 "item_code",
@@ -24,17 +25,12 @@ export default function purchaseForm(globalGoldRate, globalDiamondRate) {
             ];
 
             requiredText.forEach((field) => {
-                if (
-                    !this.item[field] ||
-                    this.item[field].toString().trim() === ""
-                ) {
+                if (!this.item[field] || this.item[field].toString().trim() === "") {
                     this.errors[field] = "This field is required.";
                 }
             });
 
-            /* ------------------------------
-             * REQUIRED NUMERIC FIELDS (> 0)
-             * ------------------------------ */
+            // Required Numeric Fields (>0)
             const requiredNumbers = [
                 "quantity",
                 "gross_weight",
@@ -57,10 +53,7 @@ export default function purchaseForm(globalGoldRate, globalDiamondRate) {
                 }
             });
 
-            /* ------------------------------
-             * OPTIONAL NUMERIC FIELDS
-             * (CAN BE 0 BUT NOT NEGATIVE)
-             * ------------------------------ */
+            // Optional Numeric Fields (>= 0)
             const optionalNumbers = ["retail_percent", "mrp_percent"];
 
             optionalNumbers.forEach((field) => {
@@ -70,64 +63,33 @@ export default function purchaseForm(globalGoldRate, globalDiamondRate) {
                 }
             });
 
-            /* ------------------------------
-             * IMAGE VALIDATION
-             * ------------------------------ */
-            if (
-                this.item.certificate_image &&
-                !(this.item.certificate_image instanceof File)
-            ) {
+            // Images
+            if (this.item.certificate_image && !(this.item.certificate_image instanceof File)) {
                 this.errors.certificate_image = "Invalid certificate image.";
             }
 
-            if (
-                this.item.product_image &&
-                !(this.item.product_image instanceof File)
-            ) {
+            if (this.item.product_image && !(this.item.product_image instanceof File)) {
                 this.errors.product_image = "Invalid product image.";
             }
 
-            /* ------------------------------
-             * SPECIAL CASES
-             * ------------------------------ */
-
-            // Net Weight: Must be > 0
+            // Net weight
             const netWeight = parseFloat(this.item.net_weight);
             if (isNaN(netWeight) || netWeight <= 0) {
                 this.errors.net_weight = "Net weight must be greater than 0.";
             }
 
-            // Retail % → retail_cost must match formula if value exists
-            if (this.item.retail_percent && this.item.landing_cost > 0) {
-                const expected =
-                    (this.item.landing_cost * this.item.retail_percent) / 100;
-                if (expected <= 0) {
-                    this.errors.retail_percent = "Invalid retail percentage.";
-                }
-            }
-
-            // MRP % → mrp_cost must match formula if value exists
-            if (this.item.mrp_percent && this.item.landing_cost > 0) {
-                const expected =
-                    (this.item.landing_cost * this.item.mrp_percent) / 100;
-                if (expected <= 0) {
-                    this.errors.mrp_percent = "Invalid MRP percentage.";
-                }
-            }
-
-            /* ------------------------------
-             * RETURN
-             * ------------------------------ */
             return Object.keys(this.errors).length === 0;
         },
 
-        // --- Accordion UI State ---
+        // -----------------------------
+        // UI State
+        // -----------------------------
         accordion: {
             purchaseOpen: true,
             cardOpen: false,
         },
 
-        // --- Main Item Object (UI clean, backend-safe) ---
+        // Main Item Object
         item: {
             product_code: "",
             item_code: "",
@@ -149,7 +111,6 @@ export default function purchaseForm(globalGoldRate, globalDiamondRate) {
             total_amount: "",
             landing_cost: "",
 
-            // Final standardized fields
             retail_percent: "",
             retail_cost: "",
             mrp_percent: "",
@@ -164,18 +125,21 @@ export default function purchaseForm(globalGoldRate, globalDiamondRate) {
             notes: "",
         },
 
-        // --- UI Panels ---
+        // Other UI flags
         shapePanel: false,
         shapePanelOpen: false,
 
-        // --- Lifecycle ---
+        // -----------------------------
+        // Lifecycle
+        // -----------------------------
         init() {
+            // Dropdown sync
             window.addEventListener("dropdown-selected", (e) => {
                 this.item.item_code = e.detail.selected.item_code;
                 this.item.item_name = e.detail.selected.item_name;
             });
 
-            // Only watch input fields — not computed ones
+            // Watch real fields
             const watchedFields = [
                 "item.gross_weight",
                 "item.stone_weight",
@@ -194,10 +158,13 @@ export default function purchaseForm(globalGoldRate, globalDiamondRate) {
                 this.$watch(field, () => this.recalculateAll());
             });
 
+            // Recalculate once on init
             this.recalculateAll();
         },
 
-        // --- Utility Helpers ---
+        // -----------------------------
+        // Utility Helpers
+        // -----------------------------
         safeNumber(value) {
             const num = parseFloat(value);
             return isNaN(num) ? 0 : num;
@@ -205,14 +172,13 @@ export default function purchaseForm(globalGoldRate, globalDiamondRate) {
 
         diamondWeightInGrams() {
             const carats = parseFloat(this.item.diamond_weight);
-            return isNaN(carats) || carats <= 0
-                ? 0
-                : +(carats * 0.002).toFixed(3);
+            return isNaN(carats) || carats <= 0 ? 0 : +(carats * 0.002).toFixed(3);
         },
 
-        // --- Derived Computations ---
+        // -----------------------------
+        // Derived Computations
+        // -----------------------------
         recalculateAll() {
-            // compute values first
             const newNet = this.calculateNetWeight();
             const newGold = this.calculateGoldComponent(newNet);
             const newTotal = this.calculateTotalAmount(newGold);
@@ -220,60 +186,31 @@ export default function purchaseForm(globalGoldRate, globalDiamondRate) {
             const newRetail = this.calculateRetailCost(newLanding);
             const newMrp = this.calculateMrpCost(newLanding);
 
-            // only update if changed (prevents loops)
             if (this.item.net_weight !== newNet) this.item.net_weight = newNet;
-            if (this.item.gold_component !== newGold)
-                this.item.gold_component = newGold;
-            if (this.item.total_amount !== newTotal)
-                this.item.total_amount = newTotal;
-            if (this.item.landing_cost !== newLanding)
-                this.item.landing_cost = newLanding;
-            if (this.item.retail_cost !== newRetail)
-                this.item.retail_cost = newRetail;
+            if (this.item.gold_component !== newGold) this.item.gold_component = newGold;
+            if (this.item.total_amount !== newTotal) this.item.total_amount = newTotal;
+            if (this.item.landing_cost !== newLanding) this.item.landing_cost = newLanding;
+            if (this.item.retail_cost !== newRetail) this.item.retail_cost = newRetail;
             if (this.item.mrp_cost !== newMrp) this.item.mrp_cost = newMrp;
         },
 
         calculateNetWeight() {
             const g = this.safeNumber(this.item.gross_weight);
             const s = this.safeNumber(this.item.stone_weight);
-            const d = this.diamondWeightInGrams(); // convert carats to grams
+            const d = this.diamondWeightInGrams();
             const result = g - (s + d);
             return result > 0 ? +result.toFixed(3) : 0;
         },
 
         calculateGoldComponent(netWeight = this.item.net_weight) {
-            const net = this.safeNumber(netWeight);
-            const rate = this.safeNumber(this.gold_rate);
-            console.log("Gold " + (net * rate).toFixed(2));
-            return +(net * rate).toFixed(2);
+            return +(this.safeNumber(netWeight) * this.safeNumber(this.gold_rate)).toFixed(2);
         },
-
-        // async fetchGoldRate() {
-        //     try {
-        //         const res = await fetch("/admin/api/latest-gold-rate");
-        //         const data = await res.json();
-        //         this.item.gold_rate = data.rate ?? 0;
-        //         console.log("Fetched Gold Rate:", this.item.gold_rate);
-        //     } catch (e) {
-        //         console.error("Failed to fetch gold rate:", e);
-        //     }
-        // },
-
-        // async fetchDiamondRate() {
-        //     try {
-        //         const res = await fetch("/admin/api/latest-diamond-rate");
-        //         const data = await res.json();
-        //         this.item.diamond_rate = data.rate ?? 0;
-        //         console.log("Fetched Diamond Rate:", this.item.diamond_rate);
-        //     } catch (e) {
-        //         console.error("Failed to fetch diamond rate:", e);
-        //     }
-        // },
 
         calculateTotalAmount(goldComponent = this.item.gold_component) {
             const gold = this.safeNumber(goldComponent);
             const stone = this.safeNumber(this.item.stone_amount);
             const diamond = this.safeNumber(this.diamond_rate);
+
             const charges =
                 this.safeNumber(this.item.making_charge) +
                 this.safeNumber(this.item.card_charge) +
@@ -282,37 +219,24 @@ export default function purchaseForm(globalGoldRate, globalDiamondRate) {
             return +(gold + stone + diamond + charges).toFixed(2);
         },
 
-        calculateLandingCost(
-            total = this.item.total_amount,
-            gold = this.item.gold_component,
-        ) {
-            console.log("🔍 calculateLandingCost() called with:");
-            console.log("   total_amount:", total);
-            console.log("   gold_component:", gold);
-
-            const suggested = this.safeNumber(total) - this.safeNumber(gold);
-
-            console.log("   safe total:", this.safeNumber(total));
-            console.log("   safe gold:", this.safeNumber(gold));
-            console.log(
-                "   calculated landing cost:",
-                suggested > 0 ? +suggested.toFixed(2) : 0,
-            );
-            console.log("--------------------------------------");
-
-            return suggested > 0 ? +suggested.toFixed(2) : 0;
+        calculateLandingCost(total = this.item.total_amount, gold = this.item.gold_component) {
+            const val = this.safeNumber(total) - this.safeNumber(gold);
+            return val > 0 ? +val.toFixed(2) : 0;
         },
 
         calculateRetailCost(landing = this.item.landing_cost) {
-            const percent = this.safeNumber(this.item.retail_percent);
-            return +(landing * (1 + percent / 100)).toFixed(2);
+            const p = this.safeNumber(this.item.retail_percent);
+            return +(landing * (1 + p / 100)).toFixed(2);
         },
 
         calculateMrpCost(landing = this.item.landing_cost) {
-            const percent = this.safeNumber(this.item.mrp_percent);
-            return +(landing * (1 + percent / 100)).toFixed(2);
+            const p = this.safeNumber(this.item.mrp_percent);
+            return +(landing * (1 + p / 100)).toFixed(2);
         },
 
+        // -----------------------------
+        // Barcode
+        // -----------------------------
         generateBarcodeData() {
             return JSON.stringify({
                 pc: this.item.product_code,
@@ -320,6 +244,7 @@ export default function purchaseForm(globalGoldRate, globalDiamondRate) {
                 gr: this.gold_rate,
             });
         },
+
         formatCurrency(value) {
             const num = parseFloat(value);
             if (isNaN(num)) return "₹0.00";
@@ -332,6 +257,9 @@ export default function purchaseForm(globalGoldRate, globalDiamondRate) {
             );
         },
 
+        // -----------------------------
+        // Add Item Handler
+        // -----------------------------
         async addItem() {
             if (!this.validateItem()) {
                 console.warn("Validation failed:", this.errors);
@@ -344,37 +272,30 @@ export default function purchaseForm(globalGoldRate, globalDiamondRate) {
                 const response = await fetch("/admin/temp-items", {
                     method: "POST",
                     headers: {
-                        "X-CSRF-TOKEN": document.querySelector(
-                            "meta[name=csrf-token]",
-                        ).content,
+                        "X-CSRF-TOKEN": document.querySelector("meta[name=csrf-token]").content,
                         "Content-Type": "application/json",
                     },
                     body: JSON.stringify(this.item),
                 });
 
-                // 422 → Validation failed (show inline error, not alert)
                 if (response.status === 422) {
                     const result = await response.json();
-
-                    // Backend unique check message
                     if (result.error) {
                         this.$nextTick(() => {
                             this.errors.product_code = result.error;
                         });
                     }
-
-                    return; // stop, no alert, no modal close
+                    return;
                 }
 
-                // Non-validation errors → optional logging
                 if (!response.ok) {
                     console.error("Server Response:", await response.text());
                     return;
                 }
 
-                // Success
                 window.dispatchEvent(new CustomEvent("refresh-temp-items"));
                 this.resetItem();
+
                 this.$nextTick(() => {
                     window.dispatchEvent(new Event("close-purchase-modal"));
                 });
@@ -382,10 +303,15 @@ export default function purchaseForm(globalGoldRate, globalDiamondRate) {
                 console.error("Add Item Error:", error);
             }
         },
+
+        // -----------------------------
+        // Reset Item
+        // -----------------------------
         resetItem() {
             Object.keys(this.item).forEach((key) => {
                 this.item[key] = typeof this.item[key] === "number" ? 0 : "";
             });
+
             this.item.quantity = 1;
         },
     };

@@ -21,50 +21,65 @@ class CardsController extends Controller
                 });
             })
             ->orderByDesc('created_at')
-            ->paginate(10);
+            ->paginate(25);
 
-        return view('admin.purchases.index', compact('cards'));
+        $suppliers = \App\Models\Supplier::pluck('name', 'id');
+
+        $cards = Card::with('purchaseInvoice')
+            ->when(
+                request('filter'),
+                fn($q) =>
+                $q->whereHas(
+                    'purchaseInvoice',
+                    fn($p) =>
+                    $p->where('supplier_id', request('filter'))
+                )
+            )
+            ->paginate(25);
+
+
+        return view('admin.reports.purchase', compact('cards','suppliers'));
     }
 
-public function lookup(Request $request)
-{
-    $search = $request->get('q');
-    $user = Auth::user();
+    public function lookup(Request $request)
+    {
+        $search = $request->get('q');
+        $user = Auth::user();
 
-    $query = \DB::table('cards')
-        ->leftJoin('products', 'cards.item_code', 'products.item_code')
-        ->join('card_ownerships', 'cards.id', '=', 'card_ownerships.card_id')
-        ->select('cards.*', 'products.hsn_code');
+        $query = \DB::table('cards')
+            ->leftJoin('products', 'cards.item_code', 'products.item_code')
+            ->join('card_ownerships', 'cards.id', '=', 'card_ownerships.card_id')
+            ->select('cards.*', 'products.hsn_code');
 
-    // -----------------------------
-    //  OWNERSHIP FILTER
-    // -----------------------------
-    if ($user->role === 'admin') {
+        // -----------------------------
+        //  OWNERSHIP FILTER
+        // -----------------------------
+        if ($user->role === 'admin') {
 
-        // Admin should ONLY see admin-owned cards
-        $query->where('card_ownerships.owner_type', 'admin');
+            // Admin should ONLY see admin-owned cards
+            $query->where('card_ownerships.owner_type', 'admin');
 
-    } else if ($user->role === 'merchant') {
+        } else if ($user->role === 'merchant') {
 
-        // Merchant should only see THEIR cards
-        $query->where('card_ownerships.owner_type', 'merchant')
-              ->where('card_ownerships.owner_id', $user->id);
+            // Merchant should only see THEIR cards
+            $query->where('card_ownerships.owner_type', 'merchant')
+                ->where('card_ownerships.owner_id', $user->id);
+        }
+
+        // -----------------------------
+        //  SEARCH FILTER (safe)
+        // -----------------------------
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('cards.product_code', 'like', "%{$search}%")
+                    ->orWhere('cards.item_name', 'like', "%{$search}%");
+            });
+        }
+
+        $products = $query->limit(25)->get();
+
+        return response()->json($products);
     }
-
-    // -----------------------------
-    //  SEARCH FILTER (safe)
-    // -----------------------------
-    if ($search) {
-        $query->where(function ($q) use ($search) {
-            $q->where('cards.product_code', 'like', "%{$search}%")
-              ->orWhere('cards.item_name', 'like', "%{$search}%");
-        });
-    }
-
-    $products = $query->limit(25)->get();
-
-    return response()->json($products);
-}
 
     public function edit($id)
     {
@@ -74,7 +89,8 @@ public function lookup(Request $request)
 
     public function update(Request $request, $id)
     {
-        if (Auth::user()->role !== 'admin') abort(403);
+        if (Auth::user()->role !== 'admin')
+            abort(403);
 
         $validated = $request->validate([
             'product_code' => 'required|string|max:255',

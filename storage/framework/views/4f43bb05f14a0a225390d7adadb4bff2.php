@@ -1,0 +1,233 @@
+<?php if (isset($component)) { $__componentOriginal9ac128a9029c0e4701924bd2d73d7f54 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54 = $attributes; } ?>
+<?php $component = App\View\Components\AppLayout::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('app-layout'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\App\View\Components\AppLayout::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+    <?php $__env->slot('title', 'Diamond Certificates'); ?>
+
+    <?php
+        // Pre-calculate totals
+        $totalQty = $cards->sum('quantity');
+        $totalGross = $cards->sum('gross_weight');
+        $totalStone = $cards->sum('stone_weight');
+        $totalDiamond = $cards->sum('diamond_weight');
+        $totalNet = $cards->sum('net_weight');
+
+        $totalNetAmt = $cards->sum('total_amount');
+        $totalGST = $cards->sum(fn($c) => $c->total_amount * 0.03);
+        $grandTotal = $totalNetAmt + $totalGST;
+    ?>
+
+    <div class="bg-white px-6 py-2 shadow dark:bg-gray-800 rounded-lg">
+        <div class="mx-auto text-gray-900 dark:text-gray-100">
+
+            <?php if (isset($component)) { $__componentOriginal7d9f6e0b9001f5841f72577781b2d17f = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal7d9f6e0b9001f5841f72577781b2d17f = $attributes; } ?>
+<?php $component = App\View\Components\Table::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('table'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\App\View\Components\Table::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['headers' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute([
+                    'SI. No.',
+                    'Date',
+                    'Rate',
+                    'Total',
+                    'Qty',
+                    'Gross Wgt',
+                    'Stone Wgt',
+                    'Diamond Carat',
+                    'Net Wgt',
+                    'Net Amt',
+                    'GST',
+                    'Total (With GST)',
+                    'Actions'
+                ]),'collection' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($cards),'filters' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($suppliers),'route' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(route('admin.products.index')),'searchQuery' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(request('search', ''))]); ?>
+
+                <?php $__currentLoopData = $cards; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $card): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <tr class="text-gray-700 dark:text-gray-400">
+
+                        
+                        <td class="px-4 py-3 text-sm"><?php echo e($cards->firstItem() + $index); ?></td>
+
+                        
+                        <td class="px-4 py-3 text-sm">
+                            <?php echo e(optional($card->purchaseInvoice)->invoice_date); ?>
+
+                        </td>
+
+                        
+                        <td class="px-4 py-3 text-sm">
+                            <?php echo e($card->gold_rate + $card->diamond_rate); ?>
+
+                        </td>
+
+                        
+                        <td class="px-4 py-3 text-sm">
+                            <?php echo e(number_format($card->total_amount, 2)); ?>
+
+                        </td>
+
+                        
+                        <td class="px-4 py-3 text-sm"><?php echo e($card->quantity); ?></td>
+
+                        
+                        <td class="px-4 py-3 text-sm"><?php echo e($card->gross_weight); ?></td>
+
+                        
+                        <td class="px-4 py-3 text-sm"><?php echo e($card->stone_weight); ?></td>
+
+                        
+                        <td class="px-4 py-3 text-sm"><?php echo e($card->diamond_weight); ?></td>
+
+                        
+                        <td class="px-4 py-3 text-sm"><?php echo e($card->net_weight); ?></td>
+
+                        
+                        <td class="px-4 py-3 text-sm"><?php echo e(number_format($card->total_amount, 2)); ?></td>
+
+                        
+                        <td class="px-4 py-3 text-sm">
+                            <?php echo e(number_format($card->total_amount * 0.03, 2)); ?>
+
+                        </td>
+
+                        
+                        <td class="px-4 py-3 text-sm">
+                            <?php echo e(number_format($card->total_amount * 1.03, 2)); ?>
+
+                        </td>
+
+                        
+                        <td class="px-4 py-3 text-sm">
+                            <div class="flex items-center space-x-3">
+
+                                <a href="<?php echo e(route('admin.products.edit', $card->id)); ?>">
+                                    <?php if (isset($component)) { $__componentOriginal3b0e04e43cf890250cc4d85cff4d94af = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal3b0e04e43cf890250cc4d85cff4d94af = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.secondary-button','data' => ['type' => 'button']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('secondary-button'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['type' => 'button']); ?>Edit <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal3b0e04e43cf890250cc4d85cff4d94af)): ?>
+<?php $attributes = $__attributesOriginal3b0e04e43cf890250cc4d85cff4d94af; ?>
+<?php unset($__attributesOriginal3b0e04e43cf890250cc4d85cff4d94af); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal3b0e04e43cf890250cc4d85cff4d94af)): ?>
+<?php $component = $__componentOriginal3b0e04e43cf890250cc4d85cff4d94af; ?>
+<?php unset($__componentOriginal3b0e04e43cf890250cc4d85cff4d94af); ?>
+<?php endif; ?>
+                                </a>
+
+                                <?php if (isset($component)) { $__componentOriginal656e8c5ea4d9a4fa173298297bfe3f11 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal656e8c5ea4d9a4fa173298297bfe3f11 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.danger-button','data' => ['type' => 'button','xData' => true,'xOn:click.prevent' => '
+                                        $dispatch(\'open-modal\', \'confirm-delete-modal\');
+                                        document.getElementById(\'deleteMerchantForm\').action =
+                                            \''.e(route('admin.products.destroy', $card->id)).'\';
+                                    ']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('danger-button'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['type' => 'button','x-data' => true,'x-on:click.prevent' => '
+                                        $dispatch(\'open-modal\', \'confirm-delete-modal\');
+                                        document.getElementById(\'deleteMerchantForm\').action =
+                                            \''.e(route('admin.products.destroy', $card->id)).'\';
+                                    ']); ?>
+                                    Delete
+                                 <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal656e8c5ea4d9a4fa173298297bfe3f11)): ?>
+<?php $attributes = $__attributesOriginal656e8c5ea4d9a4fa173298297bfe3f11; ?>
+<?php unset($__attributesOriginal656e8c5ea4d9a4fa173298297bfe3f11); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal656e8c5ea4d9a4fa173298297bfe3f11)): ?>
+<?php $component = $__componentOriginal656e8c5ea4d9a4fa173298297bfe3f11; ?>
+<?php unset($__componentOriginal656e8c5ea4d9a4fa173298297bfe3f11); ?>
+<?php endif; ?>
+
+                            </div>
+                        </td>
+
+                    </tr>
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+
+                
+                <tr class="bg-gray-100 dark:bg-gray-700 font-semibold text-gray-900 dark:text-gray-100">
+                    <td colspan="4" class="px-4 py-3 text-right">Totals:</td>
+
+                    <td class="px-4 py-3"><?php echo e($totalQty); ?></td>
+                    <td class="px-4 py-3"><?php echo e($totalGross); ?></td>
+                    <td class="px-4 py-3"><?php echo e($totalStone); ?></td>
+                    <td class="px-4 py-3"><?php echo e($totalDiamond); ?></td>
+                    <td class="px-4 py-3"><?php echo e($totalNet); ?></td>
+
+                    <td class="px-4 py-3"><?php echo e(number_format($totalNetAmt, 2)); ?></td>
+                    <td class="px-4 py-3"><?php echo e(number_format($totalGST, 2)); ?></td>
+                    <td class="px-4 py-3"><?php echo e(number_format($grandTotal, 2)); ?></td>
+
+                    <td></td>
+                </tr>
+
+             <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal7d9f6e0b9001f5841f72577781b2d17f)): ?>
+<?php $attributes = $__attributesOriginal7d9f6e0b9001f5841f72577781b2d17f; ?>
+<?php unset($__attributesOriginal7d9f6e0b9001f5841f72577781b2d17f); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal7d9f6e0b9001f5841f72577781b2d17f)): ?>
+<?php $component = $__componentOriginal7d9f6e0b9001f5841f72577781b2d17f; ?>
+<?php unset($__componentOriginal7d9f6e0b9001f5841f72577781b2d17f); ?>
+<?php endif; ?>
+
+            <!-- Delete Modal -->
+            <?php if (isset($component)) { $__componentOriginale40048ea38c0c52002bb582aed451504 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginale40048ea38c0c52002bb582aed451504 = $attributes; } ?>
+<?php $component = App\View\Components\ConfirmDeleteModal::resolve(['action' => '#','title' => 'Confirm Deletion','message' => 'Are you sure you want to delete this certificate? This action cannot be undone.'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('confirm-delete-modal'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\App\View\Components\ConfirmDeleteModal::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginale40048ea38c0c52002bb582aed451504)): ?>
+<?php $attributes = $__attributesOriginale40048ea38c0c52002bb582aed451504; ?>
+<?php unset($__attributesOriginale40048ea38c0c52002bb582aed451504); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginale40048ea38c0c52002bb582aed451504)): ?>
+<?php $component = $__componentOriginale40048ea38c0c52002bb582aed451504; ?>
+<?php unset($__componentOriginale40048ea38c0c52002bb582aed451504); ?>
+<?php endif; ?>
+
+        </div>
+    </div>
+
+ <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54)): ?>
+<?php $attributes = $__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54; ?>
+<?php unset($__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal9ac128a9029c0e4701924bd2d73d7f54)): ?>
+<?php $component = $__componentOriginal9ac128a9029c0e4701924bd2d73d7f54; ?>
+<?php unset($__componentOriginal9ac128a9029c0e4701924bd2d73d7f54); ?>
+<?php endif; ?>
+<?php /**PATH C:\xampp\htdocs\zeoradiamonds\resources\views/admin/reports/purchase.blade.php ENDPATH**/ ?>

@@ -6,7 +6,8 @@
     <div class="flex items-center justify-between mb-4 border-b border-gray-200 dark:border-gray-700 pb-3">
         <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100">Items Added</h3>
 
-        <x-primary-button type="button" id="add-item-btn" tabindex="5" @click="showModal = true">
+        <x-primary-button type="button" id="add-item-btn" tabindex="5"
+            @click="showModal = true; window.dispatchEvent(new Event('open-purchase-modal'))">
             {{-- <x-icon.plus class="w-4 h-4" /> --}}
             Add Item
         </x-primary-button>

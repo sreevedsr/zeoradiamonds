@@ -90,7 +90,7 @@ class DropdownController extends Controller
                             'stone_weight' => $card->stone_weight,
                             'diamond_weight' => $card->diamond_weight,
                             'net_weight' => $card->net_weight,
-                            'total_amount' => $card->total_amount,
+                        'total_amount' => $card->total_amount,
                         ];
                     });
 

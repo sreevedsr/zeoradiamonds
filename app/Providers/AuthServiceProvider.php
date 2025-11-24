@@ -31,6 +31,7 @@ class AuthServiceProvider extends ServiceProvider
             'view-suppliers' => ['admin'],
             'create-account' => ['admin'],
             'manage-staff' => ['admin'],
+            'manage-reports' => ['admin'],
 
             // Merchant-only permissions
             'view-customers' => ['merchant'],

@@ -1,18 +1,22 @@
 // resources/js/app.js
-import './bootstrap';
-import Alpine from 'alpinejs';
-
+import "./bootstrap";
+import Alpine from "alpinejs";
 
 // Import all components
-import stateCode from './components/stateCode.js';
-import pageTransition from './components/pageTransition.js';
-import purchaseForm from './components/purchaseForm.js';
-import saleForm from './components/saleForm.js';
-import addSaleItemModal from './components/addSaleItemModal.js';
-import collapsibleMenu from './components/collapsibleMenu.js';
-import searchableDropdown from './components/searchableDropdown.js';
-import searchableProductDropdown from './components/searchableProductDropdown.js';
-import { enableSequentialInput, focusFirstInput } from './utils/formNavigation.js';
+import stateCode from "./components/stateCode.js";
+import pageTransition from "./components/pageTransition.js";
+import purchaseForm from "./components/purchaseForm.js";
+import saleForm from "./components/saleForm.js";
+import addSaleItemModal from "./components/addSaleItemModal.js";
+import collapsibleMenu from "./components/collapsibleMenu.js";
+import searchableDropdown from "./components/searchableDropdown.js";
+import searchableProductDropdown from "./components/searchableProductDropdown.js";
+import { inlineSaleItem } from './components/saleForm';
+
+import {
+    enableSequentialInput,
+    focusFirstInput,
+} from "./utils/formNavigation.js";
 
 function globalRates() {
     return {
@@ -22,11 +26,17 @@ function globalRates() {
         init() {
             this.fetchGoldRate();
             this.fetchDiamondRate();
+
+            // Refresh rates whenever the modal opens
+            window.addEventListener("open-purchase-modal", () => {
+                this.fetchGoldRate();
+                this.fetchDiamondRate();
+            });
         },
 
         async fetchGoldRate() {
             try {
-                const res = await fetch('/admin/api/latest-gold-rate');
+                const res = await fetch("/admin/api/latest-gold-rate");
                 this.gold_rate = (await res.json()).rate ?? 0;
             } catch (e) {
                 console.error("Failed gold rate", e);
@@ -35,13 +45,13 @@ function globalRates() {
 
         async fetchDiamondRate() {
             try {
-                const res = await fetch('/admin/api/latest-diamond-rate');
+                const res = await fetch("/admin/api/latest-diamond-rate");
                 this.diamond_rate = (await res.json()).rate ?? 0;
             } catch (e) {
                 console.error("Failed diamond rate", e);
             }
-        }
-    }
+        },
+    };
 }
 
 window.Alpine = Alpine;
@@ -51,29 +61,31 @@ window.enableSequentialInput = enableSequentialInput;
 window.focusFirstInput = focusFirstInput;
 window.searchableDropdown = searchableDropdown;
 window.searchableProductDropdown = searchableProductDropdown;
+window.inlineSaleItem = inlineSaleItem;
 
 
-Alpine.data('globalRates', globalRates);
-Alpine.data('stateCode', stateCode);
-Alpine.data('pageTransition', pageTransition);
-Alpine.data('purchaseForm', purchaseForm);
-Alpine.data('saleForm', saleForm);
-Alpine.data('addSaleItemModal', addSaleItemModal);
-Alpine.data('collapsibleMenu', collapsibleMenu);
+Alpine.data("globalRates", globalRates);
+Alpine.data("stateCode", stateCode);
+Alpine.data("pageTransition", pageTransition);
+Alpine.data("purchaseForm", purchaseForm);
+Alpine.data("saleForm", saleForm);
+Alpine.data("addSaleItemModal", addSaleItemModal);
+Alpine.data("collapsibleMenu", collapsibleMenu);
 
 Alpine.start();
 
 // ✅ Global HTML5 validation customization (unrelated but clean)
-document.addEventListener('DOMContentLoaded', () => {
-
+document.addEventListener("DOMContentLoaded", () => {
     document
-        .querySelectorAll('input[required], select[required], textarea[required]')
+        .querySelectorAll(
+            "input[required], select[required], textarea[required]",
+        )
         .forEach((el) => {
-            el.addEventListener('invalid', () => {
-                el.setCustomValidity(`Please fill the ${el.name.replace('_', ' ')} field.`);
+            el.addEventListener("invalid", () => {
+                el.setCustomValidity(
+                    `Please fill the ${el.name.replace("_", " ")} field.`,
+                );
             });
-            el.addEventListener('input', () => el.setCustomValidity(''));
+            el.addEventListener("input", () => el.setCustomValidity(""));
         });
 });
-
-
