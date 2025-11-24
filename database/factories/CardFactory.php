@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Product;
 use App\Models\PurchaseInvoice;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -12,7 +13,7 @@ class CardFactory extends Factory
         return [
             'purchase_invoice_id' => PurchaseInvoice::factory(),
             'product_code' => strtoupper($this->faker->unique()->bothify('PRD####')),
-            'item_code' => strtoupper($this->faker->bothify('ITM###')),
+            'item_code' => Product::factory(),
             'quantity' => 1,
 
             'gross_weight' => $this->faker->randomFloat(3, 1, 50),
