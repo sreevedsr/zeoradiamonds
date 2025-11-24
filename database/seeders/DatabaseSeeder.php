@@ -25,6 +25,8 @@ public function run(): void
             'gst_no' => null,
         ]
     );
+    $this->call(DemoDataSeeder::class);
+
 }
 
 }

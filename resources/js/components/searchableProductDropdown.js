@@ -23,6 +23,11 @@ export default function searchableProductDropdown(config = {}) {
                     (p) => !blocked.includes(p.product_code),
                 );
             });
+            window.addEventListener("reset-product-dropdown", () => {
+                this.searchQuery = "";
+                this.open = false;
+                this.filteredOptions = [];
+            });
         },
 
         async loadProducts() {

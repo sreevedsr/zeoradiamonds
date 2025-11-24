@@ -47,12 +47,13 @@ class CardAssignmentController extends Controller
     public function assignCard(Request $request)
     {
         $request->validate([
-            'merchant_id' => 'required|exists:users,id'
+            'merchant_id' => 'required|exists:users,id',
+            'invoice_no' => 'required|string|max:255'
         ]);
 
         $items = TempSale::where('created_by', Auth::id())->get();
 
-        // Pre-check (fail fast)
+        // Pre-checks
         foreach ($items as $item) {
             $ownership = CardOwnership::where('card_id', $item->card_id)->first();
 
@@ -63,22 +64,23 @@ class CardAssignmentController extends Controller
             }
         }
 
-        // Assign safely
         DB::transaction(function () use ($request, $items) {
+
+            $invoiceNo = $request->invoice_no; // 🔥 Use Invoice No from form
 
             foreach ($items as $item) {
 
+                // Lock and update ownership
                 $ownership = CardOwnership::where('card_id', $item->card_id)
                     ->lockForUpdate()
                     ->first();
 
-                // THIS SHOULD ALWAYS EXIST because admin always owns it
                 $ownership->update([
                     'owner_type' => 'merchant',
                     'owner_id' => $request->merchant_id,
                 ]);
 
-                // Log ownership change
+                // Log to history
                 CardOwnershipHistory::create([
                     'card_id' => $item->card_id,
                     'previous_owner_type' => 'admin',
@@ -86,12 +88,25 @@ class CardAssignmentController extends Controller
                     'new_owner_id' => $request->merchant_id,
                     'changed_by' => Auth::id(),
                 ]);
+
+                // 🔥 Save sale into admin_sales_invoices (1 card = 1 row)
+                \DB::table('admin_sales_invoices')->insert([
+                    'product_code' => $item->product_code,
+                    'merchant_id' => $request->merchant_id,
+                    'invoice_no' => $invoiceNo,
+                    'sale_date' => now()->toDateString(),
+                    'amount' => $item->total_amount ?? 0,
+                    'notes' => null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
             }
 
-            // Remove temp items
+            // Clear temp items
             TempSale::where('created_by', Auth::id())->delete();
         });
 
-        return back()->with('success', 'Cards assigned successfully.');
+        return back()->with('success', 'Sales recorded successfully.');
     }
+
 }

@@ -4,45 +4,19 @@ export default function saleForm() {
         errorMessage: null,
         deleteId: null,
 
-        merchantState: null,
-        taxType: null,
-
         async init() {
-            // Load temp sales (server stored)
+            // Load temp sales from server
             const res = await fetch("/admin/temp-sales");
             const data = await res.json();
 
             this.items = data.items || [];
             this.updateBlockedProducts();
 
-            // Watch merchant dropdown → update tax type
-            this.$nextTick(() => {
-                const dropdown = document.querySelector(
-                    '[x-data^="searchableDropdown"]',
-                );
-
-                if (dropdown?._x) {
-                    dropdown._x.$watch("selected", (val) => {
-                        if (val && val.state) {
-                            this.merchantState = val.state;
-                            this.updateTaxType();
-                        } else {
-                            this.merchantState = null;
-                            this.taxType = null;
-                        }
-                    });
-                }
-            });
-
-            /*
-             |-----------------------------------------------------
-             | HANDLE "add-sale-item" FROM INLINE ITEM BOX
-             |-----------------------------------------------------
-             */
+            // Listen for inserted sale items
             window.addEventListener("add-sale-item", (e) => {
                 const item = e.detail;
 
-                // Prevent duplicate product code
+                // Prevent duplicate
                 if (this.items.some((i) => i.product_code === item.item_code)) {
                     this.errorMessage = "This item is already added.";
                     return;
@@ -63,17 +37,10 @@ export default function saleForm() {
                 window.dispatchEvent(new CustomEvent("refresh-sale-products"));
             });
 
-            /*
-             |-----------------------------------------------------
-             | DELETE CONFIRMATION (UNCHANGED)
-             |-----------------------------------------------------
-             */
+            // Delete item listener
             window.addEventListener("confirm-delete", () => {
                 if (this.deleteId) {
                     this.removeItem(this.deleteId);
-                    window.dispatchEvent(
-                        new CustomEvent("refresh-sale-products"),
-                    );
                     this.deleteId = null;
                 }
 
@@ -83,16 +50,6 @@ export default function saleForm() {
                     }),
                 );
             });
-        },
-
-        updateTaxType() {
-            if (!this.merchantState) {
-                this.taxType = null;
-                return;
-            }
-
-            const st = this.merchantState.trim().toLowerCase();
-            this.taxType = st === "telangana" ? "cgst_sgst" : "igst";
         },
 
         openDeleteModal(id) {
@@ -130,41 +87,27 @@ export default function saleForm() {
         },
     };
 }
-
-/*
- |-----------------------------------------------------
- | INLINE ADD SALE ITEM COMPONENT
- |-----------------------------------------------------
-*/
 export function inlineSaleItem() {
     return {
         selectedProduct: null,
         item: {},
 
         handleProduct(option) {
-            console.log("HANDLE PRODUCT FIRED:", option);
-
-            this.selected = option;
+            this.selectedProduct = option;
 
             this.item = {
                 id: option.id,
-                si_no: option.id, // You must decide real SI. No
+                si_no: option.id,
                 barcode: option.product_code,
                 item_code: option.product_code,
                 item_name: option.item_name,
 
                 hsn: option.hsn_code,
-
                 quantity: 1,
 
-                gross_weight: option.gross_weight,
-                stone_weight: option.stone_weight,
-                diamond_weight: option.diamond_weight,
-
                 net_weight: option.net_weight,
-
-                net_amount: option.total_amount, // no separate net_amount exists
-                total_amount: option.total_amount, // correct
+                net_amount: option.total_amount,
+                total_amount: option.total_amount,
             };
         },
 
@@ -184,20 +127,18 @@ export function inlineSaleItem() {
             })
                 .then((res) => res.json())
                 .then((temp) => {
-                    // Notify parent to insert the saved item
                     window.dispatchEvent(
-                        new CustomEvent("add-sale-item", {
-                            detail: temp, // the DB-backed temp sale row
-                        }),
+                        new CustomEvent("add-sale-item", { detail: temp }),
                     );
-
                     window.dispatchEvent(
                         new CustomEvent("refresh-sale-products"),
                     );
+                    window.dispatchEvent(
+                        new CustomEvent("reset-product-dropdown"),
+                    );
                 });
 
-            // Reset fields
-            this.selected = null;
+            this.selectedProduct = null;
             this.item = {};
         },
     };

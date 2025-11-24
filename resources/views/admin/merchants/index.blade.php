@@ -2,7 +2,7 @@
     @slot('title', 'Merchants')
 
 
-    <div class="bg-white px-6 py-2 shadow dark:bg-gray-800 rounded-lg ">
+    <div class="bg-white px-6 py-2 shadow dark:bg-gray-800 rounded-lg "x-data="editModal()">
         <div class="mx-auto  text-gray-900 dark:text-gray-100">
             <!-- Merchants Table -->
             <x-table :headers="[
@@ -35,23 +35,25 @@
                         <td class="px-4 py-3 text-sm">
                             <div class="flex items-center space-x-3">
                                 <!-- Edit Button -->
-                                <x-secondary-button type="button" x-data
-                                    x-on:click.prevent="
-        $dispatch('open-modal', 'edit-merchant-modal');
-        setTimeout(() => {
-            document.getElementById('edit_merchant_code').value = '{{ $merchant->merchant_code }}';
-            document.getElementById('edit_name').value = '{{ $merchant->name }}';
-            document.getElementById('edit_email').value = '{{ $merchant->email }}';
-            document.getElementById('edit_phone').value = '{{ $merchant->phone }}';
-            document.getElementById('edit_address').value = '{{ $merchant->address }}';
-            document.getElementById('edit_state_code').value = '{{ $merchant->state_code }}';
-            document.getElementById('edit_state').value = '{{ $merchant->state }}';
-            document.getElementById('edit_gst_no').value = '{{ $merchant->gst_no }}';
-            document.getElementById('editMerchantForm').action = '{{ route('admin.merchants.update', $merchant->id) }}';
-        }, 100);
-    ">
-                                    {{ __('Edit') }}
+                                <script type="application/json" id="merchant-{{ $merchant->id }}">
+    @json($merchant)
+</script>
+
+                                <x-secondary-button
+                                    x-on:click="
+    openFromJson(
+        {{ $merchant->id }},
+        'merchant',
+        'edit-merchant',
+        'edit-merchant-modal',
+        '/admin/merchants'
+    )
+">
+                                    Edit
                                 </x-secondary-button>
+
+
+
 
 
                                 <x-danger-button type="button" x-data
@@ -73,7 +75,7 @@
 
             <!-- Edit Merchant Modal -->
             <x-modal name="edit-merchant-modal" focusable>
-                <form method="POST" id="editMerchantForm" class="p-6">
+                <form method="POST" id="edit-merchantForm" class="p-6">
                     @csrf
                     @method('PUT')
 
@@ -88,54 +90,56 @@
                     <div class="mt-4 space-y-4">
 
                         <div>
-                            <x-input-label for="edit_merchant_code" value="{{ __('Merchant Code') }}" />
-                            <x-text-input id="edit_merchant_code" name="merchant_code" type="text"
+                            <x-input-label for="edit-merchant-merchant_code" value="{{ __('Merchant Code') }}" />
+                            <x-text-input id="edit-merchant-merchant_code" name="merchant_code" type="text"
                                 class="mt-1 block w-full" placeholder="{{ __('Enter merchant code') }}" required />
                         </div>
 
                         <div>
-                            <x-input-label for="edit_name" value="{{ __('Merchant Name') }}" />
-                            <x-text-input id="edit_name" name="name" type="text" class="mt-1 block w-full"
-                                placeholder="{{ __('Enter merchant name') }}" required />
+                            <x-input-label for="edit-merchant-name" value="{{ __('Merchant Name') }}" />
+                            <x-text-input id="edit-merchant-name" name="name" type="text"
+                                class="mt-1 block w-full" placeholder="{{ __('Enter merchant name') }}" required />
                         </div>
 
                         <div>
-                            <x-input-label for="edit_email" value="{{ __('Email') }}" />
-                            <x-text-input id="edit_email" name="email" type="email" class="mt-1 block w-full"
-                                placeholder="{{ __('Enter email address') }}" required />
+                            <x-input-label for="edit-merchant-email" value="{{ __('Email') }}" />
+                            <x-text-input id="edit-merchant-email" name="email" type="email"
+                                class="mt-1 block w-full" placeholder="{{ __('Enter email address') }}" required />
                         </div>
 
                         <div>
-                            <x-input-label for="edit_phone" value="{{ __('Phone No.') }}" />
-                            <x-text-input id="edit_phone" name="phone" type="text" class="mt-1 block w-full"
-                                placeholder="{{ __('Enter phone number') }}" required />
+                            <x-input-label for="edit-merchant-phone" value="{{ __('Phone No.') }}" />
+                            <x-text-input id="edit-merchant-phone" name="phone" type="text"
+                                class="mt-1 block w-full" placeholder="{{ __('Enter phone number') }}" required />
                         </div>
 
                         <div>
-                            <x-input-label for="edit_address" value="{{ __('Address') }}" />
-                            <x-textarea id="edit_address" name="address" rows="2" class="mt-1 block w-full"
-                                placeholder="{{ __('Enter full address') }}" required></x-textarea>
+                            <x-input-label for="edit-merchant-address" value="{{ __('Address') }}" />
+                            <x-textarea id="edit-merchant-address" name="address" rows="2"
+                                class="mt-1 block w-full" placeholder="{{ __('Enter full address') }}"
+                                required></x-textarea>
                         </div>
 
                         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                             <div>
-                                <x-input-label for="edit_state_code" value="{{ __('State Code') }}" />
-                                <x-text-input id="edit_state_code" name="state_code" type="text"
+                                <x-input-label for="edit-merchant-state_code" value="{{ __('State Code') }}" />
+                                <x-text-input id="edit-merchant-state_code" name="state_code" type="text"
                                     class="mt-1 block w-full" placeholder="{{ __('Enter or select state code') }}"
                                     required />
                             </div>
 
                             <div>
-                                <x-input-label for="edit_state" value="{{ __('State') }}" />
-                                <x-text-input id="edit_state" name="state" type="text" class="mt-1 block w-full"
-                                    placeholder="{{ __('Enter or select state') }}" required />
+                                <x-input-label for="edit-merchant-state" value="{{ __('State') }}" />
+                                <x-text-input id="edit-merchant-state" name="state" type="text"
+                                    class="mt-1 block w-full" placeholder="{{ __('Enter or select state') }}"
+                                    required />
                             </div>
                         </div>
 
                         <div>
-                            <x-input-label for="edit_gst_no" value="{{ __('GST No.') }}" />
-                            <x-text-input id="edit_gst_no" name="gst_no" type="text" class="mt-1 block w-full"
-                                placeholder="{{ __('Enter GST number') }}" />
+                            <x-input-label for="edit-merchant-gst_no" value="{{ __('GST No.') }}" />
+                            <x-text-input id="edit-merchant-gst_no" name="gst_no" type="text"
+                                class="mt-1 block w-full" placeholder="{{ __('Enter GST number') }}" />
                         </div>
                     </div>
 

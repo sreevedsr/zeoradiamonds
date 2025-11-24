@@ -11,7 +11,7 @@
     <?php $__env->slot('title', 'Merchants'); ?>
 
 
-    <div class="bg-white px-6 py-2 shadow dark:bg-gray-800 rounded-lg ">
+    <div class="bg-white px-6 py-2 shadow dark:bg-gray-800 rounded-lg "x-data="editModal()">
         <div class="mx-auto  text-gray-900 dark:text-gray-100">
             <!-- Merchants Table -->
             <?php if (isset($component)) { $__componentOriginal7d9f6e0b9001f5841f72577781b2d17f = $component; } ?>
@@ -53,44 +53,37 @@
                         <td class="px-4 py-3 text-sm">
                             <div class="flex items-center space-x-3">
                                 <!-- Edit Button -->
+                                <script type="application/json" id="merchant-<?php echo e($merchant->id); ?>">
+    <?php echo json_encode($merchant, 15, 512) ?>
+</script>
+
                                 <?php if (isset($component)) { $__componentOriginal3b0e04e43cf890250cc4d85cff4d94af = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal3b0e04e43cf890250cc4d85cff4d94af = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.secondary-button','data' => ['type' => 'button','xData' => true,'xOn:click.prevent' => '
-        $dispatch(\'open-modal\', \'edit-merchant-modal\');
-        setTimeout(() => {
-            document.getElementById(\'edit_merchant_code\').value = \''.e($merchant->merchant_code).'\';
-            document.getElementById(\'edit_name\').value = \''.e($merchant->name).'\';
-            document.getElementById(\'edit_email\').value = \''.e($merchant->email).'\';
-            document.getElementById(\'edit_phone\').value = \''.e($merchant->phone).'\';
-            document.getElementById(\'edit_address\').value = \''.e($merchant->address).'\';
-            document.getElementById(\'edit_state_code\').value = \''.e($merchant->state_code).'\';
-            document.getElementById(\'edit_state\').value = \''.e($merchant->state).'\';
-            document.getElementById(\'edit_gst_no\').value = \''.e($merchant->gst_no).'\';
-            document.getElementById(\'editMerchantForm\').action = \''.e(route('admin.merchants.update', $merchant->id)).'\';
-        }, 100);
-    ']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.secondary-button','data' => ['xOn:click' => '
+    openFromJson(
+        '.e($merchant->id).',
+        \'merchant\',
+        \'edit-merchant\',
+        \'edit-merchant-modal\',
+        \'/admin/merchants\'
+    )
+']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('secondary-button'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['type' => 'button','x-data' => true,'x-on:click.prevent' => '
-        $dispatch(\'open-modal\', \'edit-merchant-modal\');
-        setTimeout(() => {
-            document.getElementById(\'edit_merchant_code\').value = \''.e($merchant->merchant_code).'\';
-            document.getElementById(\'edit_name\').value = \''.e($merchant->name).'\';
-            document.getElementById(\'edit_email\').value = \''.e($merchant->email).'\';
-            document.getElementById(\'edit_phone\').value = \''.e($merchant->phone).'\';
-            document.getElementById(\'edit_address\').value = \''.e($merchant->address).'\';
-            document.getElementById(\'edit_state_code\').value = \''.e($merchant->state_code).'\';
-            document.getElementById(\'edit_state\').value = \''.e($merchant->state).'\';
-            document.getElementById(\'edit_gst_no\').value = \''.e($merchant->gst_no).'\';
-            document.getElementById(\'editMerchantForm\').action = \''.e(route('admin.merchants.update', $merchant->id)).'\';
-        }, 100);
-    ']); ?>
-                                    <?php echo e(__('Edit')); ?>
-
+<?php $component->withAttributes(['x-on:click' => '
+    openFromJson(
+        '.e($merchant->id).',
+        \'merchant\',
+        \'edit-merchant\',
+        \'edit-merchant-modal\',
+        \'/admin/merchants\'
+    )
+']); ?>
+                                    Edit
                                  <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal3b0e04e43cf890250cc4d85cff4d94af)): ?>
@@ -101,6 +94,9 @@
 <?php $component = $__componentOriginal3b0e04e43cf890250cc4d85cff4d94af; ?>
 <?php unset($__componentOriginal3b0e04e43cf890250cc4d85cff4d94af); ?>
 <?php endif; ?>
+
+
+
 
 
                                 <?php if (isset($component)) { $__componentOriginal656e8c5ea4d9a4fa173298297bfe3f11 = $component; } ?>
@@ -178,7 +174,7 @@
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
 <?php $component->withAttributes(['name' => 'edit-merchant-modal','focusable' => true]); ?>
-                <form method="POST" id="editMerchantForm" class="p-6">
+                <form method="POST" id="edit-merchantForm" class="p-6">
                     <?php echo csrf_field(); ?>
                     <?php echo method_field('PUT'); ?>
 
@@ -197,14 +193,14 @@
                         <div>
                             <?php if (isset($component)) { $__componentOriginale3da9d84bb64e4bc2eeebaafabfb2581 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginale3da9d84bb64e4bc2eeebaafabfb2581 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.input-label','data' => ['for' => 'edit_merchant_code','value' => ''.e(__('Merchant Code')).'']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.input-label','data' => ['for' => 'edit-merchant-merchant_code','value' => ''.e(__('Merchant Code')).'']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('input-label'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['for' => 'edit_merchant_code','value' => ''.e(__('Merchant Code')).'']); ?>
+<?php $component->withAttributes(['for' => 'edit-merchant-merchant_code','value' => ''.e(__('Merchant Code')).'']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginale3da9d84bb64e4bc2eeebaafabfb2581)): ?>
@@ -217,14 +213,14 @@
 <?php endif; ?>
                             <?php if (isset($component)) { $__componentOriginal18c21970322f9e5c938bc954620c12bb = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal18c21970322f9e5c938bc954620c12bb = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.text-input','data' => ['id' => 'edit_merchant_code','name' => 'merchant_code','type' => 'text','class' => 'mt-1 block w-full','placeholder' => ''.e(__('Enter merchant code')).'','required' => true]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.text-input','data' => ['id' => 'edit-merchant-merchant_code','name' => 'merchant_code','type' => 'text','class' => 'mt-1 block w-full','placeholder' => ''.e(__('Enter merchant code')).'','required' => true]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('text-input'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['id' => 'edit_merchant_code','name' => 'merchant_code','type' => 'text','class' => 'mt-1 block w-full','placeholder' => ''.e(__('Enter merchant code')).'','required' => true]); ?>
+<?php $component->withAttributes(['id' => 'edit-merchant-merchant_code','name' => 'merchant_code','type' => 'text','class' => 'mt-1 block w-full','placeholder' => ''.e(__('Enter merchant code')).'','required' => true]); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal18c21970322f9e5c938bc954620c12bb)): ?>
@@ -240,14 +236,14 @@
                         <div>
                             <?php if (isset($component)) { $__componentOriginale3da9d84bb64e4bc2eeebaafabfb2581 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginale3da9d84bb64e4bc2eeebaafabfb2581 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.input-label','data' => ['for' => 'edit_name','value' => ''.e(__('Merchant Name')).'']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.input-label','data' => ['for' => 'edit-merchant-name','value' => ''.e(__('Merchant Name')).'']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('input-label'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['for' => 'edit_name','value' => ''.e(__('Merchant Name')).'']); ?>
+<?php $component->withAttributes(['for' => 'edit-merchant-name','value' => ''.e(__('Merchant Name')).'']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginale3da9d84bb64e4bc2eeebaafabfb2581)): ?>
@@ -260,14 +256,14 @@
 <?php endif; ?>
                             <?php if (isset($component)) { $__componentOriginal18c21970322f9e5c938bc954620c12bb = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal18c21970322f9e5c938bc954620c12bb = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.text-input','data' => ['id' => 'edit_name','name' => 'name','type' => 'text','class' => 'mt-1 block w-full','placeholder' => ''.e(__('Enter merchant name')).'','required' => true]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.text-input','data' => ['id' => 'edit-merchant-name','name' => 'name','type' => 'text','class' => 'mt-1 block w-full','placeholder' => ''.e(__('Enter merchant name')).'','required' => true]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('text-input'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['id' => 'edit_name','name' => 'name','type' => 'text','class' => 'mt-1 block w-full','placeholder' => ''.e(__('Enter merchant name')).'','required' => true]); ?>
+<?php $component->withAttributes(['id' => 'edit-merchant-name','name' => 'name','type' => 'text','class' => 'mt-1 block w-full','placeholder' => ''.e(__('Enter merchant name')).'','required' => true]); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal18c21970322f9e5c938bc954620c12bb)): ?>
@@ -283,14 +279,14 @@
                         <div>
                             <?php if (isset($component)) { $__componentOriginale3da9d84bb64e4bc2eeebaafabfb2581 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginale3da9d84bb64e4bc2eeebaafabfb2581 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.input-label','data' => ['for' => 'edit_email','value' => ''.e(__('Email')).'']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.input-label','data' => ['for' => 'edit-merchant-email','value' => ''.e(__('Email')).'']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('input-label'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['for' => 'edit_email','value' => ''.e(__('Email')).'']); ?>
+<?php $component->withAttributes(['for' => 'edit-merchant-email','value' => ''.e(__('Email')).'']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginale3da9d84bb64e4bc2eeebaafabfb2581)): ?>
@@ -303,14 +299,14 @@
 <?php endif; ?>
                             <?php if (isset($component)) { $__componentOriginal18c21970322f9e5c938bc954620c12bb = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal18c21970322f9e5c938bc954620c12bb = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.text-input','data' => ['id' => 'edit_email','name' => 'email','type' => 'email','class' => 'mt-1 block w-full','placeholder' => ''.e(__('Enter email address')).'','required' => true]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.text-input','data' => ['id' => 'edit-merchant-email','name' => 'email','type' => 'email','class' => 'mt-1 block w-full','placeholder' => ''.e(__('Enter email address')).'','required' => true]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('text-input'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['id' => 'edit_email','name' => 'email','type' => 'email','class' => 'mt-1 block w-full','placeholder' => ''.e(__('Enter email address')).'','required' => true]); ?>
+<?php $component->withAttributes(['id' => 'edit-merchant-email','name' => 'email','type' => 'email','class' => 'mt-1 block w-full','placeholder' => ''.e(__('Enter email address')).'','required' => true]); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal18c21970322f9e5c938bc954620c12bb)): ?>
@@ -326,14 +322,14 @@
                         <div>
                             <?php if (isset($component)) { $__componentOriginale3da9d84bb64e4bc2eeebaafabfb2581 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginale3da9d84bb64e4bc2eeebaafabfb2581 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.input-label','data' => ['for' => 'edit_phone','value' => ''.e(__('Phone No.')).'']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.input-label','data' => ['for' => 'edit-merchant-phone','value' => ''.e(__('Phone No.')).'']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('input-label'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['for' => 'edit_phone','value' => ''.e(__('Phone No.')).'']); ?>
+<?php $component->withAttributes(['for' => 'edit-merchant-phone','value' => ''.e(__('Phone No.')).'']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginale3da9d84bb64e4bc2eeebaafabfb2581)): ?>
@@ -346,14 +342,14 @@
 <?php endif; ?>
                             <?php if (isset($component)) { $__componentOriginal18c21970322f9e5c938bc954620c12bb = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal18c21970322f9e5c938bc954620c12bb = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.text-input','data' => ['id' => 'edit_phone','name' => 'phone','type' => 'text','class' => 'mt-1 block w-full','placeholder' => ''.e(__('Enter phone number')).'','required' => true]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.text-input','data' => ['id' => 'edit-merchant-phone','name' => 'phone','type' => 'text','class' => 'mt-1 block w-full','placeholder' => ''.e(__('Enter phone number')).'','required' => true]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('text-input'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['id' => 'edit_phone','name' => 'phone','type' => 'text','class' => 'mt-1 block w-full','placeholder' => ''.e(__('Enter phone number')).'','required' => true]); ?>
+<?php $component->withAttributes(['id' => 'edit-merchant-phone','name' => 'phone','type' => 'text','class' => 'mt-1 block w-full','placeholder' => ''.e(__('Enter phone number')).'','required' => true]); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal18c21970322f9e5c938bc954620c12bb)): ?>
@@ -369,14 +365,14 @@
                         <div>
                             <?php if (isset($component)) { $__componentOriginale3da9d84bb64e4bc2eeebaafabfb2581 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginale3da9d84bb64e4bc2eeebaafabfb2581 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.input-label','data' => ['for' => 'edit_address','value' => ''.e(__('Address')).'']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.input-label','data' => ['for' => 'edit-merchant-address','value' => ''.e(__('Address')).'']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('input-label'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['for' => 'edit_address','value' => ''.e(__('Address')).'']); ?>
+<?php $component->withAttributes(['for' => 'edit-merchant-address','value' => ''.e(__('Address')).'']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginale3da9d84bb64e4bc2eeebaafabfb2581)): ?>
@@ -389,14 +385,14 @@
 <?php endif; ?>
                             <?php if (isset($component)) { $__componentOriginal4727f9fd7c3055c2cf9c658d89b16886 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal4727f9fd7c3055c2cf9c658d89b16886 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.textarea','data' => ['id' => 'edit_address','name' => 'address','rows' => '2','class' => 'mt-1 block w-full','placeholder' => ''.e(__('Enter full address')).'','required' => true]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.textarea','data' => ['id' => 'edit-merchant-address','name' => 'address','rows' => '2','class' => 'mt-1 block w-full','placeholder' => ''.e(__('Enter full address')).'','required' => true]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('textarea'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['id' => 'edit_address','name' => 'address','rows' => '2','class' => 'mt-1 block w-full','placeholder' => ''.e(__('Enter full address')).'','required' => true]); ?> <?php echo $__env->renderComponent(); ?>
+<?php $component->withAttributes(['id' => 'edit-merchant-address','name' => 'address','rows' => '2','class' => 'mt-1 block w-full','placeholder' => ''.e(__('Enter full address')).'','required' => true]); ?> <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal4727f9fd7c3055c2cf9c658d89b16886)): ?>
 <?php $attributes = $__attributesOriginal4727f9fd7c3055c2cf9c658d89b16886; ?>
@@ -412,14 +408,14 @@
                             <div>
                                 <?php if (isset($component)) { $__componentOriginale3da9d84bb64e4bc2eeebaafabfb2581 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginale3da9d84bb64e4bc2eeebaafabfb2581 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.input-label','data' => ['for' => 'edit_state_code','value' => ''.e(__('State Code')).'']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.input-label','data' => ['for' => 'edit-merchant-state_code','value' => ''.e(__('State Code')).'']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('input-label'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['for' => 'edit_state_code','value' => ''.e(__('State Code')).'']); ?>
+<?php $component->withAttributes(['for' => 'edit-merchant-state_code','value' => ''.e(__('State Code')).'']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginale3da9d84bb64e4bc2eeebaafabfb2581)): ?>
@@ -432,14 +428,14 @@
 <?php endif; ?>
                                 <?php if (isset($component)) { $__componentOriginal18c21970322f9e5c938bc954620c12bb = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal18c21970322f9e5c938bc954620c12bb = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.text-input','data' => ['id' => 'edit_state_code','name' => 'state_code','type' => 'text','class' => 'mt-1 block w-full','placeholder' => ''.e(__('Enter or select state code')).'','required' => true]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.text-input','data' => ['id' => 'edit-merchant-state_code','name' => 'state_code','type' => 'text','class' => 'mt-1 block w-full','placeholder' => ''.e(__('Enter or select state code')).'','required' => true]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('text-input'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['id' => 'edit_state_code','name' => 'state_code','type' => 'text','class' => 'mt-1 block w-full','placeholder' => ''.e(__('Enter or select state code')).'','required' => true]); ?>
+<?php $component->withAttributes(['id' => 'edit-merchant-state_code','name' => 'state_code','type' => 'text','class' => 'mt-1 block w-full','placeholder' => ''.e(__('Enter or select state code')).'','required' => true]); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal18c21970322f9e5c938bc954620c12bb)): ?>
@@ -455,14 +451,14 @@
                             <div>
                                 <?php if (isset($component)) { $__componentOriginale3da9d84bb64e4bc2eeebaafabfb2581 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginale3da9d84bb64e4bc2eeebaafabfb2581 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.input-label','data' => ['for' => 'edit_state','value' => ''.e(__('State')).'']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.input-label','data' => ['for' => 'edit-merchant-state','value' => ''.e(__('State')).'']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('input-label'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['for' => 'edit_state','value' => ''.e(__('State')).'']); ?>
+<?php $component->withAttributes(['for' => 'edit-merchant-state','value' => ''.e(__('State')).'']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginale3da9d84bb64e4bc2eeebaafabfb2581)): ?>
@@ -475,14 +471,14 @@
 <?php endif; ?>
                                 <?php if (isset($component)) { $__componentOriginal18c21970322f9e5c938bc954620c12bb = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal18c21970322f9e5c938bc954620c12bb = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.text-input','data' => ['id' => 'edit_state','name' => 'state','type' => 'text','class' => 'mt-1 block w-full','placeholder' => ''.e(__('Enter or select state')).'','required' => true]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.text-input','data' => ['id' => 'edit-merchant-state','name' => 'state','type' => 'text','class' => 'mt-1 block w-full','placeholder' => ''.e(__('Enter or select state')).'','required' => true]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('text-input'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['id' => 'edit_state','name' => 'state','type' => 'text','class' => 'mt-1 block w-full','placeholder' => ''.e(__('Enter or select state')).'','required' => true]); ?>
+<?php $component->withAttributes(['id' => 'edit-merchant-state','name' => 'state','type' => 'text','class' => 'mt-1 block w-full','placeholder' => ''.e(__('Enter or select state')).'','required' => true]); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal18c21970322f9e5c938bc954620c12bb)): ?>
@@ -499,14 +495,14 @@
                         <div>
                             <?php if (isset($component)) { $__componentOriginale3da9d84bb64e4bc2eeebaafabfb2581 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginale3da9d84bb64e4bc2eeebaafabfb2581 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.input-label','data' => ['for' => 'edit_gst_no','value' => ''.e(__('GST No.')).'']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.input-label','data' => ['for' => 'edit-merchant-gst_no','value' => ''.e(__('GST No.')).'']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('input-label'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['for' => 'edit_gst_no','value' => ''.e(__('GST No.')).'']); ?>
+<?php $component->withAttributes(['for' => 'edit-merchant-gst_no','value' => ''.e(__('GST No.')).'']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginale3da9d84bb64e4bc2eeebaafabfb2581)): ?>
@@ -519,14 +515,14 @@
 <?php endif; ?>
                             <?php if (isset($component)) { $__componentOriginal18c21970322f9e5c938bc954620c12bb = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal18c21970322f9e5c938bc954620c12bb = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.text-input','data' => ['id' => 'edit_gst_no','name' => 'gst_no','type' => 'text','class' => 'mt-1 block w-full','placeholder' => ''.e(__('Enter GST number')).'']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.text-input','data' => ['id' => 'edit-merchant-gst_no','name' => 'gst_no','type' => 'text','class' => 'mt-1 block w-full','placeholder' => ''.e(__('Enter GST number')).'']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('text-input'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['id' => 'edit_gst_no','name' => 'gst_no','type' => 'text','class' => 'mt-1 block w-full','placeholder' => ''.e(__('Enter GST number')).'']); ?>
+<?php $component->withAttributes(['id' => 'edit-merchant-gst_no','name' => 'gst_no','type' => 'text','class' => 'mt-1 block w-full','placeholder' => ''.e(__('Enter GST number')).'']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal18c21970322f9e5c938bc954620c12bb)): ?>

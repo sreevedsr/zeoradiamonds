@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('merchant_id');
 
             // Optional: if admin wants invoice number
-            $table->string('invoice_no')->nullable()->unique();
+            $table->string('invoice_no')->nullable();
 
             // Date of sale
             $table->date('sale_date');
