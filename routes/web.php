@@ -6,9 +6,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CardController;
 use App\Http\Controllers\RateController;
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\PurchasesController;
-use App\Http\Controllers\Cards\CardsController;
-use App\Http\Controllers\Cards\CardAssignmentController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
@@ -19,10 +16,14 @@ use App\Http\Controllers\MerchantController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\TempSaleController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PurchasesController;
 use App\Http\Controllers\SaleAssignController;
-use App\Http\Controllers\TempPurchaseController;
+use App\Http\Controllers\Cards\CardsController;
 use App\Http\Controllers\MerchantRequestController;
 use App\Http\Controllers\TempPurchaseItemController;
+use App\Http\Controllers\Cards\CardAssignmentController;
+use App\Http\Controllers\Admin\Reports\SalesReportController;
+use App\Http\Controllers\Admin\Reports\SalesmanReportController;
 
 
 Route::get('/admin/debug/cards', function () {
@@ -106,10 +107,10 @@ Route::middleware('auth')->group(function () {
             Route::get('/purchase', [CardsController::class, 'index'])
                 ->name('purchase');
 
-            Route::get('/sales', [\App\Http\Controllers\Admin\Reports\SalesReportController::class, 'index'])
+            Route::get('/sales', [SalesReportController::class, 'index'])
                 ->name('sales');
 
-            Route::get('/salesman', [\App\Http\Controllers\Admin\Reports\SalesmanReportController::class, 'index'])
+            Route::get('/salesman', [SalesmanReportController::class, 'index'])
                 ->name('salesman');
 
         });

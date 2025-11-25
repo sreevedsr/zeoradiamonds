@@ -3,6 +3,9 @@ import "./bootstrap";
 import Alpine from "alpinejs";
 
 // Import all components
+import 'flowbite';
+import 'flowbite-datepicker';
+
 import stateCode from "./components/stateCode.js";
 import pageTransition from "./components/pageTransition.js";
 import purchaseForm from "./components/purchaseForm.js";
@@ -11,8 +14,10 @@ import addSaleItemModal from "./components/addSaleItemModal.js";
 import collapsibleMenu from "./components/collapsibleMenu.js";
 import searchableDropdown from "./components/searchableDropdown.js";
 import editModal from './components/editModal';
+import dropdownComponent from './components/dropdowns.js';
 import searchableProductDropdown from "./components/searchableProductDropdown.js";
 import { inlineSaleItem } from './components/saleForm';
+
 
 import {
     enableSequentialInput,
@@ -63,6 +68,9 @@ window.focusFirstInput = focusFirstInput;
 window.searchableDropdown = searchableDropdown;
 window.searchableProductDropdown = searchableProductDropdown;
 window.inlineSaleItem = inlineSaleItem;
+window.dropdownComponent = dropdownComponent;
+
+
 
 
 Alpine.data("globalRates", globalRates);

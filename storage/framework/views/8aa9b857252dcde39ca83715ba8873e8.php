@@ -33,8 +33,7 @@
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\App\View\Components\Input\Text::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['type' => 'text','name' => 'entry_no','value' => ''.e($nextEntryNo ?? 'AUTO').'','readonly' => true,'class' => 'w-full rounded-md border border-gray-300 px-3 py-2
-                       bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300']); ?>
+<?php $component->withAttributes(['type' => 'text','name' => 'entry_no','value' => ''.e($nextEntryNo ?? 'AUTO').'','readonly' => true,'class' => 'w-full rounded-md border border-gray-300 px-3 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginalc8d1187b2ef4f66f642fdbe432c184c8)): ?>
@@ -104,7 +103,8 @@
             <div x-data="searchableDropdown({
                 apiUrl: '<?php echo e(route('admin.dropdown.fetch', ['type' => 'merchants'])); ?>',
                 optionLabel: 'name',
-                optionValue: 'id'
+                optionValue: 'id',
+                selectedKey: 'merchantSelected'
             })" x-init="init()" class="relative mt-8" @click.outside="open = false">
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
                     Select Merchant (Name / Code)
@@ -157,11 +157,11 @@
                 </div>
 
                 <!-- Hidden Fields -->
-                <input type="hidden" name="merchant_id" :value="selected ? selected.id : ''">
-                <input type="hidden" name="merchant_state" :value="selected ? selected.state : ''">
+                <input type="hidden" name="merchant_id" :value="merchantSelected ? merchantSelected.id : ''">
+                <input type="hidden" name="merchant_state" :value="merchantSelected ? merchantSelected.state : ''">
 
                 <!-- Merchant Details Card (Compact Layout With Dummy SVGs) -->
-                <template x-if="selected">
+                <template x-if="merchantSelected">
                     <div
                         class="mt-4 rounded-xl border border-gray-200 dark:border-gray-700
         px-5 py-6 shadow-sm dark:shadow-md
@@ -202,7 +202,7 @@
                                     <p class="font-semibold text-gray-800 dark:text-gray-200 text-base">Merchant Code
                                     </p>
                                     <p class="text-gray-700 dark:text-gray-400 mt-1"
-                                        x-text="selected.merchant_code || '-'"></p>
+                                        x-text="merchantSelected.merchant_code || '-'"></p>
                                 </div>
                             </div>
 
@@ -218,7 +218,8 @@
 
                                 <div>
                                     <p class="font-semibold text-gray-800 dark:text-gray-200 text-base">Name</p>
-                                    <p class="text-gray-700 dark:text-gray-400 mt-1" x-text="selected.name || '-'">
+                                    <p class="text-gray-700 dark:text-gray-400 mt-1"
+                                        x-text="merchantSelected.name || '-'">
                                     </p>
                                 </div>
                             </div>
@@ -235,7 +236,8 @@
 
                                 <div>
                                     <p class="font-semibold text-gray-800 dark:text-gray-200 text-base">Phone</p>
-                                    <p class="text-gray-700 dark:text-gray-400 mt-1" x-text="selected.phone || '-'">
+                                    <p class="text-gray-700 dark:text-gray-400 mt-1"
+                                        x-text="merchantSelected.phone || '-'">
                                     </p>
                                 </div>
                             </div>
@@ -253,7 +255,8 @@
                                 </svg>
                                 <div>
                                     <p class="font-semibold text-gray-800 dark:text-gray-200 text-base">GST No.</p>
-                                    <p class="text-gray-700 dark:text-gray-400 mt-1" x-text="selected.gst_no || '-'">
+                                    <p class="text-gray-700 dark:text-gray-400 mt-1"
+                                        x-text="merchantSelected.gst_no || '-'">
                                     </p>
                                 </div>
                             </div>
@@ -272,7 +275,8 @@
 
                                 <div>
                                     <p class="font-semibold text-gray-800 dark:text-gray-200 text-base">State</p>
-                                    <p class="text-gray-700 dark:text-gray-400 mt-1" x-text="selected.state || '-'">
+                                    <p class="text-gray-700 dark:text-gray-400 mt-1"
+                                        x-text="merchantSelected.state || '-'">
                                     </p>
                                 </div>
                             </div>
@@ -293,7 +297,7 @@
                                 <div>
                                     <p class="font-semibold text-gray-800 dark:text-gray-200 text-base">Address</p>
                                     <p class="text-gray-700 dark:text-gray-400 mt-1 leading-snug"
-                                        x-text="selected.address || '-'"></p>
+                                        x-text="merchantSelected.address || '-'"></p>
                                 </div>
                             </div>
 
@@ -307,7 +311,7 @@
         <!-- INLINE ADD PRODUCT (REPLACES MODAL) -->
         <div class="rounded-lg bg-white dark:bg-gray-800 p-8 border border-gray-200 dark:border-transparent
            text-gray-900 dark:text-gray-100 shadow-sm dark:shadow-md dark:shadow-gray-900/50 mb-6"
-            x-data="inlineSaleItem()" @dropdown-selected.window="handleProduct($event.detail.selected)">
+            x-data="inlineSaleItem()" @product-selected.window="handleProduct($event.detail.product)">
 
             <!-- Product Dropdown Using searchableProductDropdown -->
             <div x-data="searchableProductDropdown({
@@ -319,13 +323,13 @@
                 <input type="text" x-model="searchQuery" @focus="open = true" @input="filterOptions()"
                     placeholder="Search product..."
                     class="w-full rounded-lg border border-gray-300 dark:border-gray-600
-                      px-3 py-2 text-sm bg-white dark:bg-gray-700
+                      px-3 py-2 bg-white dark:bg-gray-700
                       focus:ring-2 focus:ring-purple-600 dark:text-gray-100" />
 
                 <!-- Dropdown -->
                 <div x-show="open" x-transition
                     class="absolute z-20 mt-1 w-full max-h-60 overflow-y-auto rounded-lg
-                    bg-white dark:bg-gray-800 shadow-xl border border-gray-200 dark:border-gray-700">
+                    bg-white dark:bg-gray-800 shadow-xl border border-gray-200 dark:border-gray-700 custom-scrollbar">
 
                     <template x-if="filteredOptions.length > 0">
                         <template x-for="option in filteredOptions" :key="option.product_code">

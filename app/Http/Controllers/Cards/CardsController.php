@@ -11,35 +11,59 @@ class CardsController extends Controller
 {
     public function index(Request $request)
     {
-        $search = $request->input('search');
+        $search = $request->search;
+        $supplierId = $request->supplier_id;
+        $from = $request->from;
+        $to = $request->to;
 
-        $cards = Card::with('merchant')
-            ->when($search, function ($query, $search) {
-                $query->where(function ($q) use ($search) {
-                    $q->where('certificate_id', 'like', "%{$search}%")
-                        ->orWhere('item_name', 'like', "%{$search}%");
-                });
-            })
-            ->orderByDesc('created_at')
-            ->paginate(25);
+        // Base query
+        $query = Card::with(['merchant', 'purchaseInvoice']);
 
-        $suppliers = \App\Models\Supplier::pluck('name', 'id');
+        // Apply search filter
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('certificate_id', 'like', "%{$search}%")
+                    ->orWhere('item_name', 'like', "%{$search}%")
+                    ->orWhere('product_code', 'like', "%{$search}%");
+            });
+        }
 
-        $cards = Card::with('purchaseInvoice')
-            ->when(
-                request('filter'),
-                fn($q) =>
-                $q->whereHas(
-                    'purchaseInvoice',
-                    fn($p) =>
-                    $p->where('supplier_id', request('filter'))
-                )
-            )
-            ->paginate(25);
+        // Apply supplier filter
+        if ($supplierId) {
+            $query->whereHas('purchaseInvoice', function ($p) use ($supplierId) {
+                $p->where('supplier_id', $supplierId);
+            });
+        }
+
+        // Apply date range
+        if ($from) {
+            $query->whereHas('purchaseInvoice', function ($q) use ($from) {
+                $q->whereDate('invoice_date', '>=', $from);
+            });
+        }
+
+        if ($to) {
+            $query->whereHas('purchaseInvoice', function ($q) use ($to) {
+                $q->whereDate('invoice_date', '<=', $to);
+            });
+        }
 
 
-        return view('admin.reports.purchase', compact('cards','suppliers'));
+        // -------------------------
+        // 🎉 Show success message
+        // -------------------------
+        if ($search || $supplierId || $from || $to) {
+            session()->flash('success', 'Filters applied successfully.');
+        }
+
+        // Final results
+        $cards = $query->orderByDesc('created_at')->paginate(25)->withQueryString();
+
+        $suppliers = \App\Models\Supplier::select('id', 'name')->orderBy('name')->get();
+
+        return view('admin.reports.purchase', compact('cards', 'suppliers'));
     }
+
 
     public function lookup(Request $request)
     {

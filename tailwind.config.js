@@ -9,6 +9,8 @@ export default {
         "./storage/framework/views/*.php",
         "./resources/views/**/*.blade.php",
         "./resources/js/**/*.js",
+        "./node_modules/flowbite/**/*.js",
+        "./node_modules/flowbite-datepicker/**/*.js",
     ],
     theme: {
         extend: {
@@ -17,5 +19,8 @@ export default {
             },
         },
     },
-    plugins: [forms],
+    plugins: [
+        forms,
+        require("flowbite/plugin"),
+    ],
 };

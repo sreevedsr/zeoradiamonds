@@ -76,6 +76,10 @@ class Card extends Model
      | Relationships
      ------------------------------------------*/
 
+    public function saleInvoice()
+    {
+        return $this->hasOne(AdminSalesInvoice::class, 'product_code', 'product_code');
+    }
     public function merchant(): BelongsTo
     {
         return $this->belongsTo(User::class, 'merchant_id');

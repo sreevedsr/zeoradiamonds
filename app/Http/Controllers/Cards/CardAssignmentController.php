@@ -26,7 +26,6 @@ class CardAssignmentController extends Controller
                 $q->where('owner_type', 'admin');
             });
 
-        // Apply search safely (this fixes your OR bug)
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('certificate_id', 'like', "%{$search}%")
@@ -37,8 +36,13 @@ class CardAssignmentController extends Controller
         $cards = $query->orderByDesc('created_at')->paginate(10);
         $merchants = \App\Models\User::where('role', 'merchant')->get();
 
-        return view('admin.sales.create', compact('cards', 'merchants', 'search'));
+        // 🔥 Get next Entry No from admin_sales_invoices
+        $lastInvoice = \DB::table('admin_sales_invoices')->orderByDesc('id')->first();
+        $nextEntryNo = $lastInvoice ? $lastInvoice->id + 1 : 1;
+
+        return view('admin.sales.create', compact('cards', 'merchants', 'search', 'nextEntryNo'));
     }
+
 
 
     /**

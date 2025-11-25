@@ -2,6 +2,31 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Placeholder color (light mode) */
+input::placeholder,
+textarea::placeholder {
+    color: #9ca3af !important; /* gray-400 */
+}
+
+/* Placeholder color (dark mode) */
+.dark input::placeholder,
+.dark textarea::placeholder {
+    color: #6b7280 !important; /* gray-500 */
+}
+
+/* Input text color when typing */
+input,
+textarea {
+    color: #ffffff !important; /* white text */
+}
+
+/* Dark mode input text */
+.dark input,
+.dark textarea {
+    color: #ffffff !important; /* still white in dark mode */
+}
+
+
 .custom-scrollbar::-webkit-scrollbar {
     width: 10px;
     height: 10px;
@@ -21,6 +46,10 @@
     background: #a5b4fc;
 }
 
+.custom-scrollbar::-webkit-scrollbar-corner {
+    background: #e2e8f0;
+}
+
 .dark .custom-scrollbar::-webkit-scrollbar-track {
     background: #374151;
 }
@@ -31,6 +60,10 @@
 
 .dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
     background: #6b7280;
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-corner {
+    background: #4b5563;
 }
 
 @layer utilities {

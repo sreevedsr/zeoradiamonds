@@ -63,8 +63,8 @@ export default function searchableProductDropdown(config = {}) {
             this.open = false;
 
             window.dispatchEvent(
-                new CustomEvent("dropdown-selected", {
-                    detail: { selected: option },
+                new CustomEvent("product-selected", {
+                    detail: { product: option },
                 }),
             );
         },

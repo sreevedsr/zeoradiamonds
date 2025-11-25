@@ -4,7 +4,7 @@ export default function searchableDropdown(config = {}) {
         searchQuery: "",
         options: [],
         filteredOptions: [],
-        selected: null,
+        merchantSelected: null,
         selectedId: "",
         apiUrl: config.apiUrl || null,
         sourceKey: config.sourceKey || null,
@@ -21,7 +21,10 @@ export default function searchableDropdown(config = {}) {
                         this.options = cached[this.sourceKey] || [];
                     } else {
                         const res = await fetch("/api/dropdown/combined");
-                        if (!res.ok) throw new Error("Failed to load combined dropdown data");
+                        if (!res.ok)
+                            throw new Error(
+                                "Failed to load combined dropdown data",
+                            );
                         const allData = await res.json();
                         this.setCachedData(allData);
                         this.options = allData[this.sourceKey] || [];
@@ -30,7 +33,10 @@ export default function searchableDropdown(config = {}) {
                 // 🟣 2. Otherwise use custom API
                 else if (this.apiUrl) {
                     const res = await fetch(this.apiUrl);
-                    if (!res.ok) throw new Error(`Failed to load data from ${this.apiUrl}`);
+                    if (!res.ok)
+                        throw new Error(
+                            `Failed to load data from ${this.apiUrl}`,
+                        );
 
                     const data = await res.json();
 
@@ -42,13 +48,19 @@ export default function searchableDropdown(config = {}) {
                     } else if (data.results && Array.isArray(data.results)) {
                         this.options = data.results;
                     } else {
-                        console.warn("⚠️ Unexpected dropdown response format:", data);
+                        console.warn(
+                            "⚠️ Unexpected dropdown response format:",
+                            data,
+                        );
                         this.options = [];
                     }
                 }
 
                 this.filteredOptions = this.options;
-                console.log(`✅ Loaded ${this.options.length} options from`, this.apiUrl || this.sourceKey);
+                console.log(
+                    `✅ Loaded ${this.options.length} options from`,
+                    this.apiUrl || this.sourceKey,
+                );
             } catch (error) {
                 console.error("❌ Dropdown fetch error:", error);
                 this.options = [];
@@ -70,7 +82,10 @@ export default function searchableDropdown(config = {}) {
         },
 
         setCachedData(data) {
-            localStorage.setItem("dropdownCache", JSON.stringify({ data, timestamp: Date.now() }));
+            localStorage.setItem(
+                "dropdownCache",
+                JSON.stringify({ data, timestamp: Date.now() }),
+            );
         },
 
         // 🟢 Client-side filtering
@@ -91,7 +106,7 @@ export default function searchableDropdown(config = {}) {
                     option.state,
                     option.item_name,
                     option.item_code,
-                    option.hsn
+                    option.hsn,
                 ]
                     .filter(Boolean)
                     .map((v) => String(v).toLowerCase());
@@ -102,18 +117,20 @@ export default function searchableDropdown(config = {}) {
 
         // 🟢 Select an option
         select(option) {
-            this.selected = option;
+            this.merchantSelected = option;
             this.selectedId = option[this.optionValue];
             this.searchQuery = option[this.optionLabel];
             this.open = false;
 
             // Broadcast Alpine event
-            this.$dispatch("dropdown-selected", { selected: option });
+            this.$dispatch("dropdown-selected", { merchantSelected: option });
 
             // Focus next input field automatically
             this.$nextTick(() => {
                 const focusables = Array.from(
-                    document.querySelectorAll("input, select, textarea, button")
+                    document.querySelectorAll(
+                        "input, select, textarea, button",
+                    ),
                 ).filter((el) => !el.disabled && el.tabIndex >= 0);
 
                 const current = document.activeElement;
