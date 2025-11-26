@@ -39,7 +39,9 @@
                 <?php $__currentLoopData = $merchants; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $merchant): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                     <tr
                         class="text-gray-700 transition-colors hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-700">
-                        <td class="px-4 py-3 text-sm"><?php echo e($index + 1); ?></td>
+                        <td class="px-4 py-3 text-sm"> <?php echo e($merchants->firstItem() + $index); ?>
+
+                        </td>
                         <td class="px-4 py-3 text-sm font-medium"><?php echo e($merchant->merchant_code ?? '—'); ?></td>
                         <td class="px-4 py-3 text-sm">
                             <p><?php echo e($merchant->name); ?></p>

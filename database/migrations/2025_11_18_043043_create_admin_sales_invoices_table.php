@@ -17,6 +17,9 @@ return new class extends Migration
             // Merchant receiving the sale
             $table->unsignedBigInteger('merchant_id');
 
+            // Staff who handled the sale
+            $table->unsignedBigInteger('staff_id')->nullable();
+
             // Optional: if admin wants invoice number
             $table->string('invoice_no')->nullable();
 
@@ -32,7 +35,16 @@ return new class extends Migration
             $table->timestamps();
 
             // Relationship with users (merchant)
-            $table->foreign('merchant_id')->references('id')->on('users')->cascadeOnDelete();
+            $table->foreign('merchant_id')
+                ->references('id')
+                ->on('users')
+                ->cascadeOnDelete();
+
+            // Relationship with staff
+            $table->foreign('staff_id')
+                ->references('id')
+                ->on('staff')
+                ->cascadeOnDelete();
         });
     }
 

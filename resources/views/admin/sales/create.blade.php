@@ -11,7 +11,7 @@
             class="rounded-lg bg-white dark:bg-gray-800 p-8 border border-gray-200 dark:border-transparent
            text-gray-900 dark:text-gray-100 shadow-sm dark:shadow-md dark:shadow-gray-900/50 mb-6">
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Entry No (Auto) -->
                 <div>
                     <label class="text-sm font-medium">Entry No.</label>
@@ -34,9 +34,74 @@
                         class="input-field w-full rounded-md border border-gray-300 px-3 py-2
                        focus:ring-2 focus:ring-purple-500" />
                 </div>
+
+                <!-- Salesman Dropdown -->
+                <div x-data="searchableDropdown({
+                    apiUrl: '{{ route('admin.dropdown.fetch', ['type' => 'staff']) }}',
+                    optionLabel: 'name',
+                    optionValue: 'id',
+                    selectedKey: 'salesmanSelected'
+                })" x-init="init()" class="relative" @click.outside="open = false">
+
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
+                        Select Salesman
+                    </label>
+
+                    <div class="relative">
+                        <input type="text" x-model="searchQuery" @input="filterOptions()" @focus="open = true"
+                            @keydown.enter.prevent="
+                        if (filteredOptions.length > 0) {
+                            select(filteredOptions[0]);
+
+                            const focusables = Array.from(document.querySelectorAll('input, select, textarea, button'));
+                            const currentIndex = focusables.indexOf($el);
+                            if (currentIndex >= 0 && focusables[currentIndex + 1]) {
+                                focusables[currentIndex + 1].focus();
+                                }
+                                }"
+                            tabindex="2" placeholder="Search salesman..."
+                            class="w-full rounded-md border border-gray-300 px-3 py-2
+                                focus:outline-none focus:ring-2 focus:ring-purple-600
+                                dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100
+                                hover:border-purple-400 transition duration-150" />
+
+                        <!-- Dropdown -->
+                        <div x-show="open" x-transition
+                            class="absolute z-10 mt-1 w-full max-h-60 overflow-y-auto rounded-md
+                                bg-white dark:bg-gray-800 shadow-lg border border-gray-200
+                                dark:border-gray-700 custom-scrollbar">
+
+                            <template x-if="filteredOptions.length > 0">
+                                <ul>
+                                    <template x-for="option in filteredOptions" :key="option.id">
+                                        <li @click="select(option)" tabindex="0"
+                                            @keydown.enter.prevent="select(option)"
+                                            class="cursor-pointer px-3 py-2 text-sm
+                                            hover:bg-purple-50 dark:hover:bg-purple-700/30
+                                            dark:text-gray-100 border-b border-gray-100
+                                            dark:border-gray-700 last:border-0">
+                                            <span x-text="option.name"></span>
+                                            <span class="text-xs text-gray-500 ml-1"
+                                                x-text="'(' + option.code + ')'"></span>
+                                        </li>
+                                    </template>
+                                </ul>
+                            </template>
+
+                            <template x-if="filteredOptions.length === 0">
+                                <div class="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">
+                                    No results found
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+
+                    <!-- Hidden field -->
+                    <input type="hidden" name="salesman_id" :value="salesmanSelected ? salesmanSelected.id : ''">
+
+                </div>
             </div>
 
-            
 
             <!-- Merchant Dropdown -->
             <div x-data="searchableDropdown({
@@ -124,8 +189,8 @@
                         </div>
 
                         <!-- Details Grid -->
-                        <div class="grid grid-cols-2 gap-x-8 gap-y-5 text-[15px] leading-relaxed">
-
+                        <div
+                            class="grid grid-cols-1 sm:grid-cols-2 gap-x-4 sm:gap-x-8 gap-y-5 text-[14px] sm:text-[15px] leading-relaxed">
                             <!-- Code -->
                             <div class="flex items-between gap-3">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -312,34 +377,52 @@
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
 
-                        <x-input.text label="SI. No." model="item.si_no" readonly />
-                        <x-input.text label="Barcode" model="item.barcode" readonly />
-                        <x-input.text label="Item Code" model="item.item_code" readonly />
-                        <x-input.text label="Item Name" model="item.item_name" readonly />
-                        <x-input.text label="HSN Code" model="item.hsn" readonly />
-                        <x-input.text label="Quantity" model="item.quantity" readonly />
-                        <x-input.text label="Net Weight (g)" model="item.net_weight" readonly />
-                        <x-input.text label="Net Amount (₹)" model="item.net_amount" readonly />
+                        <!-- Non-editable fields -->
+                        <x-input.text label="SI. No." model="item.si_no" readonly
+                            class="bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 cursor-not-allowed" />
 
-                        <!-- Editable -->
+                        <x-input.text label="Barcode" model="item.barcode" readonly
+                            class="bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 cursor-not-allowed" />
+
+                        <x-input.text label="Item Code" model="item.item_code" readonly
+                            class="bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 cursor-not-allowed" />
+
+                        <x-input.text label="Item Name" model="item.item_name" readonly
+                            class="bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 cursor-not-allowed" />
+
+                        <x-input.text label="HSN Code" model="item.hsn" readonly
+                            class="bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 cursor-not-allowed" />
+
+                        <x-input.text label="Quantity" model="item.quantity" readonly
+                            class="bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 cursor-not-allowed" />
+
+                        <x-input.text label="Net Weight (g)" model="item.net_weight" readonly
+                            class="bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 cursor-not-allowed" />
+
+                        <x-input.text label="Net Amount (₹)" model="item.net_amount" readonly
+                            class="bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 cursor-not-allowed" />
+
+                        <!-- Editable field -->
                         <div>
                             <label class="text-sm font-medium">Total Amount (₹)</label>
                             <input type="number" x-model="item.total_amount"
-                                class="w-full rounded-md border border-gray-300 dark:border-gray-700 px-3 py-2
-                                  focus:ring-2 focus:ring-purple-600 dark:bg-gray-700 dark:text-gray-100">
+                                class="w-full rounded-md border border-purple-400 dark:border-purple-500
+                           px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100
+                           focus:ring-2 focus:ring-purple-600 focus:border-purple-600 shadow-sm">
                         </div>
+
                     </div>
 
                     <div class="mt-5 text-right">
                         <button type="button" @click="addToParent()"
-                            class="rounded-md bg-purple-600 px-5 py-2.5 text-white text-sm
-                               hover:bg-purple-700 shadow">
+                            class="rounded-md bg-purple-600 px-5 py-2.5 text-white text-sm hover:bg-purple-700 shadow">
                             Add to Sales Table
                         </button>
                     </div>
 
                 </div>
             </template>
+
 
         </div>
 

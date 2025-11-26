@@ -23,13 +23,13 @@ class DemoDataSeeder extends Seeder
     public function run(): void
     {
         // Users (Admin + Merchants + Customers)
-        User::factory()->count(10)->create();
+        User::factory()->count(100)->create();
 
-        Product::factory()->count(20)->create();
+        Product::factory()->count(200)->create();
 
-        Supplier::factory()->count(10)->create();
+        Supplier::factory()->count(100)->create();
 
-        Staff::factory()->count(5)->create();
+        Staff::factory()->count(50)->create();
 
         GoldRate::factory()->count(10)->create();
         DiamondRate::factory()->count(10)->create();

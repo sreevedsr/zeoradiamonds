@@ -23,11 +23,14 @@
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\App\View\Components\Table::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['headers' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(['#', 'Supplier Code', 'Name', 'Phone', 'State', 'GST No', 'Created At', 'Actions']),'from' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($pagination['from'] ?? 1),'to' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($pagination['to'] ?? 10),'total' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($pagination['total'] ?? count($suppliers)),'pages' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($pagination['pages'] ?? [1]),'current' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($pagination['current'] ?? 1)]); ?>
+<?php $component->withAttributes(['headers' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(['#', 'Supplier Code', 'Name', 'Phone', 'State', 'GST No', 'Created At', 'Actions']),'collection' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($suppliers),'from' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($pagination['from'] ?? 1),'to' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($pagination['to'] ?? 10),'total' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($pagination['total'] ?? count($suppliers)),'pages' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($pagination['pages'] ?? [1]),'current' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($pagination['current'] ?? 1)]); ?>
+
                 <?php $__currentLoopData = $suppliers; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $supplier): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                     <tr
                         class="text-gray-700 transition-colors hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-700">
-                        <td class="px-4 py-3 text-sm"><?php echo e($index + 1); ?></td>
+                        <td class="px-4 py-3 text-sm"> <?php echo e($suppliers->firstItem() + $index); ?>
+
+                        </td>
                         <td class="px-4 py-3 text-sm"><?php echo e($supplier->supplier_code); ?></td>
                         <td class="px-4 py-3 text-sm"><?php echo e($supplier->name); ?></td>
                         <td class="px-4 py-3 text-sm"><?php echo e($supplier->phone); ?></td>

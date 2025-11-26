@@ -5,7 +5,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CardController;
 use App\Http\Controllers\RateController;
-use App\Http\Controllers\AdminController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\UploadController;
 use App\Http\Controllers\ProductController;
@@ -188,13 +187,13 @@ Route::middleware('auth')->group(function () {
 
         // Merchant management
         Route::middleware('can:edit-merchants')->prefix('merchants')->name('merchants.')->group(function () {
-            Route::get('/', [AdminController::class, 'index'])->name('index');
-            Route::get('/create', [AdminController::class, 'create'])->name('create');
-            Route::post('/store', [AdminController::class, 'store'])->name('store');
+            Route::get('/', [MerchantController::class, 'index'])->name('index');
+            Route::get('/create', [MerchantController::class, 'create'])->name('create');
+            Route::post('/store', [MerchantController::class, 'store'])->name('store');
 
-            Route::get('/{id}/edit', [AdminController::class, 'edit'])->name('edit');
-            Route::put('/{id}', [AdminController::class, 'update'])->name('update');
-            Route::delete('/{id}', [AdminController::class, 'destroy'])->name('destroy');
+            Route::get('/{id}/edit', [MerchantController::class, 'edit'])->name('edit');
+            Route::put('/{id}', [MerchantController::class, 'update'])->name('update');
+            Route::delete('/{id}', [MerchantController::class, 'destroy'])->name('destroy');
 
         });
         Route::get('/api/dropdown/{type}', [DropdownController::class, 'fetch'])->name('dropdown.fetch');
@@ -214,32 +213,32 @@ Route::middleware('auth')->group(function () {
 
         // Customers management
         Route::prefix('customers')->name('customers.')->group(function () {
-            Route::get('/', [MerchantController::class, 'customers'])->name('index');
+            Route::get('/', [CustomerController::class, 'customers'])->name('index');
             Route::get('/create', [CustomerController::class, 'createCustomer'])->name('create');
-            Route::post('/', [MerchantController::class, 'storeCustomer'])->name('store');
+            Route::post('/', [CustomerController::class, 'storeCustomer'])->name('store');
         });
         Route::prefix('cards')->name('cards.')->group(function () {
             // 🟣 View all assigned diamond certificates
-            Route::get('/', [AdminController::class, 'viewCards'])->name('index');
+            Route::get('/', [MerchantController::class, 'viewCards'])->name('index');
 
             // 🟢 Show assign-cards page (form + table)
-            Route::get('/assign', [MerchantController::class, 'assignCardsPage'])->name('assign');
+            Route::get('/assign', [CustomerController::class, 'assignCardsPage'])->name('assign');
 
             // 🟠 Handle card assignment form submission
-            Route::post('/assign', [MerchantController::class, 'assignCard'])->name('assign');
+            Route::post('/assign', [CustomerController::class, 'assignCard'])->name('assign');
         });
         Route::prefix('marketplace')->name('marketplace.')->group(function () {
-            // Route::get('/card-requests', [AdminController::class, 'viewRequests'])->name('cards.requests');
-            Route::get('/request', [AdminController::class, 'requestCards'])->name('request');
+            // Route::get('/card-requests', [MerchantController::class, 'viewRequests'])->name('cards.requests');
+            Route::get('/request', [MerchantController::class, 'requestCards'])->name('request');
 
             // View Requests page
-            Route::get('/view', [AdminController::class, 'viewRequests'])->name('view');
+            Route::get('/view', [MerchantController::class, 'viewRequests'])->name('view');
         });
 
         // Requests management
         Route::get('/requests', [MerchantRequestController::class, 'merchantRequests'])->name('merchant.requests');
         Route::post('/requests', [MerchantRequestController::class, 'storeRequest'])->name('merchant.requests.store');
-        Route::delete('/unassign-card/{id}', [AdminController::class, 'unassignCard'])->name('unassignCard');
+        Route::delete('/unassign-card/{id}', [MerchantController::class, 'unassignCard'])->name('unassignCard');
 
     });
 

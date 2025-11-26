@@ -13,6 +13,7 @@ class CreateTempSalesTable extends Migration
             $table->string('product_code')->unique();
             $table->foreignId('card_id')->constrained('cards')->onDelete('cascade');
             $table->foreignId('created_by')->constrained('users')->onDelete('cascade');
+            $table->decimal('amount', 10, 2)->default(0);
             $table->timestamps();
         });
 

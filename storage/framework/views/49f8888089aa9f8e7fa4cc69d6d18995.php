@@ -1,7 +1,9 @@
 <div class="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4"
     @dropdown-selected.window="
-    item.item_code = $event.detail.merchantSelected.item_code;
-    item.item_name = $event.detail.merchantSelected.item_name;
+    if ($event.detail.merchantSelected) {
+        item.item_code = $event.detail.merchantSelected.item_code;
+        item.item_name = $event.detail.merchantSelected.item_name;
+    }
 ">
 
     <!-- Product Code -->
@@ -33,7 +35,8 @@
     <div x-data="searchableDropdown({
         apiUrl: '<?php echo e(route('admin.dropdown.fetch', ['type' => 'products'])); ?>',
         optionLabel: 'item_code',
-        optionValue: 'id'
+        optionValue: 'id',
+        selectedKey: 'merchantSelected'
     })" x-init="init()" class="relative mt-1" @click.outside="open = false">
 
         <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
@@ -42,7 +45,14 @@
 
         <!-- Search Input -->
         <input type="text" x-model="searchQuery" placeholder="Search Item Code" required @focus="open = true"
-            @input="filterOptions()"
+            @input="filterOptions();
+                const key = $data.selectedKey;
+    const label = $data.optionLabel;
+
+    if ($data[key] && searchQuery !== $data[key][label]) {
+        $data[key] = null;
+        $data.selectedId = null;
+    }"
             @keydown.enter.prevent="
                 if (filteredOptions.length > 0) {
                     select(filteredOptions[0]);

@@ -25,7 +25,7 @@ class TempSaleController extends Controller
                 'cards.product_code',
                 'cards.net_weight',
                 'cards.total_amount as net_amount',
-                'cards.total_amount as total_amount',
+                'temp_sales.amount as total_amount',
 
                 // From products table
                 'products.item_name',
@@ -47,6 +47,7 @@ class TempSaleController extends Controller
     {
         $request->validate([
             'product_code' => 'required|string|exists:cards,product_code',
+            'amount' => 'required|numeric|min:0',
         ]);
 
         $card = \App\Models\Card::where('product_code', $request->product_code)->first();
@@ -75,6 +76,7 @@ class TempSaleController extends Controller
             'product_code' => $card->product_code,
             'card_id' => $card->id,
             'created_by' => auth()->id(),
+            'amount' => $request->amount,
         ]);
 
         // Return flattened data exactly like index()
@@ -85,7 +87,7 @@ class TempSaleController extends Controller
             'product_code' => $card->product_code,
             'net_weight' => $card->net_weight,
             'net_amount' => $card->total_amount,
-            'total_amount' => $card->total_amount,
+            'total_amount' => $temp->amount,
 
             // products fields
             'item_name' => $product->item_name,

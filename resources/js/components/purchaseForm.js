@@ -145,8 +145,10 @@ export default function purchaseForm(globalGoldRate, globalDiamondRate) {
         init() {
             // Dropdown sync
             window.addEventListener("dropdown-selected", (e) => {
-                this.item.item_code = e.detail.selected.item_code;
-                this.item.item_name = e.detail.selected.item_name;
+                if (e.detail.merchantSelected) {
+                    this.item.item_code = e.detail.merchantSelected.item_code;
+                    this.item.item_name = e.detail.merchantSelected.item_name;
+                }
             });
 
             // Watch real fields

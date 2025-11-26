@@ -5,11 +5,14 @@ export default function searchableDropdown(config = {}) {
         options: [],
         filteredOptions: [],
         merchantSelected: null,
+        salesmanSelected: null,
         selectedId: "",
         apiUrl: config.apiUrl || null,
         sourceKey: config.sourceKey || null,
         optionLabel: config.optionLabel || "name",
         optionValue: config.optionValue || "id",
+        selectedKey: config.selectedKey || null,
+
         cacheDuration: 15 * 60 * 1000, // 15 minutes
 
         async init() {
@@ -115,17 +118,22 @@ export default function searchableDropdown(config = {}) {
             });
         },
 
-        // 🟢 Select an option
         select(option) {
-            this.merchantSelected = option;
+            // Set the dynamic selected variable (merchantSelected / salesmanSelected)
+            if (this.selectedKey) {
+                this[this.selectedKey] = option;
+            }
+
             this.selectedId = option[this.optionValue];
             this.searchQuery = option[this.optionLabel];
             this.open = false;
 
-            // Broadcast Alpine event
-            this.$dispatch("dropdown-selected", { merchantSelected: option });
+            // Broadcast Alpine event with dynamic key
+            this.$dispatch("dropdown-selected", {
+                [this.selectedKey]: option,
+            });
 
-            // Focus next input field automatically
+            // Auto focus next field
             this.$nextTick(() => {
                 const focusables = Array.from(
                     document.querySelectorAll(

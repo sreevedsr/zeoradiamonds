@@ -125,6 +125,7 @@ export function inlineSaleItem() {
         addToParent() {
             const form = new FormData();
             form.append("product_code", this.item.product_code);
+            form.append("amount", this.item.total_amount);
 
             fetch("/admin/temp-sales", {
                 method: "POST",

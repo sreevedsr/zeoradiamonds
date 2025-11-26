@@ -11,6 +11,7 @@ class AdminSalesInvoice extends Model
     protected $fillable = [
         'product_code',
         'merchant_id',
+        'staff_id',
         'invoice_no',
         'sale_date',
         'amount',
@@ -31,5 +32,11 @@ class AdminSalesInvoice extends Model
     public function merchant()
     {
         return $this->belongsTo(User::class, 'merchant_id');
+    }
+
+    // New staff relationship
+    public function staff()
+    {
+        return $this->belongsTo(Staff::class, 'staff_id');
     }
 }

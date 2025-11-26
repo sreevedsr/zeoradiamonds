@@ -10,7 +10,8 @@ class TempSale extends Model
     protected $fillable = [
         'product_code',
         'card_id',
-        'created_by'
+        'created_by',
+        'amount',
     ];
 
     public function card()

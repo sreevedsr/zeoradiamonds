@@ -52,7 +52,8 @@ class CardAssignmentController extends Controller
     {
         $request->validate([
             'merchant_id' => 'required|exists:users,id',
-            'invoice_no' => 'required|string|max:255'
+            'invoice_no' => 'required|string|max:255',
+            'salesman_id' => 'required|exists:staff,id',
         ]);
 
         $items = TempSale::where('created_by', Auth::id())->get();
@@ -97,9 +98,10 @@ class CardAssignmentController extends Controller
                 \DB::table('admin_sales_invoices')->insert([
                     'product_code' => $item->product_code,
                     'merchant_id' => $request->merchant_id,
+                    'staff_id' => $request->salesman_id,
                     'invoice_no' => $invoiceNo,
                     'sale_date' => now()->toDateString(),
-                    'amount' => $item->total_amount ?? 0,
+                    'amount' => $item->amount ?? 0,
                     'notes' => null,
                     'created_at' => now(),
                     'updated_at' => now(),

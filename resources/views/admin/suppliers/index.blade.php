@@ -5,12 +5,14 @@
         <div class=" text-gray-900 dark:text-gray-100">
 
             <!-- Suppliers Table -->
-            <x-table :headers="['#', 'Supplier Code', 'Name', 'Phone', 'State', 'GST No', 'Created At', 'Actions']" :from="$pagination['from'] ?? 1" :to="$pagination['to'] ?? 10" :total="$pagination['total'] ?? count($suppliers)" :pages="$pagination['pages'] ?? [1]"
-                :current="$pagination['current'] ?? 1">
+            <x-table :headers="['#', 'Supplier Code', 'Name', 'Phone', 'State', 'GST No', 'Created At', 'Actions']" :collection="$suppliers" :from="$pagination['from'] ?? 1" :to="$pagination['to'] ?? 10" :total="$pagination['total'] ?? count($suppliers)"
+                :pages="$pagination['pages'] ?? [1]" :current="$pagination['current'] ?? 1">
+
                 @foreach ($suppliers as $index => $supplier)
                     <tr
                         class="text-gray-700 transition-colors hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-700">
-                        <td class="px-4 py-3 text-sm">{{ $index + 1 }}</td>
+                        <td class="px-4 py-3 text-sm"> {{ $suppliers->firstItem() + $index }}
+                        </td>
                         <td class="px-4 py-3 text-sm">{{ $supplier->supplier_code }}</td>
                         <td class="px-4 py-3 text-sm">{{ $supplier->name }}</td>
                         <td class="px-4 py-3 text-sm">{{ $supplier->phone }}</td>

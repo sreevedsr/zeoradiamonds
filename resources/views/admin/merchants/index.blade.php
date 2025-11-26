@@ -21,7 +21,8 @@
                 @foreach ($merchants as $index => $merchant)
                     <tr
                         class="text-gray-700 transition-colors hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-700">
-                        <td class="px-4 py-3 text-sm">{{ $index + 1 }}</td>
+                        <td class="px-4 py-3 text-sm"> {{ $merchants->firstItem() + $index }}
+                        </td>
                         <td class="px-4 py-3 text-sm font-medium">{{ $merchant->merchant_code ?? '—' }}</td>
                         <td class="px-4 py-3 text-sm">
                             <p>{{ $merchant->name }}</p>
