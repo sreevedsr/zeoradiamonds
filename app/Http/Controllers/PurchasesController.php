@@ -56,6 +56,22 @@ class PurchasesController extends Controller
             $invoice = PurchaseInvoice::create($validated);
 
             foreach ($tempItems as $item) {
+
+                // Move certificate image if exists
+                $certificateImage = null;
+                if ($item->certificate_image) {
+                    $certificateImage = str_replace('temp/', 'certificates/', $item->certificate_image);
+                    \Storage::disk('public')->move($item->certificate_image, $certificateImage);
+                }
+
+                // Move product image if exists
+                $productImage = null;
+                if ($item->product_image) {
+                    $productImage = str_replace('temp/', 'products/', $item->product_image);
+                    \Storage::disk('public')->move($item->product_image, $productImage);
+                }
+
+                // Create Card
                 $card = Card::create([
                     'purchase_invoice_id' => $invoice->id,
                     'product_code' => $item->product_code,
@@ -83,8 +99,10 @@ class PurchasesController extends Controller
                     'clarity' => $item->clarity,
                     'cut' => $item->cut,
                     'certificate_code' => $item->certificate_code,
-                    'certificate_image' => $item->certificate_image,
-                    'product_image' => $item->product_image,
+
+                    // 🔥 Save final paths, NOT temp paths
+                    'certificate_image' => $certificateImage,
+                    'product_image' => $productImage,
                 ]);
 
                 CardOwnership::create([
@@ -93,6 +111,7 @@ class PurchasesController extends Controller
                     'owner_id' => null,
                 ]);
             }
+
 
             TempPurchaseItem::where('user_id', Auth::id())->delete();
 

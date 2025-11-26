@@ -22,7 +22,7 @@
     <x-table :headers="$headers"
         :collection="$invoices"
         :route="route('admin.reports.sales')"
-        searchPlaceholder="Search invoice, product code">
+        searchPlaceholder="Invoice, Product Code...">
 
         {{-- 🎯 FILTERS SLOT --}}
         <x-slot:filters>

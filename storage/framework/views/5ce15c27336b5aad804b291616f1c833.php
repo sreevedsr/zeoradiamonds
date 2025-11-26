@@ -10,8 +10,8 @@
 <?php $component->withAttributes([]); ?>
     <?php $__env->slot('title', 'Suppliers'); ?>
 
-    <div class="bg-white p-4 shadow dark:bg-gray-800 sm:rounded-lg sm:px-8" x-data="editModal()">
-        <div class="mx-auto text-gray-900 dark:text-gray-100">
+    <div class="bg-white shadow dark:bg-gray-800 sm:rounded-lg" x-data="editModal()">
+        <div class=" text-gray-900 dark:text-gray-100">
 
             <!-- Suppliers Table -->
             <?php if (isset($component)) { $__componentOriginal7d9f6e0b9001f5841f72577781b2d17f = $component; } ?>

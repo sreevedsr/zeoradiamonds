@@ -19,7 +19,7 @@
         ];
     @endphp
 
-    <x-table :headers="$headers" :collection="$cards" :route="route('admin.reports.purchase')" searchPlaceholder="Search certificate ID, item name">
+    <x-table :headers="$headers" :collection="$cards" :route="route('admin.reports.purchase')" searchPlaceholder="Certificate ID, Item Name...">
 
         {{-- 🎯 FILTERS SLOT --}}
         <x-slot:filters>

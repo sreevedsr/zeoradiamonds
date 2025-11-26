@@ -11,14 +11,49 @@ class TempPurchaseItemController extends Controller
     // Fetch items for logged-in user
     public function index()
     {
-        return TempPurchaseItem::where('user_id', Auth::id())->orderBy('id', 'desc')->get();
+        return TempPurchaseItem::where('user_id', Auth::id())
+            ->orderBy('id', 'desc')
+            ->get();
     }
 
     // Store one item
     public function store(Request $request)
     {
+        // Validate incoming fields (all from modal)
         $request->validate([
-            'product_code' => 'required|string',
+            'product_code'       => 'required|string',
+            'item_code'          => 'nullable|string',
+            'item_name'          => 'nullable|string',
+            'quantity'           => 'nullable|numeric',
+            'gold_rate'          => 'nullable|numeric',
+            'gross_weight'       => 'nullable|numeric',
+            'stone_weight'       => 'nullable|numeric',
+            'diamond_weight'     => 'nullable|numeric',
+            'net_weight'         => 'nullable|numeric',
+            'stone_amount'       => 'nullable|numeric',
+            'diamond_rate'       => 'nullable|numeric',
+            'making_charge'      => 'nullable|numeric',
+            'card_charge'        => 'nullable|numeric',
+            'other_charge'       => 'nullable|numeric',
+            'total_amount'       => 'nullable|numeric',
+            'landing_cost'       => 'nullable|numeric',
+            'retail_percent'     => 'nullable|numeric',
+            'retail_cost'        => 'nullable|numeric',
+            'mrp_percent'        => 'nullable|numeric',
+            'mrp_cost'           => 'nullable|numeric',
+
+            // Diamond certificate fields
+            'certificate_id'     => 'nullable|string',
+            'color'              => 'nullable|string',
+            'clarity'            => 'nullable|string',
+            'cut'                => 'nullable|string',
+
+            // Uploaded image paths (from AJAX temp upload)
+            'certificate_image'  => 'nullable|string',
+            'product_image'      => 'nullable|string',
+
+            'barcode_data'       => 'nullable|string',
+            'notes'              => 'nullable|string',
         ]);
 
         $productCode = $request->product_code;
@@ -46,16 +81,14 @@ class TempPurchaseItemController extends Controller
         return response()->json(['status' => 'success']);
     }
 
-
-
     public function update(Request $request, $id)
     {
         $item = TempPurchaseItem::findOrFail($id);
 
         $item->update([
-            'item_name' => $request->item_name,
-            'quantity' => $request->quantity,
-            'net_weight' => $request->net_weight,
+            'item_name'    => $request->item_name,
+            'quantity'     => $request->quantity,
+            'net_weight'   => $request->net_weight,
             'total_amount' => $request->total_amount,
         ]);
 

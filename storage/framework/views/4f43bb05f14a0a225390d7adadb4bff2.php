@@ -10,9 +10,6 @@
 <?php $component->withAttributes([]); ?>
     <?php $__env->slot('title', 'Purchase Report'); ?>
 
-    
-    
-
     <?php
         $headers = [
             'SI. No.',
@@ -40,7 +37,7 @@
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\App\View\Components\Table::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['headers' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($headers),'collection' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($cards),'route' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(route('admin.reports.purchase')),'searchPlaceholder' => 'Search certificate ID, item name']); ?>
+<?php $component->withAttributes(['headers' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($headers),'collection' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($cards),'route' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(route('admin.reports.purchase')),'searchPlaceholder' => 'Certificate ID, Item Name...']); ?>
 
         
          <?php $__env->slot('filters', null, []); ?> 

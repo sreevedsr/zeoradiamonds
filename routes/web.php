@@ -7,6 +7,7 @@ use App\Http\Controllers\CardController;
 use App\Http\Controllers\RateController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\StaffController;
+use App\Http\Controllers\UploadController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
@@ -118,6 +119,10 @@ Route::middleware('auth')->group(function () {
         Route::middleware(['auth', 'can:edit-cards'])->prefix('products')->name('products.')->group(function () {
             Route::get('register', [ProductController::class, 'create'])->name('register');
             Route::post('register', [ProductController::class, 'store'])->name('register');
+
+            Route::post('/upload-temp-image', [UploadController::class, 'uploadTempImage'])
+                ->name('upload.temp.image');
+
 
 
 

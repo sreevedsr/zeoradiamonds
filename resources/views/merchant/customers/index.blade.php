@@ -6,7 +6,7 @@
 
             <!-- Customers Table -->
             <x-table :headers="['#', 'Customer Name', 'Email', 'Phone', 'City', 'State', 'Created At', 'Actions']" :from="$customers->firstItem()" :to="$customers->lastItem()" :total="$customers->total()" :pages="$customers->getUrlRange(1, $customers->lastPage())"
-                :current="$customers->currentPage()" :route="route('merchant.customers.index')" searchPlaceholder="Search customers...">
+                :current="$customers->currentPage()" :route="route('merchant.customers.index')" searchPlaceholder="Customers...">
                 @foreach ($customers as $index => $customer)
                     <tr
                         class="text-gray-700 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">

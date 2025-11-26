@@ -36,7 +36,7 @@
             :class="isSidebarCollapsed ? 'md:ml-20' : 'md:ml-64'">
             @include('layouts.navigation')
 
-            <main class="flex-1 overflow-y-auto px-6 py-6 transition-colors duration-300">
+            <main class="flex-1 overflow-y-auto px-6 pt-4 transition-colors duration-300">
                 {{ $slot }}
             </main>
         </div>

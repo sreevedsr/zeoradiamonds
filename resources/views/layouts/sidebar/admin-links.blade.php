@@ -12,11 +12,12 @@
             :aria-expanded="open.toString()">
 
             <!-- Icon -->
-            <svg class="h-5 w-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
-                stroke-linecap="round" stroke-linejoin="round">
-                <path
-                    d="M12 15.5H7.5C6.1 15.5 5.4 15.5 4.84 15.67C3.56 16.06 2.56 17.06 2.17 18.34C2 18.9 2 19.6 2 21M19 21V15M16 18H22M14.5 7.5C14.5 9.98 12.48 12 10 12C7.51 12 5.5 9.98 5.5 7.5C5.5 5.01 7.51 3 10 3C12.48 3 14.5 5.01 14.5 7.5Z">
-                </path>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                class="lucide lucide-shopping-cart-icon lucide-shopping-cart shrink-0">
+                <circle cx="8" cy="21" r="1" />
+                <circle cx="19" cy="21" r="1" />
+                <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
             </svg>
 
             <!-- Label -->
@@ -84,9 +85,13 @@
             :aria-expanded="open.toString()">
 
             <!-- Icon -->
-            <svg class="h-5 w-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
-                stroke-linecap="round" stroke-linejoin="round">
-                <path d="M20 13V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v6M9 21h6M12 17v4M3 13h18"></path>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                class="lucide lucide-users-icon lucide-users shrink-0">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                <path d="M16 3.128a4 4 0 0 1 0 7.744" />
+                <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+                <circle cx="9" cy="7" r="4" />
             </svg>
 
             <!-- Label -->
@@ -155,10 +160,14 @@
             :aria-expanded="open.toString()">
 
             <!-- Icon -->
-            <svg class="h-5 w-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
-                stroke-linecap="round" stroke-linejoin="round">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                class="lucide lucide-package-icon lucide-package shrink-0">
                 <path
-                    d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                    d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z" />
+                <path d="M12 22V12" />
+                <polyline points="3.29 7 12 12 20.71 7" />
+                <path d="m7.5 4.27 9 5.15" />
             </svg>
 
             <!-- Label -->
@@ -246,14 +255,15 @@
             :aria-expanded="open.toString()">
 
             <!-- Icon -->
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                class="lucide lucide-file-chart h-5 w-5 shrink-0">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                <path d="M14 2v6h6" />
-                <path d="M8 13h1v3H8z" />
-                <path d="M12 11h1v5h-1z" />
-                <path d="M16 9h1v7h-1z" />
+                class="lucide lucide-file-text-icon lucide-file-text shrink-0">
+                <path
+                    d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" />
+                <path d="M14 2v5a1 1 0 0 0 1 1h5" />
+                <path d="M10 9H8" />
+                <path d="M16 13H8" />
+                <path d="M16 17H8" />
             </svg>
 
             <!-- Label -->
@@ -271,7 +281,9 @@
                 :class="[open ? 'rotate-180' : 'rotate-0', isSidebarCollapsed ? 'hidden' : 'block']" fill="currentColor"
                 viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 0 1 1.414 0L10 10.586l3.293-3.293a1 1 0 0 1
-                        1.414 1.414l-4 4a1 1 0 0 1-1.414 0l-4-4a1 1 0 0 1 0-1.414z" clip-rule="evenodd"></path>
+                                            1.414 1.414l-4 4a1 1 0 0 1-1.414 0l-4-4a1 1 0 0 1 0-1.414z"
+                    clip-rule="evenodd">
+                </path>
             </svg>
         </button>
 
@@ -366,14 +378,11 @@
             :aria-expanded="open.toString()">
 
             <!-- Icon -->
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                class="lucide lucide-id-card-lanyard-icon lucide-id-card-lanyard h-5 w-5 shrink-0">
-                <path d="M13.5 8h-3" />
-                <path d="m15 2-1 2h3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h3" />
-                <path d="M16.899 22A5 5 0 0 0 7.1 22" />
-                <path d="m9 2 3 6" />
-                <circle cx="12" cy="15" r="3" />
+                class="lucide lucide-user-icon lucide-user shrink-0">
+                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
             </svg>
 
             <!-- Label (completely hidden when sidebar collapsed) -->

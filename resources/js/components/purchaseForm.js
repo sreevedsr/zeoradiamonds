@@ -25,7 +25,10 @@ export default function purchaseForm(globalGoldRate, globalDiamondRate) {
             ];
 
             requiredText.forEach((field) => {
-                if (!this.item[field] || this.item[field].toString().trim() === "") {
+                if (
+                    !this.item[field] ||
+                    this.item[field].toString().trim() === ""
+                ) {
                     this.errors[field] = "This field is required.";
                 }
             });
@@ -64,12 +67,19 @@ export default function purchaseForm(globalGoldRate, globalDiamondRate) {
             });
 
             // Images
-            if (this.item.certificate_image && !(this.item.certificate_image instanceof File)) {
-                this.errors.certificate_image = "Invalid certificate image.";
+            if (
+                this.item.certificate_image &&
+                typeof this.item.certificate_image !== "string"
+            ) {
+                this.errors.certificate_image =
+                    "Invalid certificate image path.";
             }
 
-            if (this.item.product_image && !(this.item.product_image instanceof File)) {
-                this.errors.product_image = "Invalid product image.";
+            if (
+                this.item.product_image &&
+                typeof this.item.product_image !== "string"
+            ) {
+                this.errors.product_image = "Invalid product image path.";
             }
 
             // Net weight
@@ -172,7 +182,9 @@ export default function purchaseForm(globalGoldRate, globalDiamondRate) {
 
         diamondWeightInGrams() {
             const carats = parseFloat(this.item.diamond_weight);
-            return isNaN(carats) || carats <= 0 ? 0 : +(carats * 0.002).toFixed(3);
+            return isNaN(carats) || carats <= 0
+                ? 0
+                : +(carats * 0.002).toFixed(3);
         },
 
         // -----------------------------
@@ -187,10 +199,14 @@ export default function purchaseForm(globalGoldRate, globalDiamondRate) {
             const newMrp = this.calculateMrpCost(newLanding);
 
             if (this.item.net_weight !== newNet) this.item.net_weight = newNet;
-            if (this.item.gold_component !== newGold) this.item.gold_component = newGold;
-            if (this.item.total_amount !== newTotal) this.item.total_amount = newTotal;
-            if (this.item.landing_cost !== newLanding) this.item.landing_cost = newLanding;
-            if (this.item.retail_cost !== newRetail) this.item.retail_cost = newRetail;
+            if (this.item.gold_component !== newGold)
+                this.item.gold_component = newGold;
+            if (this.item.total_amount !== newTotal)
+                this.item.total_amount = newTotal;
+            if (this.item.landing_cost !== newLanding)
+                this.item.landing_cost = newLanding;
+            if (this.item.retail_cost !== newRetail)
+                this.item.retail_cost = newRetail;
             if (this.item.mrp_cost !== newMrp) this.item.mrp_cost = newMrp;
         },
 
@@ -203,7 +219,9 @@ export default function purchaseForm(globalGoldRate, globalDiamondRate) {
         },
 
         calculateGoldComponent(netWeight = this.item.net_weight) {
-            return +(this.safeNumber(netWeight) * this.safeNumber(this.gold_rate)).toFixed(2);
+            return +(
+                this.safeNumber(netWeight) * this.safeNumber(this.gold_rate)
+            ).toFixed(2);
         },
 
         calculateTotalAmount(goldComponent = this.item.gold_component) {
@@ -219,7 +237,10 @@ export default function purchaseForm(globalGoldRate, globalDiamondRate) {
             return +(gold + stone + diamond + charges).toFixed(2);
         },
 
-        calculateLandingCost(total = this.item.total_amount, gold = this.item.gold_component) {
+        calculateLandingCost(
+            total = this.item.total_amount,
+            gold = this.item.gold_component,
+        ) {
             const val = this.safeNumber(total) - this.safeNumber(gold);
             return val > 0 ? +val.toFixed(2) : 0;
         },
@@ -272,7 +293,9 @@ export default function purchaseForm(globalGoldRate, globalDiamondRate) {
                 const response = await fetch("/admin/temp-items", {
                     method: "POST",
                     headers: {
-                        "X-CSRF-TOKEN": document.querySelector("meta[name=csrf-token]").content,
+                        "X-CSRF-TOKEN": document.querySelector(
+                            "meta[name=csrf-token]",
+                        ).content,
                         "Content-Type": "application/json",
                     },
                     body: JSON.stringify(this.item),

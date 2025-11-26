@@ -36,6 +36,8 @@
                 </div>
             </div>
 
+            
+
             <!-- Merchant Dropdown -->
             <div x-data="searchableDropdown({
                 apiUrl: '{{ route('admin.dropdown.fetch', ['type' => 'merchants']) }}',
@@ -68,7 +70,7 @@
                     <!-- Dropdown -->
                     <div x-show="open" x-transition
                         class="absolute z-10 mt-1 w-full max-h-60 overflow-y-auto rounded-md
-                       bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700">
+                       bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700 custom-scrollbar">
                         <template x-if="filteredOptions.length > 0">
                             <ul>
                                 <template x-for="option in filteredOptions" :key="option[optionValue]">

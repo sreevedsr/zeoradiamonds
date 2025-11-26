@@ -5,11 +5,13 @@
             aria-hidden="true"></span>
         <a href="<?php echo e(route('dashboard')); ?>"
             class="<?php echo e(request()->routeIs('dashboard') ? 'text-gray-800 dark:text-gray-200' : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?> inline-flex w-full items-start text-sm font-semibold transition-colors duration-150">
-            <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
-                stroke-linecap="round" stroke-linejoin="round">
-                <path
-                    d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
-                </path>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                class="lucide lucide-layout-dashboard-icon lucide-layout-dashboard">
+                <rect width="7" height="9" x="3" y="3" rx="1" />
+                <rect width="7" height="5" x="14" y="3" rx="1" />
+                <rect width="7" height="9" x="14" y="12" rx="1" />
+                <rect width="7" height="5" x="3" y="16" rx="1" />
             </svg>
             <span class="ml-2 transition-all duration-200 origin-left"
                 :class="isSidebarCollapsed ? 'opacity-0 w-0 overflow-hidden' : 'opacity-100 w-auto'">
@@ -30,5 +32,4 @@
     <?php endif; ?>
 
 </ul>
-
 <?php /**PATH C:\xampp\htdocs\zeoradiamonds\resources\views/layouts/sidebar/links.blade.php ENDPATH**/ ?>

@@ -2,7 +2,7 @@
     @slot('title', 'Merchants')
 
 
-    <div class="bg-white px-6 py-2 shadow dark:bg-gray-800 rounded-lg "x-data="editModal()">
+    <div class="bg-white shadow dark:bg-gray-800 rounded-lg "x-data="editModal()">
         <div class="mx-auto  text-gray-900 dark:text-gray-100">
             <!-- Merchants Table -->
             <x-table :headers="[

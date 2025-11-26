@@ -84,7 +84,7 @@
                 </template>
             </div>
 
-            <input type="hidden" name="supplier_id" :value="selected ? selected.id : ''">
+            <input type="hidden" name="supplier_id" :value="selectedId">
         </div>
 
     </div>

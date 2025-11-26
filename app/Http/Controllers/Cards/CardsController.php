@@ -64,7 +64,6 @@ class CardsController extends Controller
         return view('admin.reports.purchase', compact('cards', 'suppliers'));
     }
 
-
     public function lookup(Request $request)
     {
         $search = $request->get('q');

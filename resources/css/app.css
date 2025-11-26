@@ -2,74 +2,82 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Placeholder color (light mode) */
-input::placeholder,
-textarea::placeholder {
-    color: #9ca3af !important; /* gray-400 */
+/* --------------------------------
+   GLOBAL INPUT + TEXT + PLACEHOLDER
+---------------------------------- */
+@layer base {
+    /* Placeholder - Light Mode */
+    input::placeholder,
+    textarea::placeholder {
+        @apply text-gray-400;
+    }
+
+    /* Placeholder - Dark Mode */
+    .dark input::placeholder,
+    .dark textarea::placeholder {
+        @apply text-gray-500;
+    }
+
+    /* Input Text - Light Mode */
+    input,
+    textarea {
+        @apply text-gray-900;
+    }
+
+    /* Input Text - Dark Mode */
+    .dark input,
+    .dark textarea {
+        @apply text-white;
+    }
 }
 
-/* Placeholder color (dark mode) */
-.dark input::placeholder,
-.dark textarea::placeholder {
-    color: #6b7280 !important; /* gray-500 */
-}
-
-/* Input text color when typing */
-input,
-textarea {
-    color: #ffffff !important; /* white text */
-}
-
-/* Dark mode input text */
-.dark input,
-.dark textarea {
-    color: #ffffff !important; /* still white in dark mode */
-}
-
-
-.custom-scrollbar::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-track {
-    background: #f1f5f9;
-    border-radius: 4px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb {
-    background: #c7d2fe;
-    border-radius: 4px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: #a5b4fc;
-}
-
-.custom-scrollbar::-webkit-scrollbar-corner {
-    background: #e2e8f0;
-}
-
-.dark .custom-scrollbar::-webkit-scrollbar-track {
-    background: #374151;
-}
-
-.dark .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: #4b5563;
-}
-
-.dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: #6b7280;
-}
-
-.dark .custom-scrollbar::-webkit-scrollbar-corner {
-    background: #4b5563;
-}
-
+/* --------------------------------
+   CUSTOM SCROLLBAR
+---------------------------------- */
 @layer utilities {
+    .custom-scrollbar::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-track {
+        background: #f1f5f9;
+        border-radius: 4px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #c7d2fe;
+        border-radius: 4px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: #a5b4fc;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-corner {
+        background: #e2e8f0;
+    }
+
+    /* Dark Mode Scrollbar */
+    .dark .custom-scrollbar::-webkit-scrollbar-track {
+        background: #374151;
+    }
+
+    .dark .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #4b5563;
+    }
+
+    .dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: #6b7280;
+    }
+
+    .dark .custom-scrollbar::-webkit-scrollbar-corner {
+        background: #4b5563;
+    }
+
+    /* Slow Pulse Animation */
     @keyframes pulse-slow {
-        0%,
-        100% {
+        0%, 100% {
             opacity: 0.3;
         }
         50% {

@@ -1,8 +1,8 @@
 <div class="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4"
     @dropdown-selected.window="
-        item.item_code = $event.detail.selected.item_code;
-        item.item_name = $event.detail.selected.item_name
-    ">
+    item.item_code = $event.detail.merchantSelected.item_code;
+    item.item_name = $event.detail.merchantSelected.item_name;
+">
 
     <!-- Product Code -->
     <div>
@@ -82,7 +82,7 @@
             </template>
         </div>
 
-        <input type="hidden" name="item_id" :value="selected ? selected.id : ''">
+        <input type="hidden" name="item_id" :value="selectedId">
 
         <p class="text-red-500 text-xs mt-1" x-text="errors.item_code" x-show="errors.item_code"></p>
     </div>
