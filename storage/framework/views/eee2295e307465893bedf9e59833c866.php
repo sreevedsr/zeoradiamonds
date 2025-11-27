@@ -1,5 +1,14 @@
-<x-app-layout>
-    @slot('title', 'Assign Diamond Certificates')
+<?php if (isset($component)) { $__componentOriginal9ac128a9029c0e4701924bd2d73d7f54 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54 = $attributes; } ?>
+<?php $component = App\View\Components\AppLayout::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('app-layout'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\App\View\Components\AppLayout::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+    <?php $__env->slot('title', 'Assign Diamond Certificates'); ?>
 
         <div class="mx-auto text-gray-900 dark:text-gray-100 bg-white p-6 shadow dark:bg-gray-800 sm:rounded-lg sm:p-8">
 
@@ -9,13 +18,13 @@
                 <h3 class="mb-4 text-lg font-semibold text-gray-800 dark:text-gray-100">Assign Certificate to Customer
                 </h3>
 
-                <form action="{{ route('merchant.cards.assign') }}" method="POST" class="space-y-6">
-                    @csrf
+                <form action="<?php echo e(route('merchant.cards.assign')); ?>" method="POST" class="space-y-6">
+                    <?php echo csrf_field(); ?>
 
                     <div x-data="{
                         selectedCard: '',
                         valuation: '',
-                        {{-- cards: {{ Js::from($cards) }}, --}}
+                        
                         price: '',
                         discount: '',
                         get finalPrice() {
@@ -35,9 +44,9 @@
                             <select id="customer" name="customer" required
                                 class="block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-800 shadow-sm transition duration-200 ease-in-out focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200">
                                 <option value="" disabled selected>-- Select Customer --</option>
-                                @foreach ($customers as $customer)
-                                    <option value="{{ $customer->id }}">{{ $customer->name }}</option>
-                                @endforeach
+                                <?php $__currentLoopData = $customers; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $customer): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <option value="<?php echo e($customer->id); ?>"><?php echo e($customer->name); ?></option>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </select>
                         </div>
 
@@ -51,9 +60,7 @@
                                 @change="valuation = cards.find(c => c.id == selectedCard)?.valuation || ''"
                                 class="block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-800 shadow-sm transition duration-200 ease-in-out focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200">
                                 <option value="" disabled selected>-- Select Card --</option>
-                                {{-- @foreach ($cards as $card)
-                                    <option value="{{ $card->id }}">{{ $card->certificate_id }}</option>
-                                @endforeach --}}
+                                
                             </select>
                         </div>
 
@@ -131,30 +138,13 @@
                         </tr>
                     </thead>
                     <tbody class="divide-y bg-white dark:divide-gray-700 dark:bg-gray-800">
-                        {{-- @forelse ($assignedCards as $index => $assigned) --}}
+                        
                         <tr class="text-gray-700 dark:text-gray-400">
-                            {{-- <td class="px-4 py-3 text-sm">{{ $index + 1 }}</td>
-                                    <td class="px-4 py-3 text-sm">{{ $assigned->customer->name }}</td>
-                                    <td class="px-4 py-3 text-sm">{{ $assigned->card->certificate_id }}</td>
-                                    <td class="px-4 py-3 text-sm">{{ $assigned->card->diamond_type }}</td>
-                                    <td class="px-4 py-3 text-sm">{{ $assigned->card->carat_weight }} ct</td>
-                                    <td class="px-4 py-3 text-sm">{{ $assigned->created_at->format('d M Y') }}</td>
-                                    <td class="px-4 py-3 text-sm">
-                                        <form action="{{ route('merchant.unassignCard', $assigned->id) }}" method="POST"
-                                            onsubmit="return confirm('Unassign this certificate?')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button class="text-red-600 hover:underline">Unassign</button>
-                                        </form> --}}
+                            
                             </td>
                         </tr>
-                        {{-- @empty --}}
-                        {{-- <tr>
-                                    <td colspan="7" class="px-4 py-3 text-center text-sm text-gray-500 dark:text-gray-400">
-                                        No assigned certificates found.
-                                    </td>
-                                </tr>
-                            @endforelse --}}
+                        
+                        
                     </tbody>
                 </table>
             </div>
@@ -184,4 +174,14 @@
         }
     </script>
 
-</x-app-layout>
+ <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54)): ?>
+<?php $attributes = $__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54; ?>
+<?php unset($__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal9ac128a9029c0e4701924bd2d73d7f54)): ?>
+<?php $component = $__componentOriginal9ac128a9029c0e4701924bd2d73d7f54; ?>
+<?php unset($__componentOriginal9ac128a9029c0e4701924bd2d73d7f54); ?>
+<?php endif; ?>
+<?php /**PATH C:\xampp\htdocs\zeoradiamonds\resources\views/merchant/cards/assign.blade.php ENDPATH**/ ?>

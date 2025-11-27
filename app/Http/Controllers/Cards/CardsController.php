@@ -20,13 +20,17 @@ class CardsController extends Controller
         $query = Card::with(['merchant', 'purchaseInvoice']);
 
         // Apply search filter
+// Apply search filter
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('certificate_id', 'like', "%{$search}%")
-                    ->orWhere('item_name', 'like', "%{$search}%")
-                    ->orWhere('product_code', 'like', "%{$search}%");
+                    ->orWhere('product_code', 'like', "%{$search}%")
+                    ->orWhereHas('product', function ($p) use ($search) {
+                        $p->where('item_name', 'like', "%{$search}%");
+                    });
             });
         }
+
 
         // Apply supplier filter
         if ($supplierId) {
@@ -90,14 +94,16 @@ class CardsController extends Controller
         }
 
         // -----------------------------
-        //  SEARCH FILTER (safe)
+        //  SEARCH FILTER 
         // -----------------------------
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('cards.product_code', 'like', "%{$search}%")
-                    ->orWhere('cards.item_name', 'like', "%{$search}%");
+                    ->orWhere('products.item_name', 'like', "%{$search}%")
+                    ->orWhere('products.item_code', 'like', "%{$search}%");
             });
         }
+
 
         $products = $query->limit(25)->get();
 

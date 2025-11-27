@@ -29,99 +29,113 @@ foreach ($attributes->all() as $__key => $__value) {
 unset($__defined_vars, $__key, $__value); ?>
 
 <?php if($paginator->hasPages()): ?>
-<div
-    class=" py-3 text-xs font-semibold tracking-wide text-gray-600 uppercase
+    <div
+        class="py-3 text-xs font-semibold tracking-wide text-gray-600 uppercase
            dark:text-gray-300 select-none">
 
-    <div class="grid grid-cols-3 items-center">
+        <div class="grid grid-cols-1 sm:grid-cols-3 items-center sm:gap-0 gap-3">
 
-        
-        <span class="flex items-center">
-            Showing <?php echo e($paginator->firstItem()); ?>–<?php echo e($paginator->lastItem()); ?> of <?php echo e($paginator->total()); ?>
+            
+            <span class="flex items-center sm:block hidden">
+                Showing <?php echo e($paginator->firstItem()); ?>–<?php echo e($paginator->lastItem()); ?> of <?php echo e($paginator->total()); ?>
 
-        </span>
+            </span>
 
-        <span></span>
+            
+            <span class="hidden sm:block"></span>
 
-        
-        <div class="flex justify-end">
-            <nav aria-label="Pagination">
-                <ul class="flex items-center gap-1">
+            
+            <div class="flex justify-center sm:justify-end w-full">
+                <nav aria-label="Pagination">
+                    <ul class="flex items-center gap-1">
 
-                    
-                    <?php if($paginator->previousPageUrl()): ?>
-                        <li>
-                            <a href="<?php echo e($paginator->previousPageUrl()); ?>"
-                               class="flex items-center justify-center w-9 h-9 rounded-xl
-                                      bg-gray-200 dark:bg-gray-700
-                                      hover:bg-gray-300 dark:hover:bg-gray-600
-                                      transition-all">
-                                <svg class="w-4 h-4 text-gray-700 dark:text-gray-200" viewBox="0 0 20 20" fill="currentColor">
-                                    <path d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" />
-                                </svg>
-                            </a>
-                        </li>
-                    <?php endif; ?>
-
-
-                    
-                    <?php
-                        $current = $paginator->currentPage();
-                        $last = $paginator->lastPage();
-                        $range = 2;
-                        $pages = [];
-
-                        $pages[] = 1;
-                        for ($i = $current - $range; $i <= $current + $range; $i++) {
-                            if ($i > 1 && $i < $last) $pages[] = $i;
-                        }
-                        if ($last > 1) $pages[] = $last;
-
-                        $pages = array_unique($pages);
-                        sort($pages);
-                    ?>
-
-                    <?php $prev = null; ?>
-                    <?php $__currentLoopData = $pages; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $page): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                        <?php if($prev && $page > $prev + 1): ?>
-                            <li><span class="px-2 text-gray-400 dark:text-gray-500">…</span></li>
+                        
+                        <?php if($paginator->previousPageUrl()): ?>
+                            <li>
+                                <a href="<?php echo e($paginator->previousPageUrl()); ?>"
+                                    class="flex items-center justify-center w-9 h-9 rounded-xl
+                                       bg-gray-200 dark:bg-gray-700
+                                       hover:bg-gray-300 dark:hover:bg-gray-600
+                                       transition-all">
+                                    <svg class="w-4 h-4 text-gray-700 dark:text-gray-200" viewBox="0 0 20 20"
+                                        fill="currentColor">
+                                        <path
+                                            d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" />
+                                    </svg>
+                                </a>
+                            </li>
                         <?php endif; ?>
 
-                        <li>
-                            <a href="<?php echo e($paginator->url($page)); ?>"
-                               class="px-3 py-1.5 rounded-xl text-sm transition-all
-                                      <?php echo e($page == $current
-                                            ? 'bg-purple-600 text-white hover:bg-purple-700 shadow-sm'
-                                            : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600'); ?>">
-                                <?php echo e($page); ?>
 
-                            </a>
-                        </li>
+                        
+                        <?php
+                            $current = $paginator->currentPage();
+                            $last = $paginator->lastPage();
+                            $range = 1; // smaller range for mobile, still works on desktop
+                            $pages = [];
 
-                        <?php $prev = $page; ?>
-                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                            $pages[] = 1;
+                            for ($i = $current - $range; $i <= $current + $range; $i++) {
+                                if ($i > 1 && $i < $last) {
+                                    $pages[] = $i;
+                                }
+                            }
+                            if ($last > 1) {
+                                $pages[] = $last;
+                            }
+
+                            $pages = array_unique($pages);
+                            sort($pages);
+                        ?>
+
+                        <?php $prev = null; ?>
+
+                        <?php $__currentLoopData = $pages; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $page): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <?php if($prev && $page > $prev + 1): ?>
+                                <li><span class="px-2 text-gray-400 dark:text-gray-500">…</span></li>
+                            <?php endif; ?>
+
+                            <li>
+                                <a href="<?php echo e($paginator->url($page)); ?>"
+                                    class="px-3 py-1.5 rounded-xl text-sm transition-all
+                                       <?php echo e($page == $current
+                                           ? 'bg-purple-600 text-white hover:bg-purple-700 shadow-sm'
+                                           : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600'); ?>
+
+                                       sm:px-3
+                                       px-2 text-xs">
+                                    
+                                    <?php echo e($page); ?>
+
+                                </a>
+                            </li>
+
+                            <?php $prev = $page; ?>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 
 
-                    
-                    <?php if($paginator->nextPageUrl()): ?>
-                        <li>
-                            <a href="<?php echo e($paginator->nextPageUrl()); ?>"
-                               class="flex items-center justify-center w-9 h-9 rounded-xl
-                                      bg-gray-200 dark:bg-gray-700
-                                      hover:bg-gray-300 dark:hover:bg-gray-600
-                                      transition-all">
-                                <svg class="w-4 h-4 text-gray-700 dark:text-gray-200" viewBox="0 0 20 20" fill="currentColor">
-                                    <path d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" />
-                                </svg>
-                            </a>
-                        </li>
-                    <?php endif; ?>
+                        
+                        <?php if($paginator->nextPageUrl()): ?>
+                            <li>
+                                <a href="<?php echo e($paginator->nextPageUrl()); ?>"
+                                    class="flex items-center justify-center w-9 h-9 rounded-xl
+                                       bg-gray-200 dark:bg-gray-700
+                                       hover:bg-gray-300 dark:hover:bg-gray-600
+                                       transition-all">
+                                    <svg class="w-4 h-4 text-gray-700 dark:text-gray-200" viewBox="0 0 20 20"
+                                        fill="currentColor">
+                                        <path
+                                            d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" />
+                                    </svg>
+                                </a>
+                            </li>
+                        <?php endif; ?>
 
-                </ul>
-            </nav>
+                    </ul>
+                </nav>
+            </div>
+
         </div>
     </div>
-
-</div>
 <?php endif; ?>
 <?php /**PATH C:\xampp\htdocs\zeoradiamonds\resources\views/components/pagination.blade.php ENDPATH**/ ?>

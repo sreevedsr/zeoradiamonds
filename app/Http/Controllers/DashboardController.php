@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class DashboardController extends Controller
 {
@@ -18,15 +19,14 @@ class DashboardController extends Controller
         $isAdmin = $user->role === 'admin';
         $merchantId = $isAdmin ? null : $user->id;
 
-        $cacheKey = 'dashboard_v_combined_' . ($isAdmin ? 'admin' : 'merchant_' . $merchantId);
+        $cacheKey = 'dashboard_v3_' . ($isAdmin ? 'admin' : 'merchant_' . $merchantId);
 
         $metrics = Cache::remember($cacheKey, now()->addMinutes(10), function () use ($isAdmin, $merchantId) {
 
-            // --- Months (last 6 months labels)
+            // --- months (last 6 months)
             $months = collect();
             for ($i = 5; $i >= 0; $i--) {
-                $dt = Carbon::now()->subMonths($i);
-                $months->push($dt->format('M Y'));
+                $months->push(Carbon::now()->subMonths($i)->format('M Y'));
             }
 
             $startThis = Carbon::now()->startOfMonth();
@@ -34,132 +34,132 @@ class DashboardController extends Controller
             $startLast = Carbon::now()->subMonth()->startOfMonth();
             $endLast = Carbon::now()->subMonth()->endOfMonth();
 
-            // -----------------------------
-            // ADMIN SALES (admin_sales_invoices) - for admin overview
-            // -----------------------------
-            $adminSalesQuery = DB::table('admin_sales_invoices')
-                ->selectRaw('DATE_FORMAT(created_at, "%b %Y") as month, SUM(amount) as total, COUNT(*) as orders')
-                ->groupBy('month')
-                ->orderByRaw('MIN(created_at)');
+            // Helper: determines if card_ownerships has owner_type column
+            $ownershipHasType = Schema::hasColumn('card_ownerships', 'owner_type');
 
-            if (!$isAdmin) {
-                // if merchants are viewing dashboard but admin_sales_invoices has merchant_id, scope it
-                $adminSalesQuery->where('merchant_id', $merchantId);
-            }
+            // Closure that applies ownership scoping for merchant queries.
+            // It expects a Query Builder instance joined to 'cards' (or uses 'cards' table).
+            $applyMerchantOwnershipScope = function ($query) use ($merchantId, $ownershipHasType) {
+                // Ensure we are joining card_ownerships in the caller before calling this.
+                $query->where('card_ownerships.owner_id', $merchantId);
 
-            $adminSalesMonthly = $adminSalesQuery->get()->keyBy('month');
+                if ($ownershipHasType) {
+                    // Adjust the string if you store a different owner_type value for merchants
+                    $query->where('card_ownerships.owner_type', 'merchant');
+                }
 
-            $totalAdminSales = DB::table('admin_sales_invoices')
-                ->when(!$isAdmin, fn($q) => $q->where('merchant_id', $merchantId))
-                ->sum('amount');
+                return $query;
+            };
 
             // -----------------------------
-            // PURCHASES / STOCK (cards JOIN purchase_invoices)
-            // We must sum cards.total_amount grouped by purchase_invoices.invoice_date
-            // -----------------------------
-            $purchaseMonthlyQuery = DB::table('cards')
-                ->join('purchase_invoices', 'purchase_invoices.id', '=', 'cards.purchase_invoice_id')
-                ->selectRaw('DATE_FORMAT(purchase_invoices.invoice_date, "%b %Y") as month, SUM(cards.total_amount) as total, COUNT(cards.id) as items')
-                ->groupBy('month')
-                ->orderByRaw('MIN(purchase_invoices.invoice_date)');
-
-            if (!$isAdmin) {
-                $purchaseMonthlyQuery->where('purchase_invoices.merchant_id', $merchantId);
-            }
-
-            $purchaseMonthly = $purchaseMonthlyQuery->get()->keyBy('month');
-
-            $totalPurchases = DB::table('cards')
-                ->join('purchase_invoices', 'purchase_invoices.id', '=', 'cards.purchase_invoice_id')
-                ->when(!$isAdmin, fn($q) => $q->where('purchase_invoices.merchant_id', $merchantId))
-                ->sum('cards.total_amount');
-
-            // -----------------------------
-            // MERCHANT SALES (cards) - per merchant/customer granularity
-            // -----------------------------
-            $cardsMonthlyQuery = Card::query()
-                ->join('purchase_invoices', 'purchase_invoices.id', '=', 'cards.purchase_invoice_id')
-                ->selectRaw('DATE_FORMAT(purchase_invoices.invoice_date, "%b %Y") as month, SUM(cards.total_amount) as total, COUNT(cards.id) as orders')
-                ->groupBy('month')
-                ->orderByRaw('MIN(purchase_invoices.invoice_date)');
-
-            if (!$isAdmin) {
-                $cardsMonthlyQuery->where('cards.merchant_id', $merchantId);
-            }
-
-            $cardsMonthly = $cardsMonthlyQuery->get()->keyBy('month');
-
-            $totalCardsSales = Card::query()
-                ->join('purchase_invoices', 'purchase_invoices.id', '=', 'cards.purchase_invoice_id')
-                ->when(!$isAdmin, fn($q) => $q->where('cards.merchant_id', $merchantId))
-                ->sum('cards.total_amount');
-
-            // -----------------------------
-            // Build series for chart (last 6 months)
-            // -----------------------------
-            $salesSeries = [];
-            $purchaseSeries = [];
-
-            foreach ($months as $m) {
-                // sales: admin for admin view, cards for merchant view
-                $salesSeries[] = (float) ($isAdmin ? ($adminSalesMonthly[$m]->total ?? 0) : ($cardsMonthly[$m]->total ?? 0));
-                // purchases: from purchaseMonthly (cards joined with purchase_invoices)
-                $purchaseSeries[] = (float) ($purchaseMonthly[$m]->total ?? 0);
-            }
-
-            // -----------------------------
-            // KPIs: this month / last month (sales and purchases)
+            // SALES (admin: admin_sales_invoices, merchant: cards via ownership)
             // -----------------------------
             if ($isAdmin) {
+                $salesMonthly = DB::table('admin_sales_invoices')
+                    ->selectRaw('DATE_FORMAT(created_at, "%b %Y") as month, SUM(amount) as total, COUNT(*) as orders')
+                    ->groupBy('month')
+                    ->orderByRaw('MIN(created_at)')
+                    ->get()
+                    ->keyBy('month');
+
+                $totalSales = DB::table('admin_sales_invoices')->sum('amount');
+
                 $salesThisMonth = DB::table('admin_sales_invoices')
-                    ->when(!$isAdmin, fn($q) => $q->where('merchant_id', $merchantId))
                     ->whereBetween('created_at', [$startThis, $endThis])
                     ->sum('amount');
 
                 $salesLastMonth = DB::table('admin_sales_invoices')
-                    ->when(!$isAdmin, fn($q) => $q->where('merchant_id', $merchantId))
                     ->whereBetween('created_at', [$startLast, $endLast])
                     ->sum('amount');
             } else {
+                // Merchant: sales are cards that are owned by the merchant (via card_ownerships)
+                $salesMonthlyQuery = DB::table('cards')
+                    ->join('purchase_invoices', 'purchase_invoices.id', '=', 'cards.purchase_invoice_id')
+                    ->join('card_ownerships', 'card_ownerships.card_id', '=', 'cards.id')
+                    ->selectRaw('DATE_FORMAT(purchase_invoices.invoice_date, "%b %Y") as month, SUM(cards.total_amount) as total, COUNT(cards.id) as orders')
+                    ->groupBy('month')
+                    ->orderByRaw('MIN(purchase_invoices.invoice_date)');
+
+                // apply ownership
+                $applyMerchantOwnershipScope($salesMonthlyQuery);
+
+                $salesMonthly = $salesMonthlyQuery->get()->keyBy('month');
+
+                $totalSales = DB::table('cards')
+                    ->join('card_ownerships', 'card_ownerships.card_id', '=', 'cards.id')
+                    ->when($ownershipHasType, fn($q) => $q->where('card_ownerships.owner_type', 'merchant'))
+                    ->where('card_ownerships.owner_id', $merchantId)
+                    ->sum('cards.total_amount');
+
                 $salesThisMonth = DB::table('cards')
                     ->join('purchase_invoices', 'purchase_invoices.id', '=', 'cards.purchase_invoice_id')
-                    ->where('cards.merchant_id', $merchantId)
+                    ->join('card_ownerships', 'card_ownerships.card_id', '=', 'cards.id')
+                    ->when($ownershipHasType, fn($q) => $q->where('card_ownerships.owner_type', 'merchant'))
+                    ->where('card_ownerships.owner_id', $merchantId)
                     ->whereBetween('purchase_invoices.invoice_date', [$startThis, $endThis])
                     ->sum('cards.total_amount');
 
                 $salesLastMonth = DB::table('cards')
                     ->join('purchase_invoices', 'purchase_invoices.id', '=', 'cards.purchase_invoice_id')
-                    ->where('cards.merchant_id', $merchantId)
+                    ->join('card_ownerships', 'card_ownerships.card_id', '=', 'cards.id')
+                    ->when($ownershipHasType, fn($q) => $q->where('card_ownerships.owner_type', 'merchant'))
+                    ->where('card_ownerships.owner_id', $merchantId)
                     ->whereBetween('purchase_invoices.invoice_date', [$startLast, $endLast])
                     ->sum('cards.total_amount');
             }
 
-            $purchasesThisMonth = DB::table('cards')
-                ->join('purchase_invoices', 'purchase_invoices.id', '=', 'cards.purchase_invoice_id')
-                ->when(!$isAdmin, fn($q) => $q->where('purchase_invoices.merchant_id', $merchantId))
-                ->whereBetween('purchase_invoices.invoice_date', [$startThis, $endThis])
-                ->sum('cards.total_amount');
+            // -----------------------------
+            // PURCHASES (admin only) -> cards joined to purchase_invoices
+            // -----------------------------
+            if ($isAdmin) {
+                $purchaseMonthly = DB::table('cards')
+                    ->join('purchase_invoices', 'purchase_invoices.id', '=', 'cards.purchase_invoice_id')
+                    ->selectRaw('DATE_FORMAT(purchase_invoices.invoice_date, "%b %Y") as month, SUM(cards.total_amount) as total, COUNT(cards.id) as items')
+                    ->groupBy('month')
+                    ->orderByRaw('MIN(purchase_invoices.invoice_date)')
+                    ->get()
+                    ->keyBy('month');
 
-            $purchasesLastMonth = DB::table('cards')
-                ->join('purchase_invoices', 'purchase_invoices.id', '=', 'cards.purchase_invoice_id')
-                ->when(!$isAdmin, fn($q) => $q->where('purchase_invoices.merchant_id', $merchantId))
-                ->whereBetween('purchase_invoices.invoice_date', [$startLast, $endLast])
-                ->sum('cards.total_amount');
+                $totalPurchases = DB::table('cards')
+                    ->join('purchase_invoices', 'purchase_invoices.id', '=', 'cards.purchase_invoice_id')
+                    ->sum('cards.total_amount');
+
+                $purchasesThisMonth = DB::table('cards')
+                    ->join('purchase_invoices', 'purchase_invoices.id', '=', 'cards.purchase_invoice_id')
+                    ->whereBetween('purchase_invoices.invoice_date', [$startThis, $endThis])
+                    ->sum('cards.total_amount');
+
+                $purchasesLastMonth = DB::table('cards')
+                    ->join('purchase_invoices', 'purchase_invoices.id', '=', 'cards.purchase_invoice_id')
+                    ->whereBetween('purchase_invoices.invoice_date', [$startLast, $endLast])
+                    ->sum('cards.total_amount');
+            } else {
+                $purchaseMonthly = collect([]);
+                $totalPurchases = 0;
+                $purchasesThisMonth = 0;
+                $purchasesLastMonth = 0;
+            }
 
             // -----------------------------
-            // Diffs & Profit
+            // Chart series (last 6 months)
+            // -----------------------------
+            $salesSeries = $months->map(fn($m) => (float) ($salesMonthly[$m]->total ?? 0));
+            $purchaseSeries = $months->map(fn($m) => (float) ($purchaseMonthly[$m]->total ?? 0));
+
+            // -----------------------------
+            // diffs & profit
             // -----------------------------
             $salesDiff = $salesThisMonth - $salesLastMonth;
             $salesDiffPercent = $salesLastMonth > 0 ? round(($salesDiff / $salesLastMonth) * 100, 2) : null;
 
             $profitThisMonth = $salesThisMonth - $purchasesThisMonth;
-            $profitTotal = ($isAdmin ? $totalAdminSales : $totalCardsSales) - $totalPurchases;
+            $profitTotal = ($isAdmin ? DB::table('admin_sales_invoices')->sum('amount') : $totalSales) - $totalPurchases;
 
             // -----------------------------
-            // Top entities
+            // TOP ENTITIES
             // -----------------------------
             if ($isAdmin) {
-                $topMerchants = DB::table('admin_sales_invoices')
+                $topEntities = DB::table('admin_sales_invoices')
                     ->selectRaw('merchant_id, COUNT(*) as orders, SUM(amount) as amount')
                     ->groupBy('merchant_id')
                     ->orderByDesc('amount')
@@ -173,43 +173,41 @@ class DashboardController extends Controller
                             'amount' => (float) $m->amount,
                         ];
                     });
-
-                $topEntities = $topMerchants;
             } else {
-                $topCustomers = Card::query()
-                    ->selectRaw('customer_id, COUNT(*) as orders, SUM(total_amount) as amount')
-                    ->where('merchant_id', $merchantId)
-                    ->whereNotNull('customer_id')
-                    ->groupBy('customer_id')
+                // Top customers for this merchant (cards owned by merchant, grouped by customer_id)
+                $topEntities = DB::table('card_ownerships as merchant_owner')
+                    ->join('cards', 'cards.id', '=', 'merchant_owner.card_id')
+                    ->join('card_ownerships as customer_owner', 'customer_owner.card_id', '=', 'cards.id')
+                    ->join('customers', 'customers.id', '=', 'customer_owner.owner_id')
+                    ->where('merchant_owner.owner_type', 'merchant')
+                    ->where('merchant_owner.owner_id', $merchantId)
+                    ->where('customer_owner.owner_type', 'customer')
+                    ->selectRaw('
+            customers.id as customer_id,
+            customers.name as name,
+            COUNT(cards.id) as orders,
+            SUM(cards.total_amount) as amount
+        ')
+                    ->groupBy('customers.id', 'customers.name')
                     ->orderByDesc('amount')
                     ->limit(8)
-                    ->with('customer')
-                    ->get()
-                    ->map(function ($c) {
-                        return [
-                            'name' => optional($c->customer)->name ?? 'Unknown',
-                            'orders' => $c->orders,
-                            'amount' => (float) $c->amount,
-                        ];
-                    });
-
-                $topEntities = $topCustomers;
+                    ->get();
             }
 
             // -----------------------------
-            // Totals / New entities
+            // Totals / new entities
             // -----------------------------
             if ($isAdmin) {
                 $totalEntities = User::where('role', 'merchant')->count();
                 $newEntitiesThisMonth = User::where('role', 'merchant')->whereBetween('created_at', [$startThis, $endThis])->count();
                 $lastCount = User::where('role', 'merchant')->whereBetween('created_at', [$startLast, $endLast])->count();
-                $newEntitiesDiffPercent = $lastCount > 0 ? round((($newEntitiesThisMonth - $lastCount) / $lastCount) * 100, 2) : null;
             } else {
                 $totalEntities = Customer::where('merchant_id', $merchantId)->count();
                 $newEntitiesThisMonth = Customer::where('merchant_id', $merchantId)->whereBetween('created_at', [$startThis, $endThis])->count();
                 $lastCount = Customer::where('merchant_id', $merchantId)->whereBetween('created_at', [$startLast, $endLast])->count();
-                $newEntitiesDiffPercent = $lastCount > 0 ? round((($newEntitiesThisMonth - $lastCount) / $lastCount) * 100, 2) : null;
             }
+
+            $newEntitiesDiffPercent = $lastCount > 0 ? round((($newEntitiesThisMonth - $lastCount) / $lastCount) * 100, 2) : null;
 
             return [
                 'scope' => $isAdmin ? 'admin' : 'merchant',

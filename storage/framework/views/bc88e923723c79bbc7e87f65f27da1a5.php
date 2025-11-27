@@ -57,10 +57,10 @@ unset($__defined_vars, $__key, $__value); ?>
         }">
 
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-3 gap-4">
 
             <!-- 🔍 Search -->
-            <div class="lg:col-span-1">
+            <div class="md:col-span-1 lg:col-span-1">
                 <label for="search-input" class="block text-sm text-gray-600 dark:text-gray-300 mb-1">
                     Search
                 </label>
@@ -75,17 +75,18 @@ unset($__defined_vars, $__key, $__value); ?>
                     <input x-model="query" @input="search" type="text" name="search"
                         placeholder="<?php echo e($searchPlaceholder); ?>"
                         class="w-full bg-transparent pl-3 py-2 focus:ring-0 border-none focus:outline-none
-                       dark:text-gray-200" />
+                   dark:text-gray-200" />
                 </div>
             </div>
 
             <!-- ⭐ Filters -->
-            <div class="lg:col-span-2 flex flex-wrap gap-3 items-end">
+            <div class="md:col-span-1 lg:col-span-2 flex flex-wrap gap-3 items-end">
                 <?php echo e($filters ?? ''); ?>
 
             </div>
 
         </div>
+
 
 
 

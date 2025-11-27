@@ -23,7 +23,7 @@ class CustomerController extends Controller
     //     // $requests = []; // Replace with actual requests from DB
     //     return view('admin.cards.requests');
     // }
-    public function customers(Request $request)
+    public function index(Request $request)
     {
         $search = $request->input('search');
 
@@ -47,6 +47,10 @@ class CustomerController extends Controller
         // }
 
         return view('merchant.customers.index', compact('customers'));
+    }
+
+    public function create(Request $request){
+        return view('merchant.customers.create');
     }
 
     public function storeCustomer(Request $request)
@@ -99,9 +103,9 @@ class CustomerController extends Controller
         $merchant = Auth::user(); // get logged-in merchant
 
         $customers = Customer::all();
-        $cards = Card::where('merchant_id', $merchant->id)->get(['id', 'certificate_id', 'valuation']); // only this merchant’s cards
+        // $cards = Card::where('merchant_id', $merchant->id)->get(['id', 'certificate_id']);
 
-        return view('merchant.cards.assign', compact('customers', 'cards'));
+        return view('merchant.cards.assign', compact('customers'));
     }
 
 }

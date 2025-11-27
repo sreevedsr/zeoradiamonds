@@ -57,13 +57,18 @@
 
 
 
-                                <x-danger-button type="button" x-data
-                                    x-on:click.prevent="
-        $dispatch('open-modal', 'confirm-delete-modal');
-        document.getElementById('deleteMerchantForm').action = '{{ route('admin.merchants.destroy', $merchant->id) }}';
-    ">
-                                    Delete
-                                </x-danger-button>
+                                @include('buttons.delete', [
+                                    'label' => 'Delete',
+                                    'click' =>
+                                        "
+                                        \$dispatch('open-modal', 'confirm-delete-modal');
+                                        document.getElementById('deleteMerchantForm').action =
+                                            '" .
+                                        route('admin.merchants.destroy', $merchant->id) .
+                                        "';
+                                    ",
+                                ])
+
 
                             </div>
                         </td>

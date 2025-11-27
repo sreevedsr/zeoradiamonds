@@ -198,8 +198,8 @@ Route::middleware('auth')->group(function () {
 
         // Customers management
         Route::prefix('customers')->name('customers.')->group(function () {
-            Route::get('/', [CustomerController::class, 'customers'])->name('index');
-            Route::get('/create', [CustomerController::class, 'createCustomer'])->name('create');
+            Route::get('/', [CustomerController::class, 'index'])->name('index');
+            Route::get('/create', [CustomerController::class, 'create'])->name('create');
             Route::post('/', [CustomerController::class, 'storeCustomer'])->name('store');
         });
         Route::prefix('cards')->name('cards.')->group(function () {
