@@ -14,8 +14,9 @@
         </template>
 
         <template x-if="!isSidebarCollapsed">
-            <div class=" my-4 border-b border-gray-200 dark:border-gray-700"></div>
+            <div class="mt-5 mb-5 border-b border-gray-200 dark:border-gray-700"></div>
         </template>
+
 
         <!-- Sidebar Links -->
         <div class="transition-opacity duration-300"

@@ -13,10 +13,7 @@
     <div class="mx-auto">
         <div class="p-6 sm:p-8 bg-white dark:bg-gray-800 shadow-md rounded-lg">
 
-            <form action="<?php echo e(route('admin.merchants.store')); ?>" method="POST"
-                x-init="init();
-                enableSequentialInput();
-                $nextTick(() => focusFirstInput());">
+            <form action="<?php echo e(route('admin.merchants.store')); ?>" method="POST">
                 <?php echo csrf_field(); ?>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6" x-data="stateCode(<?php echo e(Js::from($stateCodes)); ?>, '<?php echo e(old('state_code')); ?>', '<?php echo e(old('state')); ?>')">

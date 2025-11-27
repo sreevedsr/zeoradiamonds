@@ -15,10 +15,7 @@
 
 
             <!-- Supplier Registration Form -->
-            <form method="POST" action="<?php echo e(route('admin.suppliers.store')); ?>"
-                x-init="init();
-                enableSequentialInput();
-                $nextTick(() => focusFirstInput());">
+            <form method="POST" action="<?php echo e(route('admin.suppliers.store')); ?>">
                 <?php echo csrf_field(); ?>
 
                 <div class="grid grid-cols-1 gap-6 md:grid-cols-2" x-data="stateCode(<?php echo e(Js::from($stateCodes)); ?>, '<?php echo e(old('state_code')); ?>', '<?php echo e(old('state')); ?>')">

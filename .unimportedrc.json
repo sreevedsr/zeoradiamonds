@@ -1,0 +1,13 @@
+{
+  "entry": [
+    "resources/js/app.js"
+  ],
+  "exclude": [
+    "node_modules",
+    "public",
+    "storage",
+    "vendor",
+    "resources/js/bootstrap.js",
+    "resources/js/**/*.spec.js"
+  ]
+}

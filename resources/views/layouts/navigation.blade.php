@@ -1,5 +1,8 @@
 <header
-    class="sticky top-0 z-20 pt-7 pb-4 bg-white dark:bg-gray-900 shadow-md dark:shadow-gray-900 transition-all duration-300">
+    class="sticky top-0 z-20 pt-7 pb-4 bg-white dark:bg-gray-900
+           border-b border-gray-200 dark:border-none
+           dark:shadow-lg dark:shadow-gray-900/20
+           transition-all duration-300">
 
     <div class="flex items-center justify-between h-full px-6 text-purple-600 dark:text-purple-300">
 

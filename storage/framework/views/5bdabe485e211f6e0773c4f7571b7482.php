@@ -12,13 +12,8 @@
             <div class="flex items-center transition-all duration-300 w-full"
                 :class="isSidebarCollapsed ? 'justify-center' : 'justify-start'">
                 <!-- Avatar -->
-                <div class="rounded-full overflow-hidden bg-gray-200 transition-all duration-300 flex-shrink-0"
-                    :class="isSidebarCollapsed ? 'w-10 h-10' : 'w-12 h-12'">
-                    <img src="<?php echo e(Auth::user()->profile_photo_url ?? asset('assets/img/create-account-office.jpeg')); ?>"
-                        alt="<?php echo e(Auth::user()->name); ?>" class="w-full h-full object-cover">
-                </div>
+                
 
-                <!-- Collapsible text (hidden when collapsed) -->
                 <div class="ml-3 flex flex-col justify-center text-left overflow-hidden transition-all duration-300"
                     :class="isSidebarCollapsed ? 'hidden' : 'block'">
                     <span class="text-sm font-semibold text-gray-900 dark:text-white truncate">
@@ -32,7 +27,6 @@
                 </div>
             </div>
 
-            <!-- Chevron Icon (hidden when collapsed) -->
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24"
                 stroke="currentColor" stroke-width="2"
                 class="ml-auto transform text-gray-700 transition-all duration-300 dark:text-gray-300"

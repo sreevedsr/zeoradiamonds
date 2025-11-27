@@ -6,6 +6,7 @@ import Alpine from "alpinejs";
 import 'flowbite';
 import 'flowbite-datepicker';
 
+import data from "./alpine/data.js";
 import stateCode from "./components/stateCode.js";
 import pageTransition from "./components/pageTransition.js";
 import purchaseForm from "./components/purchaseForm.js";
@@ -63,6 +64,7 @@ function globalRates() {
 window.Alpine = Alpine;
 
 // 🧰 Attach helpers globally (so Blade can use them)
+
 window.enableSequentialInput = enableSequentialInput;
 window.focusFirstInput = focusFirstInput;
 window.searchableDropdown = searchableDropdown;
@@ -72,7 +74,7 @@ window.dropdownComponent = dropdownComponent;
 
 
 
-
+Alpine.data("data", data);
 Alpine.data("globalRates", globalRates);
 Alpine.data("stateCode", stateCode);
 Alpine.data("pageTransition", pageTransition);

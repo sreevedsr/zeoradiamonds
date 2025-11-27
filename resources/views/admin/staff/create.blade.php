@@ -5,9 +5,7 @@
         <div class="mx-auto text-gray-900 dark:text-gray-100">
 
             <!-- Staff Registration Form -->
-            <form method="POST" action="{{ route('admin.staff.store') }}" x-init="init();
-            enableSequentialInput();
-            $nextTick(() => focusFirstInput());">
+            <form method="POST" action="{{ route('admin.staff.store') }}">
                 @csrf
 
                 <div class="grid grid-cols-1 gap-6 md:grid-cols-2">

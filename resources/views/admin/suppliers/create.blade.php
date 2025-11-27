@@ -6,10 +6,7 @@
 
 
             <!-- Supplier Registration Form -->
-            <form method="POST" action="{{ route('admin.suppliers.store') }}"
-                x-init="init();
-                enableSequentialInput();
-                $nextTick(() => focusFirstInput());">
+            <form method="POST" action="{{ route('admin.suppliers.store') }}">
                 @csrf
 
                 <div class="grid grid-cols-1 gap-6 md:grid-cols-2" x-data="stateCode({{ Js::from($stateCodes) }}, '{{ old('state_code') }}', '{{ old('state') }}')">

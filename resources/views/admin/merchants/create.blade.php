@@ -4,10 +4,7 @@
     <div class="mx-auto">
         <div class="p-6 sm:p-8 bg-white dark:bg-gray-800 shadow-md rounded-lg">
 
-            <form action="{{ route('admin.merchants.store') }}" method="POST"
-                x-init="init();
-                enableSequentialInput();
-                $nextTick(() => focusFirstInput());">
+            <form action="{{ route('admin.merchants.store') }}" method="POST">
                 @csrf
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6" x-data="stateCode({{ Js::from($stateCodes) }}, '{{ old('state_code') }}', '{{ old('state') }}')">

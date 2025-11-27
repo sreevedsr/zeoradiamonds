@@ -1,4 +1,5 @@
-function data() {
+export default function data() {
+
     return {
         // Desktop sidebar collapse state
         isSidebarCollapsed: false,
@@ -8,7 +9,7 @@ function data() {
             this.isSidebarCollapsed = !this.isSidebarCollapsed;
             document.body.classList.toggle(
                 "sidebar-collapsed",
-                this.isSidebarCollapsed
+                this.isSidebarCollapsed,
             );
         },
 

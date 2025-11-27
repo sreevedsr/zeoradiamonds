@@ -1,7 +1,7 @@
 @props(['title' => 'Zeora Diamonds'])
 
 <!DOCTYPE html>
-<html :class="{ 'dark': dark }" x-data="data()" lang="en">
+<html x-data="data()" lang="en">
 
 <head>
     <meta charset="UTF-8" />
@@ -20,8 +20,8 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindplus/elements@1" type="module"></script>
 
     <!-- Alpine.js -->
-    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
-    <script src="{{ asset('assets/js/init-alpine.js') }}"></script>
+    {{-- <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script> --}}
+    {{-- <script src="{{ asset('assets/js/init-alpine.js') }}"></script> --}}
 </head>
 
 <body>

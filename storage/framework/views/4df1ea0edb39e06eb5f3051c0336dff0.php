@@ -14,9 +14,7 @@
         <div class="mx-auto text-gray-900 dark:text-gray-100">
 
             <!-- Product Registration Form -->
-            <form method="POST" action="<?php echo e(route('admin.products.register')); ?>" x-init="init();
-            enableSequentialInput();
-            $nextTick(() => focusFirstInput());">
+            <form method="POST" action="<?php echo e(route('admin.products.register')); ?>">
                 <?php echo csrf_field(); ?>
 
                 <div class="grid grid-cols-1 gap-6 md:grid-cols-2">

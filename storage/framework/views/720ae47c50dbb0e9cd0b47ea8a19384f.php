@@ -20,12 +20,10 @@
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-200">
                 Date <span class="text-red-500">*</span>
             </label>
-            <input datepicker datepicker-autohide type="text" name="invoice_date" tabindex="2"
+            <input type="date" name="invoice_date" tabindex="2"
                 value="<?php echo e(old('invoice_date', now()->toDateString())); ?>"
-                class="input-field w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-700
-           focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100"
-                placeholder="Select date" />
-
+                class="input-field w-full cursor-not-allowed rounded-md border border-gray-300 bg-gray-100 px-3 py-2 text-gray-700
+                       focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100" />
         </div>
 
         
