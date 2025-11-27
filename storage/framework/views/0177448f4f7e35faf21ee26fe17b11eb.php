@@ -13,6 +13,10 @@
             </a>
         </template>
 
+        <template x-if="!isSidebarCollapsed">
+            <div class=" my-4 border-b border-gray-200 dark:border-gray-700"></div>
+        </template>
+
         <!-- Sidebar Links -->
         <div class="transition-opacity duration-300"
             :class="isSidebarCollapsed ? 'opacity-50 select-none' : 'opacity-100 select-auto'">
@@ -43,6 +47,9 @@
         <a class="ml-6 text-lg font-bold text-gray-800 dark:text-gray-200" href="<?php echo e(route('dashboard')); ?>">
             Zeora Diamonds
         </a>
+
+        <div class=" my-4 border-b border-gray-200 dark:border-gray-700"></div>
+
 
         <?php echo $__env->make('layouts.sidebar.links', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
     </div>

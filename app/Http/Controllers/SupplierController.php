@@ -24,18 +24,10 @@ class SupplierController extends Controller
             });
         })
             ->orderByDesc('created_at')
-            ->paginate(10);
+            ->paginate(25);
 
-        // Prepare pagination data for table footer (optional but matches your merchant/card structure)
-        $pagination = [
-            'from' => $suppliers->firstItem(),
-            'to' => $suppliers->lastItem(),
-            'total' => $suppliers->total(),
-            'pages' => range(1, $suppliers->lastPage()),
-            'current' => $suppliers->currentPage(),
-        ];
 
-        return view('admin.suppliers.index', compact('suppliers', 'pagination'));
+        return view('admin.suppliers.index', compact('suppliers'));
     }
 
     public function create()

@@ -23,28 +23,36 @@
         }">
 
 
-        <!-- 🔍 Search -->
-        <div class="relative min-w-72">
-            <label for="search-input" class="block text-sm text-gray-600 dark:text-gray-300 mb-1">
-                Search
-            </label>
-            <button type="button"
-                class="absolute left-[1.666667%] top-2/3 -translate-y-1/2 p-2 text-gray-500 dark:text-gray-300">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-4" fill="none" stroke="currentColor"
-                    stroke-width="1.5" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                        d="m21 21-4.35-4.35M10.5 18a7.5 7.5 0 1 1 7.5-7.5 7.508 7.508 0 0 1-7.5 7.5z" />
-                </svg>
-            </button>
-            <input x-model="query" @input="search" type="text" name="search" placeholder="{{ $searchPlaceholder }}"
-                class="w-full rounded-lg border pl-8 pr-4 py-2 focus:ring-2 focus:ring-purple-600 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200" />
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+
+            <!-- 🔍 Search -->
+            <div class="lg:col-span-1">
+                <label for="search-input" class="block text-sm text-gray-600 dark:text-gray-300 mb-1">
+                    Search
+                </label>
+
+                <div class="flex items-center border rounded-lg px-3 dark:border-gray-700 dark:bg-gray-900">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500 dark:text-gray-300"
+                        fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="m21 21-4.35-4.35M10.5 18a7.5 7.5 0 1 1 7.5-7.5 7.508 7.508 0 0 1-7.5 7.5z" />
+                    </svg>
+
+                    <input x-model="query" @input="search" type="text" name="search"
+                        placeholder="{{ $searchPlaceholder }}"
+                        class="w-full bg-transparent pl-3 py-2 focus:ring-0 border-none focus:outline-none
+                       dark:text-gray-200" />
+                </div>
+            </div>
+
+            <!-- ⭐ Filters -->
+            <div class="lg:col-span-2 flex flex-wrap gap-3 items-end">
+                {{ $filters ?? '' }}
+            </div>
 
         </div>
 
-        <!-- ⭐ FILTERS SLOT -->
-        <div class="flex flex-wrap gap-3 items-end">
-            {{ $filters ?? '' }}
-        </div>
+
 
     </form>
 
@@ -68,11 +76,8 @@
         </div>
     </div>
 
-    <!-- 📄 PAGINATION -->
-    <div class="p-4 pb-0">
-        @if ($collection instanceof \Illuminate\Pagination\LengthAwarePaginator)
-            {{ $collection->withQueryString()->links() }}
-        @endif
-    </div>
+    @if ($collection instanceof \Illuminate\Pagination\LengthAwarePaginator)
+        {{ $collection->withQueryString()->links('components.pagination') }}
+    @endif
 
 </div>

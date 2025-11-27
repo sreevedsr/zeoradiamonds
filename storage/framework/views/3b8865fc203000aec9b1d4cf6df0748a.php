@@ -1,28 +1,57 @@
-@props(['paginator'])
+<?php $attributes ??= new \Illuminate\View\ComponentAttributeBag;
 
-@if ($paginator->hasPages())
+$__newAttributes = [];
+$__propNames = \Illuminate\View\ComponentAttributeBag::extractPropNames((['paginator']));
+
+foreach ($attributes->all() as $__key => $__value) {
+    if (in_array($__key, $__propNames)) {
+        $$__key = $$__key ?? $__value;
+    } else {
+        $__newAttributes[$__key] = $__value;
+    }
+}
+
+$attributes = new \Illuminate\View\ComponentAttributeBag($__newAttributes);
+
+unset($__propNames);
+unset($__newAttributes);
+
+foreach (array_filter((['paginator']), 'is_string', ARRAY_FILTER_USE_KEY) as $__key => $__value) {
+    $$__key = $$__key ?? $__value;
+}
+
+$__defined_vars = get_defined_vars();
+
+foreach ($attributes->all() as $__key => $__value) {
+    if (array_key_exists($__key, $__defined_vars)) unset($$__key);
+}
+
+unset($__defined_vars, $__key, $__value); ?>
+
+<?php if($paginator->hasPages()): ?>
 <div
     class=" py-3 text-xs font-semibold tracking-wide text-gray-600 uppercase
            dark:text-gray-300 select-none">
 
     <div class="grid grid-cols-3 items-center">
 
-        {{-- Showing X–Y of Z --}}
+        
         <span class="flex items-center">
-            Showing {{ $paginator->firstItem() }}–{{ $paginator->lastItem() }} of {{ $paginator->total() }}
+            Showing <?php echo e($paginator->firstItem()); ?>–<?php echo e($paginator->lastItem()); ?> of <?php echo e($paginator->total()); ?>
+
         </span>
 
         <span></span>
 
-        {{-- Pagination --}}
+        
         <div class="flex justify-end">
             <nav aria-label="Pagination">
                 <ul class="flex items-center gap-1">
 
-                    {{-- Prev Arrow (hidden when unavailable) --}}
-                    @if ($paginator->previousPageUrl())
+                    
+                    <?php if($paginator->previousPageUrl()): ?>
                         <li>
-                            <a href="{{ $paginator->previousPageUrl() }}"
+                            <a href="<?php echo e($paginator->previousPageUrl()); ?>"
                                class="flex items-center justify-center w-9 h-9 rounded-xl
                                       bg-gray-200 dark:bg-gray-700
                                       hover:bg-gray-300 dark:hover:bg-gray-600
@@ -32,11 +61,11 @@
                                 </svg>
                             </a>
                         </li>
-                    @endif
+                    <?php endif; ?>
 
 
-                    {{-- Page number logic (with dots and range) --}}
-                    @php
+                    
+                    <?php
                         $current = $paginator->currentPage();
                         $last = $paginator->lastPage();
                         $range = 2;
@@ -50,32 +79,33 @@
 
                         $pages = array_unique($pages);
                         sort($pages);
-                    @endphp
+                    ?>
 
-                    @php $prev = null; @endphp
-                    @foreach ($pages as $page)
-                        @if ($prev && $page > $prev + 1)
+                    <?php $prev = null; ?>
+                    <?php $__currentLoopData = $pages; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $page): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <?php if($prev && $page > $prev + 1): ?>
                             <li><span class="px-2 text-gray-400 dark:text-gray-500">…</span></li>
-                        @endif
+                        <?php endif; ?>
 
                         <li>
-                            <a href="{{ $paginator->url($page) }}"
+                            <a href="<?php echo e($paginator->url($page)); ?>"
                                class="px-3 py-1.5 rounded-xl text-sm transition-all
-                                      {{ $page == $current
+                                      <?php echo e($page == $current
                                             ? 'bg-purple-600 text-white hover:bg-purple-700 shadow-sm'
-                                            : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600' }}">
-                                {{ $page }}
+                                            : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600'); ?>">
+                                <?php echo e($page); ?>
+
                             </a>
                         </li>
 
-                        @php $prev = $page; @endphp
-                    @endforeach
+                        <?php $prev = $page; ?>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 
 
-                    {{-- Next Arrow (hidden when unavailable) --}}
-                    @if ($paginator->nextPageUrl())
+                    
+                    <?php if($paginator->nextPageUrl()): ?>
                         <li>
-                            <a href="{{ $paginator->nextPageUrl() }}"
+                            <a href="<?php echo e($paginator->nextPageUrl()); ?>"
                                class="flex items-center justify-center w-9 h-9 rounded-xl
                                       bg-gray-200 dark:bg-gray-700
                                       hover:bg-gray-300 dark:hover:bg-gray-600
@@ -85,7 +115,7 @@
                                 </svg>
                             </a>
                         </li>
-                    @endif
+                    <?php endif; ?>
 
                 </ul>
             </nav>
@@ -93,4 +123,5 @@
     </div>
 
 </div>
-@endif
+<?php endif; ?>
+<?php /**PATH C:\xampp\htdocs\zeoradiamonds\resources\views/components/pagination.blade.php ENDPATH**/ ?>

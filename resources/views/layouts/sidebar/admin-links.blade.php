@@ -1,4 +1,4 @@
-@can('edit-merchants')
+@can('manage-merchants')
     <li class="relative px-6 py-3" x-data="collapsibleMenu({{ request()->routeIs('admin.merchants.*') ? true : false }})">
 
         <span
@@ -144,7 +144,7 @@
     </li>
 @endcan
 
-@can('edit-cards')
+@can('manage-products')
     <li class="relative px-6 py-3" x-data="collapsibleMenu({{ request()->routeIs('admin.products.*') ? true : false }})">
 
         <!-- Active Bar -->
@@ -312,7 +312,7 @@
                 </a>
             </li>
 
-            <li>
+            {{-- <li>
                 <a href="{{ route('admin.reports.salesman') }}"
                     class="{{ request()->routeIs('admin.reports.salesman')
                         ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
@@ -320,7 +320,7 @@
                     block rounded-md px-2 py-1 text-sm font-medium">
                     Salesman Report
                 </a>
-            </li>
+            </li> --}}
 
         </ul>
     </li>

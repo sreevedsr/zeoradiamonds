@@ -1,4 +1,4 @@
-<?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('edit-merchants')): ?>
+<?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('manage-merchants')): ?>
     <li class="relative px-6 py-3" x-data="collapsibleMenu(<?php echo e(request()->routeIs('admin.merchants.*') ? true : false); ?>)">
 
         <span
@@ -150,7 +150,7 @@
     </li>
 <?php endif; ?>
 
-<?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('edit-cards')): ?>
+<?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('manage-products')): ?>
     <li class="relative px-6 py-3" x-data="collapsibleMenu(<?php echo e(request()->routeIs('admin.products.*') ? true : false); ?>)">
 
         <!-- Active Bar -->
@@ -326,16 +326,7 @@
                 </a>
             </li>
 
-            <li>
-                <a href="<?php echo e(route('admin.reports.salesman')); ?>"
-                    class="<?php echo e(request()->routeIs('admin.reports.salesman')
-                        ? 'text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700'
-                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'); ?>
-
-                    block rounded-md px-2 py-1 text-sm font-medium">
-                    Salesman Report
-                </a>
-            </li>
+            
 
         </ul>
     </li>

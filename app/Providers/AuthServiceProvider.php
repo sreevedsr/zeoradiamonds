@@ -25,8 +25,8 @@ class AuthServiceProvider extends ServiceProvider
         */
         $permissions = [
             // Admin-only permissions
-            'edit-merchants' => ['admin'],
-            'edit-cards' => ['admin'],
+            'manage-merchants' => ['admin'],
+            'manage-products' => ['admin'],
             'view-rates' => ['admin'],
             'view-suppliers' => ['admin'],
             'create-account' => ['admin'],

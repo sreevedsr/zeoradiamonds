@@ -13,6 +13,9 @@
 
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="<?php echo e(asset('favicon.ico')); ?>">
+    
+
+
 
 
     <!-- Tailwind CSS -->

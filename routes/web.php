@@ -25,16 +25,6 @@ use App\Http\Controllers\Cards\CardAssignmentController;
 use App\Http\Controllers\Admin\Reports\SalesReportController;
 use App\Http\Controllers\Admin\Reports\SalesmanReportController;
 
-
-Route::get('/admin/debug/cards', function () {
-    return [
-        'cards' => \App\Models\Card::all(),
-        'ownerships' => \App\Models\CardOwnership::all(),
-        'admin_owned_cards' => \App\Models\Card::ownedByAdmin()->get(),
-    ];
-});
-
-// Redirect root URL to login or dashboard
 Route::get('/', function () {
     if (Auth::check()) {
         return match (Auth::user()->role) {
@@ -46,21 +36,17 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
-// Authenticated routes
 Route::middleware('auth')->group(function () {
 
-    // Profile routes (accessible to all authenticated users)
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
     Route::prefix('profile')->name('profile.')->group(function () {
         Route::get('/', [ProfileController::class, 'edit'])->name('edit');
         Route::patch('/', [ProfileController::class, 'update'])->name('update');
         Route::delete('/', [ProfileController::class, 'destroy'])->name('destroy');
     });
 
-    // Shared dashboard for admin & merchant
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-
     Route::get('/qr/{id}', function ($id) {
-        // QR payload should ONLY contain an ID
         $payload = json_encode(['id' => (int) $id]);
 
         return response(
@@ -115,13 +101,12 @@ Route::middleware('auth')->group(function () {
 
         });
 
-        Route::middleware(['auth', 'can:edit-cards'])->prefix('products')->name('products.')->group(function () {
+        Route::middleware(['auth', 'can:manage-products'])->prefix('products')->name('products.')->group(function () {
             Route::get('register', [ProductController::class, 'create'])->name('register');
             Route::post('register', [ProductController::class, 'store'])->name('register');
 
             Route::post('/upload-temp-image', [UploadController::class, 'uploadTempImage'])
                 ->name('upload.temp.image');
-
 
 
 
@@ -146,7 +131,7 @@ Route::middleware('auth')->group(function () {
             Route::put('/{id}', [CardsController::class, 'update'])->name('update');
             Route::delete('/{id}', [CardsController::class, 'destroy'])->name('destroy');
 
-            Route::get('/requests', [CustomerController::class, 'customerRequests'])->name('requests');
+            Route::get('/requests', [MerchantRequestController::class, 'requests'])->name('requests');
         });
 
         Route::middleware(['auth', 'can:view-suppliers'])->prefix('suppliers')->name('suppliers.')->group(function () {
@@ -186,7 +171,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/merchants/requests', [MerchantRequestController::class, 'index'])->name('merchants.request');
 
         // Merchant management
-        Route::middleware('can:edit-merchants')->prefix('merchants')->name('merchants.')->group(function () {
+        Route::middleware('can:manage-merchants')->prefix('merchants')->name('merchants.')->group(function () {
             Route::get('/', [MerchantController::class, 'index'])->name('index');
             Route::get('/create', [MerchantController::class, 'create'])->name('create');
             Route::post('/store', [MerchantController::class, 'store'])->name('store');

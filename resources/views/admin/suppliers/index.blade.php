@@ -1,8 +1,7 @@
 <x-app-layout>
     @slot('title', 'Suppliers')
 
-    <div class="bg-white shadow dark:bg-gray-800 sm:rounded-lg" x-data="editModal()">
-        <div class=" text-gray-900 dark:text-gray-100">
+    <div class="bg-white shadow dark:bg-gray-800 rounded-lg" x-data="editModal()">
 
             <!-- Suppliers Table -->
             <x-table :headers="['#', 'Supplier Code', 'Name', 'Phone', 'State', 'GST No', 'Created At', 'Actions']" :collection="$suppliers" :from="$pagination['from'] ?? 1" :to="$pagination['to'] ?? 10" :total="$pagination['total'] ?? count($suppliers)"
@@ -135,6 +134,5 @@
                     </div>
                 </form>
             </x-modal>
-        </div>
     </div>
 </x-app-layout>
